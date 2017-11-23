@@ -11,51 +11,78 @@
         $fecha_inscripcion =  Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $fecha_inscripcion );
     }
 @endphp
-    <div class="page" style="font-size: 11pt">
-            {{--<img src="{{ asset('encabezado.jpg') }}" style="float: center; margin: 0.5em;">--}}
+
+    <div style="font-size: 14px">
             <table style="width: 100%;" class="header">
                 <tr>
-                    <td><h1 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h1></td>
+                    <td>
+                        <img src="escudo.png" style="margin-left:30px;width: 100px">
+                        <div style="font-style: italic">Provincia de Tierra del Fuego,</div>
+                        <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
+                        <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
+                        <div style="font-style: italic">Ministerio de Educación</div>
+                        <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                    </td>
+                    <td>
+                        <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
+                        <div style="text-align: right;">"2017-Año de las energías renovables"</div>
+                    </td>
                 </tr>
             </table>
             <br>
             <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
-            <br>
             <p> La Supervisión Técnica de Supervisión Escolar, deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
                 ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->curso->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
-            <br>
             <p>IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.</p>
-            <br>
-            <br>
             <table style="width: 100%;" class="header">
                 <tr>
-                    <td><h1 style="text-align: right" class="overline stylex block">Sello y firma de supervisor</h1></td>
+                    <td>
+                        <h4 style="text-align: right" class="overline stylex block">_________________________<br>Sello y firma de supervisor</h4>
+                    </td>
                 </tr>
             </table>
-        {{--    <img src="{{ asset('footer.png') }}" style="float: center; margin: 0.5em;">--}}
+            <span style="color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
             <hr />
         </div>
-    <div class="page" style="font-size: 11pt">
-            {{--<img src="{{ asset('encabezado.jpg') }}" style="float: center; margin: 0.5em;">--}}
+    <div style="font-size: 14px">
             <table style="width: 100%;" class="header">
                 <tr>
-                    <td><h1 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h1></td>
+                    <td>
+                        <img src="escudo.png" style="margin-left:30px;width: 100px">
+                        <div style="font-style: italic">Provincia de Tierra del Fuego,</div>
+                        <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
+                        <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
+                        <div style="font-style: italic">Ministerio de Educación</div>
+                        <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                    </td>
+                    <td>
+                        <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
+                        <div style="text-align: right;">"2017-Año de las energías renovables"</div>
+                    </td>
                 </tr>
             </table>
             <br>
             <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
-            <br>
             <p> La Supervisión Técnica de Supervisión Escolar, deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
                 ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->curso->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
-            <br>
+            <p>IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.</p>
+            <table style="width: 100%;" class="header">
+                <tr>
+                    <td>
+                        <h4 style="text-align: right" class="overline stylex block">_________________________<br>Sello y firma de supervisor</h4>
+                    </td>
+                </tr>
+            </table>
+            <span style="color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
+            <hr />
         </div>
 </body>
 </html>

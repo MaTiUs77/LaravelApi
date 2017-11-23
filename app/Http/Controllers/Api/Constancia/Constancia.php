@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Constancia;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
-use App\User;
 
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -27,8 +26,11 @@ class Constancia extends Controller
             {
                 return ['error'=>'No se encontro una inscripcion con esa ID'];
             } else {
-                $pdf = PDF::loadView('constancia',array('cursoInscripcions'=>$cursoInscripcions));
-                return $pdf->stream('constancia.pdf');
+
+                $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                    ->loadView('constancia',array('cursoInscripcions'=>$cursoInscripcions));
+
+                return $pdf->stream("constancia_$inscripcion_id.pdf");
             }
         } else
         {
