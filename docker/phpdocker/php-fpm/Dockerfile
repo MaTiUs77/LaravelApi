@@ -40,4 +40,4 @@ WORKDIR "/application"
 RUN echo `ls`
 
 RUN chmod 777 ./storage -R
-RUN composer install
+RUN composer update --no-dev
