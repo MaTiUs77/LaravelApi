@@ -37,15 +37,11 @@
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
-            <p>IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.</p>
-            <table style="width: 100%;" class="header">
-                <tr>
-                    <td>
-                        <h4 style="text-align: right" class="overline stylex block">_________________________<br>Sello y firma de supervisor</h4>
-                    </td>
-                </tr>
-            </table>
-            <span style="color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
+            <p>
+                IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
+                <div style="float:right;border-top: 1px solid #000;">Sello y firma de supervisor</div>
+            </p>
+            <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
             <hr />
         </div>
     <div style="font-size: 14px">
@@ -73,15 +69,11 @@
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
-            <p>IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.</p>
-            <table style="width: 100%;" class="header">
-                <tr>
-                    <td>
-                        <h4 style="text-align: right" class="overline stylex block">_________________________<br>Sello y firma de supervisor</h4>
-                    </td>
-                </tr>
-            </table>
-            <span style="color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
+            <p>
+                IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
+                <div style="float:right;border-top: 1px solid #000;">Sello y firma de supervisor</div>
+            </p>
+            <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
             <hr />
         </div>
 </body>
