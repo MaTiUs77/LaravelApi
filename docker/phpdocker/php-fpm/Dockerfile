@@ -14,10 +14,12 @@ RUN apt-get update \
         libmcrypt-dev \
         libpng12-dev \
         libxml2-dev \
+
     && docker-php-ext-install -j$(nproc) pcntl pdo pdo_mysql zip iconv mcrypt soap \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-enable gd memcached \
+
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Install Memcached for php 7
