@@ -19,7 +19,7 @@ spec:
         io.kompose.service: php-fpm
     spec:
       containers:
-      - image: decyt/larasiep-fpm:0.0.2
+      - image: decyt/larasiep-fpm:0.0.3
         name: laravel-api-php
         resources: {}
         workingDir: /application

@@ -1,7 +1,16 @@
 apiVersion: v1
 entries:
   Siep2:
-  - created: 2017-11-24T09:11:06.875271005-03:00
+  - created: 2017-11-24T10:20:43.289016607-03:00
+    description: Segunda version del sistema basada en Laravel
+    digest: 1b0cd4584ab99b9aefd56c33e80a226f1ce79fe821d0d8bd1e9b2fed6dfd47c1
+    keywords:
+    - docker-compose
+    name: Siep2
+    urls:
+    - Siep2-0.0.3.tgz
+    version: 0.0.3
+  - created: 2017-11-24T10:20:43.28879786-03:00
     description: Segunda version del sistema basada en Laravel
     digest: 3480c1dca9b6c9b2a41b108dda89e4ab43d150e068461b2b7568b9232881e81a
     keywords:
@@ -10,4 +19,4 @@ entries:
     urls:
     - Siep2-0.0.2.tgz
     version: 0.0.2
-generated: 2017-11-24T09:11:06.874680273-03:00
+generated: 2017-11-24T10:20:43.288412505-03:00

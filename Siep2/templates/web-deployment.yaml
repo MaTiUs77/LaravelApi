@@ -19,7 +19,7 @@ spec:
         io.kompose.service: web
     spec:
       containers:
-      - image: decyt/weblarasiep:0.0.1
+      - image: decyt/weblarasiep:0.0.2
         name: laravel-api-web
         ports:
         - containerPort: 80
