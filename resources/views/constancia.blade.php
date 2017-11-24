@@ -8,7 +8,7 @@
     $fecha_inscripcion = $cursoInscripcions->inscripcion->modified;
     if($fecha_inscripcion!=null)
     {
-        $fecha_inscripcion =  Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $fecha_inscripcion );
+        $fecha_inscripcion =  Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $fecha_inscripcion );
     }
 @endphp
 
