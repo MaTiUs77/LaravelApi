@@ -1,22 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\Constancia;
+namespace App\Http\Controllers\Api\Inscripcion;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 
-use Barryvdh\DomPDF\Facade as PDF;
-use GuzzleHttp\Client;
-
-class Constancia extends Controller
+class Inscripcion extends Controller
 {
-    public function test($id)
-    {
-        $guzzle = new Client();
-        return $guzzle->get("https://web:3000/api/inscripcion/$id");
-    }
-
-    public function generarPdf($inscripcion_id)
+    public function info($inscripcion_id)
     {
         if(is_numeric($inscripcion_id))
         {
@@ -34,10 +25,7 @@ class Constancia extends Controller
                 return ['error'=>'No se encontro una inscripcion con esa ID'];
             } else {
 
-                $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                    ->loadView('constancia',array('cursoInscripcions'=>$cursoInscripcions));
-
-                return $pdf->stream("constancia_$inscripcion_id.pdf");
+                return $cursoInscripcions;
             }
         } else
         {
