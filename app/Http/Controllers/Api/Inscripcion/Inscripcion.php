@@ -13,6 +13,7 @@ class Inscripcion extends Controller
         {
             $cursoInscripcions = CursosInscripcions::with([
                 'Curso.Centro.Barrio',
+                'Curso.Centro.Ciudad',
                 'Inscripcion.Ciclo',
                 'Inscripcion.Alumno.Persona.Ciudad',
                 'Inscripcion.Hermano.Persona.Ciudad',

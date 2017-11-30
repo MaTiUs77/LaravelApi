@@ -12,4 +12,9 @@ class Centros extends Model
     {
         return $this->hasOne('App\Barrios', 'id', 'barrio_id');
     }
+
+    function Ciudad()
+    {
+        return $this->hasOne('App\Ciudades', 'id', 'ciudad_id');
+    }
 }

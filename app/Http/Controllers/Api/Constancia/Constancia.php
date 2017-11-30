@@ -13,7 +13,7 @@ class Constancia extends Controller
     public function test($id)
     {
         $guzzle = new Client();
-        return $guzzle->get("https://web:3000/api/inscripcion/$id");
+        return $guzzle->get("http://web:3000/api/inscripcion/$id");
     }
 
     public function generarPdf($inscripcion_id)
