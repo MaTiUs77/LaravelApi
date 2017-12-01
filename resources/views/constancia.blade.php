@@ -21,7 +21,7 @@
                         <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                         <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                         <div style="font-style: italic">Ministerio de Educación</div>
-                        @if(isset($cursoInscripcions->curso->centro->nivel_servicio) && $cursoInscripcions->curso->centro->nivel_servicio!='Común - Secundario')
+                        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                             <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
                         @endif
                     </td>
@@ -34,16 +34,16 @@
             <br>
             <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
             <p>
-                @if(isset($cursoInscripcions->curso->centro->nivel_servicio) && $cursoInscripcions->curso->centro->nivel_servicio!='Común - Secundario')
+                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                     La Supervisión Técnica de Supervisión Escolar,
                 @else
                     Se
                 @endif
                 deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
-                ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->curso->centro->nombre }}</b>
+                ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
-                en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
+                en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
             <p>
                 IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
@@ -61,7 +61,7 @@
                         <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                         <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                         <div style="font-style: italic">Ministerio de Educación</div>
-                        @if(isset($cursoInscripcions->curso->centro->nivel_servicio) && $cursoInscripcions->curso->centro->nivel_servicio!='Común - Secundario')
+                        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                             <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
                         @endif
                     </td>
@@ -74,16 +74,16 @@
             <br>
             <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
             <p>
-                @if(isset($cursoInscripcions->curso->centro->nivel_servicio) && $cursoInscripcions->curso->centro->nivel_servicio!='Común - Secundario')
+                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                     La Supervisión Técnica de Supervisión Escolar,
                 @else
                     Se
                 @endif
                 deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
-                ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->curso->centro->nombre }}</b>
+                ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
-                en Ushuaia el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
+                en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
             <p>
                 IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.

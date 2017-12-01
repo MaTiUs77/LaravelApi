@@ -10,10 +10,16 @@ use GuzzleHttp\Client;
 
 class Constancia extends Controller
 {
-    public function test($id)
+    public function web($id)
     {
         $guzzle = new Client();
         return $guzzle->get("http://web:3000/api/inscripcion/$id");
+    }
+
+    public function local($id)
+    {
+        $guzzle = new Client();
+        return $guzzle->get("http://localhost:3000/api/inscripcion/$id");
     }
 
     public function generarPdf($inscripcion_id)
@@ -21,8 +27,9 @@ class Constancia extends Controller
         if(is_numeric($inscripcion_id))
         {
             $cursoInscripcions = CursosInscripcions::with([
-                'Curso.Centro.Barrio',
+                'Curso.Centro.Ciudad',
                 'Inscripcion.Ciclo',
+                'Inscripcion.Centro.Ciudad',
                 'Inscripcion.Alumno.Persona.Ciudad',
                 'Inscripcion.Hermano.Persona.Ciudad',
             ])

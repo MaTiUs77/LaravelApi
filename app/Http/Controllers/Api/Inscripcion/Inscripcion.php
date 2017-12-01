@@ -12,9 +12,9 @@ class Inscripcion extends Controller
         if(is_numeric($inscripcion_id))
         {
             $cursoInscripcions = CursosInscripcions::with([
-                'Curso.Centro.Barrio',
                 'Curso.Centro.Ciudad',
                 'Inscripcion.Ciclo',
+                'Inscripcion.Centro.Ciudad',
                 'Inscripcion.Alumno.Persona.Ciudad',
                 'Inscripcion.Hermano.Persona.Ciudad',
             ])
