@@ -8,6 +8,14 @@ class CursosInscripcions extends Model
 {
     protected $table = 'cursos_inscripcions';
 
+    // Por defecto se cargan estas relaciones
+    protected $with = [
+        'Curso',
+        'Inscripcion.Ciclo',
+        'Inscripcion.Centro.Ciudad',
+        'Inscripcion.Alumno.Persona.Ciudad'
+    ];
+
     function Curso()
     {
         return $this->hasOne('App\Cursos', 'id', 'curso_id');
@@ -21,8 +29,36 @@ class CursosInscripcions extends Model
     // Metodo magico para ORM
     function scopeFiltrarNivelServicio($query,$servicio)
     {
-        $query->whereHas('Curso.Centro', function ($centros) use($servicio) {
+        $query->whereHas('Inscripcion.Centro', function ($centros) use($servicio) {
             return $centros->where('nivel_servicio', $servicio);
+        });
+    }
+
+    function scopeFiltrarCentro($query,$centro_id)
+    {
+        $query->whereHas('Inscripcion.Centro', function ($centros) use($centro_id) {
+            return $centros->where('id', $centro_id);
+        });
+    }
+
+    function scopeFiltrarTurno($query,$turno)
+    {
+        $query->whereHas('Curso', function ($cursos) use($turno) {
+            return $cursos->where('turno', $turno);
+        });
+    }
+
+    function scopeFiltrarAnio($query,$anio)
+    {
+        $query->whereHas('Curso', function ($cursos) use($anio) {
+            return $cursos->where('anio', $anio);
+        });
+    }
+
+    function scopeFiltrarConDivision($query)
+    {
+        $query->whereHas('Curso', function ($cursos)  {
+            return $cursos->where('division','<>', '');
         });
     }
 
@@ -36,13 +72,13 @@ class CursosInscripcions extends Model
         $query->filtrarNivelServicio('Común - Secundario');
     }
 
-    function scopefiltrarCiclo($query,$anio) {
-        $query->whereHas('Inscripcion.Ciclo', function ($ciclos) use($anio) {
-            return $ciclos->where('nombre', $anio);
+    function scopefiltrarCiclo($query,$ciclo_id) {
+        $query->whereHas('Inscripcion.Ciclo', function ($ciclos) use($ciclo_id) {
+            return $ciclos->where('id', $ciclo_id);
         });
     }
 
-    function scopefiltrarCiudad($query,$ciudad) {
+    function scopefiltrarPersonaCiudad($query,$ciudad) {
         $query->whereHas('Inscripcion.Alumno.Persona.Ciudad', function ($ciudades) use($ciudad) {
             return $ciudades->where('nombre', $ciudad);
         });
@@ -57,6 +93,12 @@ class CursosInscripcions extends Model
     function scopefiltrarSinHermano($query) {
         $query->whereHas('Inscripcion', function ($inscripciones) {
             return $inscripciones->where('hermano_id',null);
+        });
+    }
+
+    function scopefiltrarEstadoInscripcion($query,$estado) {
+        $query->whereHas('Inscripcion', function ($inscripciones) use($estado) {
+            return $inscripciones->where('estado_inscripcion', $estado);
         });
     }
 }

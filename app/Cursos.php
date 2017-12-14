@@ -8,6 +8,8 @@ class Cursos extends Model
 {
     protected $table = 'cursos';
 
+    public $timestamps = false;
+
     function Centro()
     {
         return $this->hasOne('App\Centros', 'id', 'centro_id');
