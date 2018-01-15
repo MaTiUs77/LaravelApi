@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inscripcions extends Model
 {
     protected $table = 'inscripcions';
+    public $timestamps = false;
 
     function Alumno()
     {

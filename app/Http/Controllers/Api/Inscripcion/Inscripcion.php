@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\Inscripcion;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -11,6 +12,22 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Inscripcion extends Controller
 {
+    public $validationRules = [
+        'centro_id' => 'required|numeric',
+        'ciclo_id' => 'required|numeric',
+        'turno' => 'string',
+        'anio' => 'string',
+        'por_pagina' => 'numeric',
+        'con_hermano' => 'sometimes|accepted',
+    ];
+
+    public $validationMessages = [
+        'required' => 'El :attribute es requerido.',
+        'numeric' => 'El :attribute debe ser numerico',
+        'string' => 'El :attribute debe ser solo texto',
+        'accepted' => 'El :attribute debe ser: 1, on o true',
+    ];
+
     public function info($inscripcion_id)
     {
         if(is_numeric($inscripcion_id))
@@ -34,23 +51,7 @@ class Inscripcion extends Controller
 
     public function lista(Request $request)
     {
-        $rules = [
-            'centro_id' => 'required|numeric',
-            'ciclo_id' => 'required|numeric',
-            'turno' => 'string',
-            'anio' => 'string',
-            'por_pagina' => 'numeric',
-            'con_hermano' => 'sometimes|accepted',
-        ];
-
-        $messages = [
-            'required' => 'El :attribute es requerido.',
-            'numeric' => 'El :attribute debe ser numerico',
-            'string' => 'El :attribute debe ser solo texto',
-            'accepted' => 'El :attribute debe ser: 1, on o true',
-        ];
-
-        $validator = Validator::make($request->all(), $rules,$messages);
+        $validator = Validator::make($request->all(), $this->validationRules,$this->validationMessages);
 
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
@@ -117,5 +118,27 @@ class Inscripcion extends Controller
                 $sheet->fromArray($content, null, 'A1', false, false);
             });
         })->export('xls');
+    }
+
+    public function add(Request $request)
+    {
+        $data = $request->json();
+
+        dd($data->get('test'));
+/*
+        $userId = null;
+        $userCentroId = null;
+
+        $cicloId = null;
+        $cursoId = null;
+        $personaId = null;
+        $legajoNro = null;
+        
+        $inscripcion = new Inscripcion();
+        $inscripcion->fecha_alta = Carbon::now()->format('Y-m-d');
+        $inscripcion->usuario_id = $userId;
+        $inscripcion->centro_id = $userCentroId;
+        $inscripcion->ciclo_id = $cicloId;*/
+        
     }
 }

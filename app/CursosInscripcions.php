@@ -8,6 +8,8 @@ class CursosInscripcions extends Model
 {
     protected $table = 'cursos_inscripcions';
 
+    public $timestamps = false;
+
     // Por defecto se cargan estas relaciones
     protected $with = [
         'Curso',
