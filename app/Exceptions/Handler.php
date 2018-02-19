@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -57,10 +58,19 @@ class Handler extends ExceptionHandler
                     'code' => 404
                 ]);
             } else {
-                return response()->json([
-                    'error' => $exception->getMessage(),
-                    'code' => $exception->getCode()
-                ]);
+
+                if($exception instanceof MethodNotAllowedHttpException)
+                {
+                    return response()->json([
+                        'error' => 'El metodo de acceso no esta permitido',
+                        'code' => 405
+                    ]);
+                } else {
+                    return response()->json([
+                        'error' => $exception->getMessage(),
+                        'code' => $exception->getCode()
+                    ]);
+                }
             }
 //        }
 

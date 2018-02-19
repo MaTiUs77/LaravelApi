@@ -23,19 +23,22 @@ class Promocion extends Controller
         $curso_id = $data->get('curso_id');
         $curso_id_promocion = $data->get('curso_id_promocion');
 
+        // Usuario que realiza la promocion
+        $user_id = $data->get('user_id');
+
         // Obtengo datos de las inscripciones a promocionar
         $inscripciones =  Inscripcions::whereIn('id',$ids)->get();
 
         // Genero nuevas inscripciones modificando solo algunos datos de la inscripcion anterior
         foreach($inscripciones as $inscripcion)
         {
-            // Duplico el registro de la inscripcion
+            // Copia de el registro de inscripcion
             $promocion = $inscripcion->replicate();
 
             // Modifico algunos campos antes de crear la inscripcion nueva para el ciclo siguiente
             $promocion->legajo_nro = $this->nuevoLegajo($promocion);
             $promocion->ciclo_id = $ciclo_siguiente->id;
-            $promocion->usuario_id = 2;
+            $promocion->usuario_id = $user_id;
             $promocion->promocionado = 0;
             $promocion->save();
 
@@ -50,11 +53,9 @@ class Promocion extends Controller
             $inscripcion->save();
         }
 
-        $output = [
-            'status' => 'done'
+        return [
+            'done' => true
         ];
-
-        return compact('output');
     }
 
     private function nuevoLegajo(Inscripcions $inscripcion)

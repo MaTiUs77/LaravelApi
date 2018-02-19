@@ -28,27 +28,6 @@ class Inscripcion extends Controller
         'accepted' => 'El :attribute debe ser: 1, on o true',
     ];
 
-    public function info($inscripcion_id)
-    {
-        if(is_numeric($inscripcion_id))
-        {
-            $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)
-//                ->with('Inscripcion.Hermano.Persona.Ciudad')
-                ->first();
-
-            if(!$cursoInscripcions)
-            {
-                return ['error'=>'No se encontro una inscripcion con esa ID'];
-            } else {
-
-                return $cursoInscripcions;
-            }
-        } else
-        {
-            return ['error'=>'El ID es inválido'];
-        }
-    }
-
     public function lista(Request $request)
     {
         $validator = Validator::make($request->all(), $this->validationRules,$this->validationMessages);
@@ -85,40 +64,7 @@ class Inscripcion extends Controller
         }
     }
 
-    public function exportExcel()
-    {
-        $guzzle = new Client();
-        $data = $guzzle->get("http://localhost/api/inscripcion/lista",[
-            'query' => Input::all()
-        ]);
-
-        $json = json_decode($data->getBody());
-
-        $content = [];
-        // Primer fila
-        $content[] = ['Ciclo', 'Centro', 'Curso', 'Turno', 'DNI', 'Alumno'];
-        // Contenido
-
-        foreach($json->data as $index => $item) {
-            $content[] = [
-                $item->inscripcion->ciclo->nombre,
-                $item->inscripcion->centro->nombre,
-                $item->curso->anio,
-                $item->curso->turno,
-                $item->inscripcion->alumno->persona->documento_nro,
-
-                $item->inscripcion->alumno->persona->apellidos
-                .",".
-                $item->inscripcion->alumno->persona->nombres
-            ];
-        }
-
-        Excel::create('Inscripciones', function($excel) use($content) {
-            $excel->sheet('Lista', function($sheet) use($content) {
-                $sheet->fromArray($content, null, 'A1', false, false);
-            });
-        })->export('xls');
-    }
+    
 
     public function add(Request $request)
     {
