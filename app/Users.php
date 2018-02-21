@@ -1,0 +1,16 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Users extends Model
+{
+    protected $table = 'users';
+
+    function Centro()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_id');
+    }
+
+}

@@ -37,10 +37,8 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
-
         $this->mapWebRoutes();
-
-        $this->customWebRoutes();
+        //$this->customWebRoutes();
     }
 
     /**
@@ -67,7 +65,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         $files = Finder::create()
-            ->in(app_path('Http/Controllers'))
+            ->in(app_path('Http/Controllers/Api'))
             ->name('routes.php');
 
         foreach($files as $file) {

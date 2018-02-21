@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\Inscripcion;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
+use App\Inscripcions;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -51,21 +52,28 @@ class InscripcionFind extends Controller
 
     public function byLegajo($legajo_nro)
     {
-        if(is_numeric($legajo_nro))
+        list($dni,$anio) = explode('-',$legajo_nro);
+        if(is_numeric($dni) && is_numeric($anio))
         {
-            $cursoInscripcions = CursosInscripcions::where('legajo_nro',$legajo_nro)
-                ->first();
+            $inscripcion = Inscripcions::where('legajo_nro',$legajo_nro)->first();
 
-            if(!$cursoInscripcions)
-            {
-                return ['error'=>'No se encontro una inscripcion con esa ID'];
+            // Verifica si existe ese legajo en las inscripciones
+            if($inscripcion!=null) {
+                $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion->id)
+                    ->first();
+
+                if($cursoInscripcions)
+                {
+                    return $cursoInscripcions;
+                } else {
+                    return ['error'=>'No se encontro una inscripcion con esa ID'];
+                }
             } else {
-
-                return $cursoInscripcions;
+                return ['error'=>'No se encontro una inscripcion con ese numero de legajo'];
             }
         } else
         {
-            return ['error'=>'El ID es inválido'];
+            return ['error'=>'El legajo es inválido'];
         }
     }
 }

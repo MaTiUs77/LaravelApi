@@ -37,6 +37,7 @@ class Inscripcion extends Controller
         }
 
         $centro_id = Input::get('centro_id');
+        $curso_id = Input::get('curso_id');
         $ciclo_id = Input::get('ciclo_id');
         $turno = Input::get('turno');
         $anio = Input::get('anio');
@@ -53,6 +54,8 @@ class Inscripcion extends Controller
         if($anio) { $query->filtrarAnio($anio); }
         if($con_hermano) { $query->filtrarConHermano();}
 
+        if($curso_id) { $query->where('curso_id',$curso_id); }
+
         $result =  $query->paginate($por_pagina);
 
         if(!$result)
@@ -63,8 +66,6 @@ class Inscripcion extends Controller
             return $result;
         }
     }
-
-    
 
     public function add(Request $request)
     {
