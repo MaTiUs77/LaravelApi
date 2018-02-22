@@ -71,12 +71,20 @@ class Promocion extends Controller
                 ";
             } else 
             {
-                $movimientosLog .= "
+                $warningLog= "
                 Inscripcion_id: $inscripcion->id
                 Ciclo_id: $inscripcion->ciclo_id != $ciclo_actual->id 
                 Legajo: $inscripcion->legajo_nro 
                 NO SE PROMOCIONA, YA ESTA INSCRIPTO, DEBERIA EDITARSE
                 ";
+
+                Log::warning("($user->id) $user->username :: PROMOCION :: ($centro->id)$centro->nombre
+                    Division: $cursoFrom->anio $cursoFrom->division $cursoFrom->turno => $cursoTo->anio $cursoTo->division $cursoTo->turno 
+        
+                    $warningLog
+                ");
+
+                $movimientosLog .= $warningLog;
             }
         }
 
