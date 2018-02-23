@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,12 +14,14 @@ use Maatwebsite\Excel\Facades\Excel;
 class Inscripcion extends Controller
 {
     public $validationRules = [
-        'centro_id' => 'required|numeric',
         'ciclo_id' => 'required|numeric',
+        'centro_id' => 'numeric',
+        'curso_id' => 'numeric',
         'turno' => 'string',
         'anio' => 'string',
-        'por_pagina' => 'numeric',
+        'division' => 'string',
         'con_hermano' => 'sometimes|accepted',
+        'por_pagina' => 'string',
     ];
 
     public $validationMessages = [
@@ -36,25 +39,68 @@ class Inscripcion extends Controller
             return ['error' => $validator->errors()];
         }
 
+        $ciclo_id = Input::get('ciclo_id');
         $centro_id = Input::get('centro_id');
         $curso_id = Input::get('curso_id');
-        $ciclo_id = Input::get('ciclo_id');
         $turno = Input::get('turno');
         $anio = Input::get('anio');
+        $division = Input::get('division');
         $con_hermano = Input::get('con_hermano');
         $por_pagina = Input::get('por_pagina');
-
-        if(!is_numeric($por_pagina)) { $por_pagina = 10; }
 
         $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
 
         if($centro_id) { $query->filtrarCentro($centro_id); }
+        if($curso_id) { $query->where('curso_id',$curso_id); }
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
         if($turno) { $query->filtrarTurno($turno); }
         if($anio) { $query->filtrarAnio($anio); }
+        if($division) { $query->filtrarDivision($division); }
         if($con_hermano) { $query->filtrarConHermano();}
 
-        if($curso_id) { $query->where('curso_id',$curso_id); }
+        if($por_pagina=='all') {
+            $result = $query->get();
+        } else {
+            if(!is_numeric($por_pagina)) {
+                $por_pagina = 10;
+            }
+            $result = $query->paginate($por_pagina);
+        }
+
+        if(!$result)
+        {
+            return ['error'=>'No se encontraron resultados'];
+        } else {
+            if($result instanceof LengthAwarePaginator) {
+                return $result->appends(Input::all());
+            } else {
+                $data = $result;
+                return compact('data');
+            }
+        }
+    }
+
+
+    /*
+     * Inscripciones 2017 Merge Inscripcion 2018
+     * Filtros 6to, primaria, estatales, ciclo 2017
+     *
+     * Relacion
+     * Persona_id
+     */
+    public function mergeLista(Request $request)
+    {
+        $por_pagina = Input::get('por_pagina');
+        if(!is_numeric($por_pagina)) { $por_pagina = 10; }
+
+        $ciclo_id = Input::get('ciclo_id');
+        $anio = Input::get('anio');
+
+        $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
+        $query->filtrarComunPrimario();
+
+        if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
+        if($anio) { $query->filtrarAnio($anio); }
 
         $result =  $query->paginate($por_pagina);
 

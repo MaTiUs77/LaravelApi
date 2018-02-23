@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 
-class InscripcionExcel extends Controller
+class InscripcionExport extends Controller
 {
     public function excel()
     {
@@ -19,7 +19,7 @@ class InscripcionExcel extends Controller
 
         $content = [];
         // Primer fila
-        $content[] = ['Ciclo', 'Centro', 'Curso', 'Turno', 'DNI', 'Alumno'];
+        $content[] = ['Ciclo', 'Centro', 'Curso', 'Division', 'Turno', 'DNI', 'Alumno'];
 
         // Contenido
         foreach($json->data as $index => $item) {
@@ -27,6 +27,7 @@ class InscripcionExcel extends Controller
                 $item->inscripcion->ciclo->nombre,
                 $item->inscripcion->centro->nombre,
                 $item->curso->anio,
+                $item->curso->division,
                 $item->curso->turno,
                 $item->inscripcion->alumno->persona->documento_nro,
 
