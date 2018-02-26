@@ -58,8 +58,10 @@ class Inscripcion extends Controller
         if($division) { $query->filtrarDivision($division); }
         if($con_hermano) { $query->filtrarConHermano();}
 
+        $countQuery= $query->count();
+
         if($por_pagina=='all') {
-            $result = $query->get();
+            $result = $query->paginate($countQuery);
         } else {
             if(!is_numeric($por_pagina)) {
                 $por_pagina = 10;
