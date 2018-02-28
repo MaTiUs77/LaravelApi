@@ -20,13 +20,19 @@ class Matriculas extends Controller
      * Esta consulta a su vez actualiza los datos en la tabla Cursos segun el Curso.id
      *
      */
-    public function recuento()
+    public function recuento($cicloNombre)
     {
-        $reset = $this->resetMatriculaYPlazas();
+        if(!is_numeric($cicloNombre))
+        {
+            $error = 'El ciclo debe ser numerico, ej: 2018';
+            return compact('error');
+        } else {
 
-        $inscripciones = DB::select(
-            DB::raw(
-            "
+            $reset = $this->resetMatriculaYPlazas();
+
+            $inscripciones = DB::select(
+                DB::raw(
+                    "
             select 
                 
                 ins.ciclo_id,
@@ -36,10 +42,10 @@ class Matriculas extends Controller
                 curso.division,
                 curso.turno,
                 curso.plazas,
-                COUNT(ins.id) as matriculados,
+                COUNT(ins.id) as matriculaCount,
                 (
                   curso.plazas - COUNT(ins.id)
-                ) as vacantes
+                ) as vacantesCount
                 
                 FROM inscripcions ins
                 
@@ -50,12 +56,11 @@ class Matriculas extends Controller
                 
                 where
                 
-                -- ci.nombre = 2017
-                -- i.ciclo_id = 4
-                -- and
-                ins.centro_id = 7 
-                AND 
-                curso.division <> ''
+                ci.nombre = $cicloNombre AND 
+               (ins.estado_inscripcion = 'CONFIRMADA' or ins.estado_inscripcion = 'NO CONFIRMADA')
+--              ins.centro_id = 7 
+--              curso.division <> ''
+
                 group by 
     
                 ins.ciclo_id,            
@@ -65,23 +70,23 @@ class Matriculas extends Controller
                 curso.division,
                 curso.turno,
                 curso.plazas")
-        );
+            );
 
-        foreach($inscripciones as $item)
-        {
-            $curso = Cursos::find($item->id);
-            $curso->matricula = $item->matriculados;
-            $curso->vacantes = $item->vacantes;
-            $curso->save();
+            foreach($inscripciones as $item)
+            {
+                $curso = Cursos::find($item->id);
+                $curso->matricula = $item->matriculaCount;
+                $curso->vacantes = $item->vacantesCount;
+                $curso->save();
+            }
+
+            return compact('reset','inscripciones');
         }
-
-        return compact('reset','inscripciones');
     }
 
-    private function resetMatriculaYPlazas()
+    // Actualiza las vacantes con el valor de plazas, y las matriculas las deja en cero
+    public function resetMatriculaYPlazas()
     {
-        // Antes que nada se devuelven a cero todas las matriculas
-        // las vacantes pasan a ser el total de plazas
         $result = DB::table('cursos')->update([
             'matricula' => 0,
             'vacantes' => DB::raw('plazas')
