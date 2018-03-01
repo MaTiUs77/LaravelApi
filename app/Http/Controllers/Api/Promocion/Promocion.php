@@ -98,8 +98,10 @@ class Promocion extends Controller
 
                     // Para guardar el id de la nueva promocion es necesario
                     // cambiar la columna promocionado de TINYINT a INT 11 para guardar $cursoInscripcion->id;
-                    $inscripcion->promocionado = 1; // $cursoInscripcion->id;
+                    $inscripcion->promocionado = $cursoInscripcion->id;
                     $inscripcion->save();
+
+                    $this->cuantificarInscripcion($cursoInscripcion);
 
                     $this->infoLog .= "
                     Inscripcion_id: {$inscripcion->id} => {$promocion->id}
@@ -161,5 +163,12 @@ class Promocion extends Controller
         list($dni,$ciclo) = explode('-',$promocion->legajo_nro);
 
         return "$dni-$nuevoCiclo";
+    }
+
+    private function cuantificarInscripcion(CursosInscripcions $cursoInscripcion) {
+        $cuantificar = Cursos::where('id',$cursoInscripcion->curso_id)->first();
+        $cuantificar->matricula++;
+        $cuantificar->vacantes--;
+        $cuantificar->save();
     }
 }
