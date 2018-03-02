@@ -8,6 +8,7 @@ use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Users;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -88,6 +89,9 @@ class Promocion extends Controller
                     $promocion->ciclo_id = $this->cicloTo->id;
                     $promocion->usuario_id = $this->user->id;
                     $promocion->promocionado = 0;
+                    $today = Carbon::now();
+                    $promocion->created = $today;
+                    $promocion->modified = $today;
                     $promocion->save();
 
                     // Una vez realizada la nueva inscripcion, guardo el ID generado en CursoInscripcion

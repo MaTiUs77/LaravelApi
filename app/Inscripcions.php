@@ -29,4 +29,8 @@ class Inscripcions extends Model
         return $this->hasOne('App\Centros', 'id', 'centro_id');
     }
 
+   function Promocion()
+    {
+        return $this->hasOne('App\CursosInscripcions', 'id', 'promocionado');
+    }
 }

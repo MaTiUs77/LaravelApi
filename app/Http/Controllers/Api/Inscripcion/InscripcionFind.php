@@ -66,7 +66,7 @@ class InscripcionFind extends Controller
                 {
                     return $cursoInscripcions;
                 } else {
-                    return ['error'=>'No se encontro una inscripcion con esa ID'];
+                    return ['error'=>'No se encontro una inscripcion con ese legajo'];
                 }
             } else {
                 return ['error'=>'No se encontro una inscripcion con ese numero de legajo'];
