@@ -10,6 +10,8 @@ Route::prefix('inscripcion')->group(function () {
         Route::get('excel', 'Api\Inscripcion\InscripcionExport@excel');
     });
 
+    Route::post('egreso', 'Api\Inscripcion\InscripcionEgreso@start');
+
     Route::get('lista', 'Api\Inscripcion\Inscripcion@lista');
     Route::get('merge', 'Api\Inscripcion\Inscripcion@mergeLista');
 
