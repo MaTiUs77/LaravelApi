@@ -37,6 +37,16 @@ class CursosInscripcions extends Model
             return $inscripciones->where('hermano_id',null);
         });
     }
+    function scopefiltrarSinEgreso($query) {
+        $query->whereHas('Inscripcion', function ($inscripciones) {
+            return $inscripciones->where('fecha_egreso',null);
+        });
+    }
+    function scopefiltrarConEgreso($query) {
+        $query->whereHas('Inscripcion', function ($inscripciones) {
+            return $inscripciones->where('fecha_egreso','<>',null);
+        });
+    }
     function scopefiltrarEstadoInscripcion($query,$estado) {
         $query->whereHas('Inscripcion', function ($inscripciones) use($estado) {
             return $inscripciones->where('estado_inscripcion', $estado);

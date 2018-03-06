@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Users;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;

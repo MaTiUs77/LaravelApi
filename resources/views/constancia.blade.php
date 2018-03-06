@@ -27,7 +27,7 @@
                     </td>
                     <td>
                         <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
-                        <div style="text-align: right;">"2017-Año de las energías renovables"</div>
+                        <div style="text-align: right;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
                     </td>
                 </tr>
             </table>
@@ -67,7 +67,7 @@
                     </td>
                     <td>
                         <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
-                        <div style="text-align: right;">"2017-Año de las energías renovables"</div>
+                        <div style="text-align: right;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
                     </td>
                 </tr>
             </table>
