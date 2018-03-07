@@ -50,6 +50,7 @@ class InscripcionEgreso extends Controller
                 if($this->puedeEgresar($curins))
                 {
                     $inscripcion->fecha_egreso = Carbon::now();
+                    $inscripcion->estado_inscripcion = "EGRESO";
                     $inscripcion->save();
                     $success[$inscripcion->id] = "success";
                 } else {
