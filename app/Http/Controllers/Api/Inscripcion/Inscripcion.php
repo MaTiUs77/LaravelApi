@@ -20,6 +20,7 @@ class Inscripcion extends Controller
         'turno' => 'string',
         'anio' => 'string',
         'division' => 'string',
+        'estado_inscripcion' => 'string',
         'por_pagina' => 'string',
     ];
 
@@ -46,6 +47,8 @@ class Inscripcion extends Controller
         $division = Input::get('division');
         $hermano = Input::get('hermano');
         $egresado = Input::get('egresado');
+        $estado_inscripcion = Input::get('estado_inscripcion');
+
         $por_pagina = Input::get('por_pagina');
 
         $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
@@ -56,6 +59,7 @@ class Inscripcion extends Controller
         if($turno) { $query->filtrarTurno($turno); }
         if($anio) { $query->filtrarAnio($anio); }
         if($division) { $query->filtrarDivision($division); }
+        if($estado_inscripcion) { $query->filtrarEstadoInscripcion($estado_inscripcion);}
         if($hermano) {
             switch($hermano){
                 case "si":
