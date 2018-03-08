@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
 
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'jwt-auth' => \App\Http\Middleware\authJWT::class,
     ];
 }

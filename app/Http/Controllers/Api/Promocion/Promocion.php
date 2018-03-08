@@ -7,6 +7,7 @@ use App\Cursos;
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
+use App\User;
 use App\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class Promocion extends Controller
         $this->cicloFrom = Ciclos::where('nombre',2017)->first();
         $this->cicloTo = Ciclos::where('nombre',2018)->first();
 
-        $this->user =  Users::where('id',$user_id)->first();
+        $this->user =  User::where('id',$user_id)->first();
         $this->centro =  Centros::where('id',$centro_id)->first();
         $this->cursoFrom =  Cursos::where('id',$curso_id)->first();
         $this->cursoTo =  Cursos::where('id',$curso_id_promocion)->first();

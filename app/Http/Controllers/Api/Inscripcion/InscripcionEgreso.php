@@ -1,15 +1,10 @@
 <?php
 namespace App\Http\Controllers\Api\Inscripcion;
 
-use App\Centros;
-use App\Ciclos;
-use App\Cursos;
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
-use App\Inscripcions;
-use App\Users;
+use App\User;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -37,7 +32,7 @@ class InscripcionEgreso extends Controller
             return ['error' => $validator->errors()];
         }
 
-        $this->user =  Users::where('id',$request->get('user_id'))->first();
+        $this->user =  User::where('id',$request->get('user_id'))->first();
         $cursoInscripcion =  CursosInscripcions::whereIn('inscripcion_id',$request->get('id'))->get();
 
         $error = [];
@@ -61,10 +56,14 @@ class InscripcionEgreso extends Controller
             }
         }
 
-        return [
+        $output = [
             'success'=>$success,
             'error'=>$error
         ];
+
+        Log::info("Egreso:",$output);
+
+        return $output;
     }
 
     private function puedeEgresar(CursosInscripcions $curi) {
