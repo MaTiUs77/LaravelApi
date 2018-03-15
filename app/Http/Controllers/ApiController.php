@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +15,17 @@ class ApiController extends Controller
     public function __construct()
     {
         $this->user = new User;
+    }
+
+    public function home()
+    {
+        $motor = 'laravel';
+        $version = app()::VERSION;
+        $github = env('GITHUB');
+        $api_tag = env('API_TAG');
+        $server_time = Carbon::now();
+
+        return compact('motor','version','github','api_tag','server_time');
     }
 
     public function login(Request $request) {

@@ -4,31 +4,9 @@ namespace App\Http\Controllers\Api\Inscripcion;
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
-use Carbon\Carbon;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class InscripcionFind extends Controller
 {
-    public $validationRules = [
-        'centro_id' => 'required|numeric',
-        'ciclo_id' => 'required|numeric',
-        'turno' => 'string',
-        'anio' => 'string',
-        'por_pagina' => 'numeric',
-        'con_hermano' => 'sometimes|accepted',
-    ];
-
-    public $validationMessages = [
-        'required' => 'El :attribute es requerido.',
-        'numeric' => 'El :attribute debe ser numerico',
-        'string' => 'El :attribute debe ser solo texto',
-        'accepted' => 'El :attribute debe ser: 1, on o true',
-    ];
-
     public function byId($inscripcion_id)
     {
         if(is_numeric($inscripcion_id))

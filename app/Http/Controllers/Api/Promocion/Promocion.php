@@ -24,14 +24,6 @@ class Promocion extends Controller
         'user_id' => 'required|numeric',
     ];
 
-    public $validationMessages = [
-        'required' => 'El :attribute es requerido.',
-        'numeric' => 'El :attribute debe ser numerico',
-        'string' => 'El :attribute debe ser solo texto',
-        'accepted' => 'El :attribute debe ser: 1, on o true',
-        'array' => 'El :attribute debe ser un array',
-    ];
-
     private $user;
     private $centro;
     private $cursoFrom;
@@ -44,7 +36,7 @@ class Promocion extends Controller
     public function start(Request $request)
     {
         // Se validan los parametros
-        $validator = Validator::make($request->all(), $this->validationRules,$this->validationMessages);
+        $validator = Validator::make($request->all(), $this->validationRules);
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
         }

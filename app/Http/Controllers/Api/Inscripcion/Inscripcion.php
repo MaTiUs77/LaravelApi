@@ -10,7 +10,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
-
 class Inscripcion extends Controller
 {
     public $validationRules = [
@@ -24,16 +23,9 @@ class Inscripcion extends Controller
         'por_pagina' => 'string',
     ];
 
-    public $validationMessages = [
-        'required' => 'El :attribute es requerido.',
-        'numeric' => 'El :attribute debe ser numerico',
-        'string' => 'El :attribute debe ser solo texto',
-        'accepted' => 'El :attribute debe ser: 1, on o true',
-    ];
-
     public function lista(Request $request)
     {
-        $validator = Validator::make($request->all(), $this->validationRules,$this->validationMessages);
+        $validator = Validator::make($request->all(), $this->validationRules);
 
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
@@ -103,60 +95,5 @@ class Inscripcion extends Controller
                 return compact('data');
             }
         }
-    }
-
-
-    /*
-     * Inscripciones 2017 Merge Inscripcion 2018
-     * Filtros 6to, primaria, estatales, ciclo 2017
-     *
-     * Relacion
-     * Persona_id
-     */
-    public function mergeLista(Request $request)
-    {
-        $por_pagina = Input::get('por_pagina');
-        if(!is_numeric($por_pagina)) { $por_pagina = 10; }
-
-        $ciclo_id = Input::get('ciclo_id');
-        $anio = Input::get('anio');
-
-        $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
-        $query->filtrarComunPrimario();
-
-        if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
-        if($anio) { $query->filtrarAnio($anio); }
-
-        $result =  $query->paginate($por_pagina);
-
-        if(!$result)
-        {
-            return ['error'=>'No se encontraron resultados'];
-        } else {
-            $result->appends(Input::all());
-            return $result;
-        }
-    }
-
-    public function add(Request $request)
-    {
-        $data = $request->json();
-
-        dd($data->get('test'));
-/*
-        $userId = null;
-        $userCentroId = null;
-
-        $cicloId = null;
-        $cursoId = null;
-        $personaId = null;
-        $legajoNro = null;
-        
-        $inscripcion = new Inscripcion();
-        $inscripcion->fecha_alta = Carbon::now()->format('Y-m-d');
-        $inscripcion->usuario_id = $userId;
-        $inscripcion->centro_id = $userCentroId;
-        $inscripcion->ciclo_id = $cicloId;*/
-        
     }
 }
