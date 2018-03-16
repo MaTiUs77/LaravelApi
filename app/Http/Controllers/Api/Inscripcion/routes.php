@@ -13,5 +13,6 @@ Route::prefix('inscripcion')->group(function () {
     Route::get('lista', 'Api\Inscripcion\Inscripcion@lista');
 
     Route::post('/egreso', 'Api\Inscripcion\InscripcionEgreso@start');
+    Route::post('/reubicacion', 'Api\Inscripcion\InscripcionReubicacion@start');
 });
 
