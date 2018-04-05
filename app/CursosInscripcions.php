@@ -114,6 +114,12 @@ class CursosInscripcions extends Model
         });
     }
 
+    function scopefiltrarCicloNombre($query,$ciclo_nombre) {
+        $query->whereHas('Inscripcion.Ciclo', function ($ciclos) use($ciclo_nombre) {
+            return $ciclos->where('nombre', $ciclo_nombre);
+        });
+    }
+
     // Filtros de PERSONA
     function scopefiltrarPersonaCiudad($query,$ciudad) {
         $query->whereHas('Inscripcion.Alumno.Persona.Ciudad', function ($ciudades) use($ciudad) {

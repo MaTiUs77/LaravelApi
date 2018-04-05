@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Matriculas extends Controller
 {
@@ -107,6 +108,8 @@ class Matriculas extends Controller
         $centro_id = Input::get('centro_id');
         $anio = Input::get('anio');
 
+        $export = Input::get('export');
+
         $filtros = [];
 
         if(isset($ciclo)) {
@@ -173,6 +176,26 @@ class Matriculas extends Controller
                 curso.plazas")
         );
 
+        if(isset($export)) {
+            $content = [];
+            $content[] = ['Ciudad', 'Establecimiento', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
+            // Contenido
+            foreach($inscripciones as $item) {
+                $content[] = [
+                    $item->ciudad,
+                    $item->nombre,
+                    $item->anio,
+                    $item->division,
+                    $item->turno,
+                    $item->plazas,
+                    $item->matriculas,
+                    $item->vacantes
+                ];
+            }
+
+            $this->toExcel("Matriculas cuantitativa $ciclo",'Matriculas',$content);
+        }
+
         return $inscripciones;
     }
 
@@ -198,6 +221,7 @@ class Matriculas extends Controller
         $centro_id = Input::get('centro_id');
         $nivel_servicio = Input::get('nivel_servicio');
 
+        $export = Input::get('export');
 
         $filtros = [];
 
@@ -252,6 +276,22 @@ class Matriculas extends Controller
             ")
         );
 
+        if(isset($export)) {
+            $content = [];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de servicio', 'Matriculas'];
+            // Contenido
+            foreach($inscripciones as $item) {
+                $content[] = [
+                    $item->ciudad,
+                    $item->nombre,
+                    $item->nivel_servicio,
+                    $item->matriculas,
+                ];
+            }
+
+            $this->toExcel("Matriculas cuantitativa $ciclo","Por nivel $nivel_servicio",$content);
+        }
+
         return $inscripciones;
     }
 
@@ -264,5 +304,13 @@ class Matriculas extends Controller
         ]);
 
         return $result;
+    }
+
+    public function toExcel($archivo,$sheet,$content) {
+        Excel::create($archivo, function($excel) use($content,$sheet) {
+            $excel->sheet($sheet, function($sheet) use($content) {
+                $sheet->fromArray($content, null, 'A1', false, false);
+            });
+        })->export('xls');
     }
 }

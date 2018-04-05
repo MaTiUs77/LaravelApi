@@ -73,9 +73,8 @@ class Inscripcion extends Controller
             }
         }
 
-        $countQuery= $query->count();
-
         if($por_pagina=='all') {
+            $countQuery= $query->count();
             $result = $query->paginate($countQuery);
         } else {
             if(!is_numeric($por_pagina)) {
