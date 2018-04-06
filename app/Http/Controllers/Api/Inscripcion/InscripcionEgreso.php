@@ -62,19 +62,41 @@ class InscripcionEgreso extends Controller
         $egresar = false;
 
         $nivelServicio = $curi->inscripcion->centro->nivel_servicio;
+        $cue = $curi->inscripcion->centro->cue;
         $anio = $curi->curso->anio;
 
-        switch ($nivelServicio)
-        {
-            case 'Común - Primario':
-                if($anio=='6to') { $egresar = true; }
-                break;
-            case 'Común - Secundario':
-                if($anio=='6to') { $egresar = true; }
-                break;
-            case 'Común - Inicial':
-                if($anio=='Sala de 5 años') { $egresar = true; }
-                break;
+        /*
+            ESTO NO DEBERIA ESTAR ASI, DEBERIA SER POR ACL
+            CON PERMISOS DE EGRESO PARA CADA COLEGIO..
+
+            $anio->can('egresar')
+
+            Todos los 6to egresan PRIMARIOS y SECUNDARIOS
+            Menos estos 3 CUEs que son de colegios Tecnicos con 7mo
+        */
+        if($anio=='6to') {
+            if (
+                ($cue == '940007700') ||
+                ($cue == '940008300') ||
+                ($cue == '940015900') ||
+                ($cue == '940015700')
+            ) {
+                $egresar = false;
+            } else {
+                $egresar = true;
+            }
+        } else {
+
+            // El resto de los años, es verificado por el nivel de servicio
+            switch ($nivelServicio)
+            {
+                case 'Común - Inicial':
+                    if($anio=='Sala de 5 años') { $egresar = true; }
+                    break;
+                case 'Común - Secundario':
+                    if($anio=='7mo') { $egresar = true; }
+                    break;
+            }
         }
 
         return $egresar;

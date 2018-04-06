@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class Matriculas extends Controller
 {
@@ -194,7 +193,7 @@ class Matriculas extends Controller
                 ];
             }
 
-            $this->toExcel("Matriculas cuantitativa $ciclo",'Matriculas',$content);
+            MatriculasExport::toExcel("Matriculas cuantitativa $ciclo",'Matriculas',$content);
         }
 
         return $inscripciones;
@@ -209,13 +208,5 @@ class Matriculas extends Controller
         ]);
 
         return $result;
-    }
-
-    public function toExcel($archivo,$sheet,$content) {
-        Excel::create($archivo, function($excel) use($content,$sheet) {
-            $excel->sheet($sheet, function($sheet) use($content) {
-                $sheet->fromArray($content, null, 'A1', false, false);
-            });
-        })->export('xls');
     }
 }
