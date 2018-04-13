@@ -33,4 +33,9 @@ class Inscripcions extends Model
     {
         return $this->hasOne('App\CursosInscripcions', 'id', 'promocionado');
     }
+
+    function CursosInscripcions()
+    {
+        return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id');
+    }
 }

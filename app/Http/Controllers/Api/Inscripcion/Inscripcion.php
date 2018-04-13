@@ -13,7 +13,8 @@ use Maatwebsite\Excel\Facades\Excel;
 class Inscripcion extends Controller
 {
     public $validationRules = [
-        'ciclo_id' => 'required|numeric',
+        'ciclo_id' => 'required_without:ciclo|numeric',
+        'ciclo' => 'required_without:ciclo_id|numeric',
         'centro_id' => 'numeric',
         'curso_id' => 'numeric',
         'turno' => 'string',

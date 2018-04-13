@@ -9,17 +9,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
-class MatriculasPorEstablecimiento extends Controller
+class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
-        // Reglas
+        // Reglas de validacion
         $validationRules = [
             'ciclo' => 'required|numeric',
             'ciudad' => 'string',
             'ciudad_id' => 'numeric',
             'centro_id' => 'numeric',
             'nivel_servicio' => 'string',
-            'anio' => 'string'
+            'anio' => 'string',
+            'division' => 'string'
         ];
 
         // Se validan los parametros
@@ -33,29 +34,43 @@ class MatriculasPorEstablecimiento extends Controller
         $ciudad = Input::get('ciudad');
         $ciudad_id = Input::get('ciudad_id');
         $centro_id = Input::get('centro_id');
-        $nivel_servicio = Input::get('nivel_servicio');
         $anio = Input::get('anio');
+        $division = Input::get('division');
+        $nivel_servicio = Input::get('nivel_servicio');
 
         $export = Input::get('export');
 
         // Generacion de query
         $query = Inscripcions::select([
             DB::raw('
-                inscripcions.centro_id,
-                ciudads.id as ciudad_id,
-                ciudads.nombre as ciudad,
-                centros.nombre,
-                centros.nivel_servicio,
-                
-                COUNT(inscripcions.id) as matriculas')
+            
+            inscripcions.centro_id,
+            cursos.id as curso_id,
+            ciudads.id as ciudad_id,
+
+            ciudads.nombre as ciudad,
+
+            centros.nombre,
+            centros.nivel_servicio,
+            
+            cursos.anio,
+            cursos.division,
+            cursos.turno,
+            cursos.plazas,
+            COUNT(inscripcions.id) as matriculas,
+            (
+              cursos.plazas - COUNT(inscripcions.id)
+            ) as vacantes
+            ')
         ])
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
+            ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
             ->join('ciudads','centros.ciudad_id','ciudads.id')
-            ->join('cursos','cursos.id','cursos_inscripcions.curso_id')
 
             ->where('inscripcions.estado_inscripcion','CONFIRMADA');
+
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -76,24 +91,41 @@ class MatriculasPorEstablecimiento extends Controller
         if(isset($anio)) {
             $query = $query->where('cursos.anio',$anio);
         }
+        if(isset($division)) {
+            $query = $query->where('cursos.division',$division);
+        }
+
         // Agrupamiento y ejecucion de query
-        $inscripciones = $query->groupBy(['inscripcions.centro_id','ciudads.nombre','centros.nivel_servicio'])->orderByDesc('matriculas')->get();
+        $inscripciones = $query->groupBy([
+            'inscripcions.centro_id',
+            'cursos.id',
+            'cursos.anio',
+            'cursos.division',
+            'cursos.turno',
+            'cursos.plazas'
+        ])->get();
 
         // Exportacion a Excel
         if(isset($export)) {
+
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de servicio', 'Matriculas'];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
             // Contenido
             foreach($inscripciones as $item) {
                 $content[] = [
                     $item->ciudad,
                     $item->nombre,
                     $item->nivel_servicio,
+                    $item->anio,
+                    $item->division,
+                    $item->turno,
+                    $item->plazas,
                     $item->matriculas,
+                    $item->vacantes
                 ];
             }
 
-            MatriculasExport::toExcel("Matriculas cuantitativa $ciclo","Por establecimiento",$content);
+            MatriculasExport::toExcel("Matriculas cuantitativa $ciclo","Matriculas",$content);
         }
 
         return $inscripciones;

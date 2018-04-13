@@ -24,7 +24,7 @@ class InscripcionEgreso extends Controller
             return ['error' => $validator->errors()];
         }
 
-        $this->user =  User::where('id',$request->get('user_id'))->first();
+        $user =  User::where('id',$request->get('user_id'))->first();
         $cursoInscripcion =  CursosInscripcions::whereIn('inscripcion_id',$request->get('id'))->get();
 
         $error = [];

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\Matriculas;
 
 use App\Http\Controllers\Controller;
-use App\Cursos;
+use App\Inscripcions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class MatriculasPorAnio extends Controller
 {
@@ -29,6 +28,7 @@ class MatriculasPorAnio extends Controller
             return ['error' => $validator->errors()];
         }
 
+        // Obtencion de parametros
         $ciclo = Input::get('ciclo');
         $ciudad = Input::get('ciudad');
         $ciudad_id = Input::get('ciudad_id');
@@ -38,59 +38,48 @@ class MatriculasPorAnio extends Controller
 
         $export = Input::get('export');
 
-        $filtros = [];
+        // Generacion de query
+        $query = Inscripcions::select([
+            DB::raw('
+                ciudads.nombre as ciudad,
+                centros.nivel_servicio,
+                cursos.anio,
+                COUNT(inscripcions.id) as matriculas
+                ')
+        ])
+            ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
+            ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
+            ->join('centros','inscripcions.centro_id','centros.id')
+            ->join('ciudads','centros.ciudad_id','ciudads.id')
+            ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
 
+            ->where('inscripcions.estado_inscripcion','CONFIRMADA');
+
+
+        // Aplicacion de filtros
         if(isset($ciclo)) {
-            $filtros[] = "ciclo.nombre = '$ciclo'";
+            $query = $query->where('ciclos.nombre',$ciclo);
         }
         if(isset($ciudad)) {
-            $filtros[] = "ciudad.nombre = '$ciudad'";
+            $query = $query->where('ciudads.nombre',$ciudad);
         }
         if(isset($ciudad_id)) {
-            $filtros[] = "ciudad.id = '$ciudad_id'";
+            $query = $query->where('ciudads.id',$ciudad_id);
         }
         if(isset($centro_id)) {
-            $filtros[] = "ins.centro_id = '$centro_id'";
+            $query = $query->where('inscripcions.centro_id',$centro_id);
         }
         if(isset($nivel_servicio)) {
-            $filtros[] = "centro.nivel_servicio= '$nivel_servicio'";
+            $query = $query->where('centros.nivel_servicio',$nivel_servicio);
         }
         if(isset($anio)) {
-            $filtros[] = "curso.anio= '$anio'";
+            $query = $query->where('cursos.anio',$anio);
         }
-        $filtros = join(' AND ',$filtros);
 
-        $inscripciones = DB::select(
-            DB::raw(
-                "
-            select 
+        // Agrupamiento y ejecucion de query
+        $inscripciones = $query->groupBy(['ciudads.nombre','cursos.anio','centros.nivel_servicio'])->get();
 
-                ciudad.nombre as ciudad,
-                centro.nivel_servicio,
-                curso.anio,
-                COUNT(ins.id) as matriculas
-                
-            FROM inscripcions ins
-                
-            inner join ciclos ciclo on ciclo.id = ins.ciclo_id
-            inner join centros centro on centro.id = ins.centro_id
-            inner join ciudads ciudad on ciudad.id = centro.ciudad_id
-            inner join cursos_inscripcions cui on cui.inscripcion_id = ins.id
-            inner join cursos curso on curso.id = cui.curso_id
-                
-            where
-                
-                (ins.estado_inscripcion = 'CONFIRMADA' or ins.estado_inscripcion = 'NO CONFIRMADA') AND
-                $filtros
-
-            group by 
-                
-                ciudad.nombre,
-                curso.anio,
-                centro.nivel_servicio
-            ")
-        );
-
+        // Exportacion a Excel
         if(isset($export)) {
             $content = [];
             $content[] = ['Ciudad', 'Nivel de servicio', 'Año', 'Matriculas'];

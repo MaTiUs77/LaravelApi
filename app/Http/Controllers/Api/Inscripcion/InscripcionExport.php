@@ -19,6 +19,11 @@ class InscripcionExport extends Controller
 
         $json = json_decode($data->getBody());
 
+        if(isset($json->error))
+        {
+            return response()->json($json);
+        } 
+
         if($json!=null)
         {
             $content = [];
