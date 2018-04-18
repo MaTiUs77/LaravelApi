@@ -13,4 +13,8 @@ class Personas extends Model
         return $this->hasOne('App\Ciudades', 'id', 'ciudad_id');
     }
 
+    function Alumnos()
+    {
+        return $this->hasMany('App\Alumnos', 'persona_id', 'id');
+    }
 }

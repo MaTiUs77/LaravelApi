@@ -121,6 +121,12 @@ class CursosInscripcions extends Model
     }
 
     // Filtros de PERSONA
+    function scopefiltrarPersona($query,$persona_id) {
+        $query->whereHas('Inscripcion.Alumno.Persona', function ($q) use($persona_id) {
+            return $q->where('id', $persona_id);
+        });
+    }
+
     function scopefiltrarPersonaCiudad($query,$ciudad) {
         $query->whereHas('Inscripcion.Alumno.Persona.Ciudad', function ($ciudades) use($ciudad) {
             return $ciudades->where('nombre', $ciudad);
