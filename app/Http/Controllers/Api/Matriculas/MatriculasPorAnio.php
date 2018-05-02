@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Matriculas;
 
+use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use Illuminate\Http\Request;
@@ -28,16 +29,6 @@ class MatriculasPorAnio extends Controller
             return ['error' => $validator->errors()];
         }
 
-        // Obtencion de parametros
-        $ciclo = Input::get('ciclo');
-        $ciudad = Input::get('ciudad');
-        $ciudad_id = Input::get('ciudad_id');
-        $centro_id = Input::get('centro_id');
-        $nivel_servicio = Input::get('nivel_servicio');
-        $anio = Input::get('anio');
-
-        $export = Input::get('export');
-
         // Generacion de query
         $query = Inscripcions::select([
             DB::raw('
@@ -55,6 +46,51 @@ class MatriculasPorAnio extends Controller
 
             ->where('inscripcions.estado_inscripcion','CONFIRMADA');
 
+        $query = $this->aplicarFiltros($query);
+
+        // Agrupamiento y ejecucion de query
+        $inscripciones = $query->groupBy([
+            'ciudads.nombre',
+            'cursos.anio',
+            'centros.nivel_servicio'
+        ])->get();
+
+        // Exportacion a Excel si es solicitado
+        $this->exportar($inscripciones);
+
+        return $inscripciones;
+    }
+
+    private function exportar($lista) {
+        $ciclo = Input::get('ciclo');
+        $anio = Input::get('anio');
+
+        // Exportacion a Excel
+        if(Input::get('export')) {
+            $content = [];
+            $content[] = ['Ciudad', 'Nivel de servicio', 'Año', 'Matriculas'];
+            // Contenido
+            foreach($lista as $item) {
+                $content[] = [
+                    $item->ciudad,
+                    $item->nivel_servicio,
+                    $item->anio,
+                    $item->matriculas,
+                ];
+            }
+
+            Export::toExcel("Matricula Cuantitativa Por Año - Ciclo $ciclo","Matriculas por Año",$content);
+        }
+    }
+
+    private function aplicarFiltros($query) {
+        // Obtencion de parametros
+        $ciclo = Input::get('ciclo');
+        $ciudad = Input::get('ciudad');
+        $ciudad_id = Input::get('ciudad_id');
+        $centro_id = Input::get('centro_id');
+        $nivel_servicio = Input::get('nivel_servicio');
+        $anio = Input::get('anio');
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -76,26 +112,6 @@ class MatriculasPorAnio extends Controller
             $query = $query->where('cursos.anio',$anio);
         }
 
-        // Agrupamiento y ejecucion de query
-        $inscripciones = $query->groupBy(['ciudads.nombre','cursos.anio','centros.nivel_servicio'])->get();
-
-        // Exportacion a Excel
-        if(isset($export)) {
-            $content = [];
-            $content[] = ['Ciudad', 'Nivel de servicio', 'Año', 'Matriculas'];
-            // Contenido
-            foreach($inscripciones as $item) {
-                $content[] = [
-                    $item->ciudad,
-                    $item->nivel_servicio,
-                    $item->anio,
-                    $item->matriculas,
-                ];
-            }
-
-            MatriculasExport::toExcel("Matriculas cuantitativa $ciclo","Por año $anio",$content);
-        }
-
-        return $inscripciones;
+        return $query;
     }
 }

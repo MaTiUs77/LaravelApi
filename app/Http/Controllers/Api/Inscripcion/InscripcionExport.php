@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api\Inscripcion;
 
+use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
 
 class InscripcionExport extends Controller
 {
@@ -13,7 +13,7 @@ class InscripcionExport extends Controller
     {
         $guzzle = new Client();
 
-        $data = $guzzle->get("http://".env('API_HOST_REMOTO')."/api/inscripcion/lista",[
+        $data = $guzzle->get(env('API_HOST_REMOTO')."/api/inscripcion/lista",[
             'query' => Input::all()
         ]);
 
@@ -46,17 +46,13 @@ class InscripcionExport extends Controller
                 ];
             }
 
-            Log::info("Exportar excel Total: $json->total",Input::all());
+            Log::debug("Exportar excel Total: $json->total",Input::all());
 
-            Excel::create('Inscripciones', function($excel) use($content) {
-                $excel->sheet('Lista', function($sheet) use($content) {
-                    $sheet->fromArray($content, null, 'A1', false, false);
-                });
-            })->export('xls');
+            Export::toExcel('Inscripciones','Lista',$content);
         } else {
 
             $error = 'No fue posible generar el archivo excel';
-            Log::warning("Exportacion a excel",$error);
+            Log::error("Exportacion a excel",$error);
             return compact('error');
         }
     }

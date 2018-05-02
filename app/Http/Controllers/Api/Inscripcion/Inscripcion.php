@@ -33,6 +33,8 @@ class Inscripcion extends Controller
         }
 
         $ciclo_id = Input::get('ciclo_id');
+        $ciclo = Input::get('ciclo');
+
         $centro_id = Input::get('centro_id');
         $curso_id = Input::get('curso_id');
         $turno = Input::get('turno');
@@ -49,6 +51,7 @@ class Inscripcion extends Controller
         if($centro_id) { $query->filtrarCentro($centro_id); }
         if($curso_id) { $query->where('curso_id',$curso_id); }
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
+        if($ciclo) { $query->filtrarCicloNombre($ciclo); }
         if($turno) { $query->filtrarTurno($turno); }
         if($anio) { $query->filtrarAnio($anio); }
         if($division) { $query->filtrarDivision($division); }

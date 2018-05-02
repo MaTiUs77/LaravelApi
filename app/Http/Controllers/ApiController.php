@@ -23,9 +23,10 @@ class ApiController extends Controller
         $version = app()::VERSION;
         $github = env('GITHUB');
         $api_tag = env('API_TAG');
+        $api_host_remoto = env('API_HOST_REMOTO');
         $server_time = Carbon::now();
 
-        return compact('motor','version','github','api_tag','server_time');
+        return compact('motor','version','github','api_tag','api_host_remoto','server_time');
     }
 
     public function login(Request $request) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Matriculas;
 
+use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use Illuminate\Http\Request;
@@ -28,17 +29,6 @@ class MatriculasPorSeccion extends Controller
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
         }
-
-        // Obtencion de parametros
-        $ciclo = Input::get('ciclo');
-        $ciudad = Input::get('ciudad');
-        $ciudad_id = Input::get('ciudad_id');
-        $centro_id = Input::get('centro_id');
-        $anio = Input::get('anio');
-        $division = Input::get('division');
-        $nivel_servicio = Input::get('nivel_servicio');
-
-        $export = Input::get('export');
 
         // Generacion de query
         $query = Inscripcions::select([
@@ -71,6 +61,58 @@ class MatriculasPorSeccion extends Controller
 
             ->where('inscripcions.estado_inscripcion','CONFIRMADA');
 
+        $query = $this->aplicarFiltros($query);
+
+        // Agrupamiento y ejecucion de query
+        $inscripciones = $query->groupBy([
+            'inscripcions.centro_id',
+            'cursos.id',
+            'cursos.anio',
+            'cursos.division',
+            'cursos.turno',
+            'cursos.plazas'
+        ])->get();
+
+        $this->exportar($inscripciones);
+
+        return $inscripciones;
+    }
+
+    private function exportar($lista) {
+        $ciclo = Input::get('ciclo');
+
+        // Exportacion a Excel
+        if(Input::get('export')) {
+            $content = [];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
+            // Contenido
+            foreach($lista as $item) {
+                $content[] = [
+                    $item->ciudad,
+                    $item->nombre,
+                    $item->nivel_servicio,
+                    $item->anio,
+                    $item->division,
+                    $item->turno,
+                    $item->plazas,
+                    $item->matriculas,
+                    $item->vacantes
+                ];
+            }
+
+            Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
+        }
+    }
+
+    private function aplicarFiltros($query) {
+        // Obtencion de parametros
+        $ciclo = Input::get('ciclo');
+        $ciudad = Input::get('ciudad');
+        $ciudad_id = Input::get('ciudad_id');
+        $centro_id = Input::get('centro_id');
+        $anio = Input::get('anio');
+        $division = Input::get('division');
+        $nivel_servicio = Input::get('nivel_servicio');
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -85,6 +127,9 @@ class MatriculasPorSeccion extends Controller
         if(isset($centro_id)) {
             $query = $query->where('inscripcions.centro_id',$centro_id);
         }
+        if(isset($curso_id)) {
+            $query = $query->where('cursos.id',$curso_id);
+        }
         if(isset($nivel_servicio)) {
             $query = $query->where('centros.nivel_servicio',$nivel_servicio);
         }
@@ -95,39 +140,6 @@ class MatriculasPorSeccion extends Controller
             $query = $query->where('cursos.division',$division);
         }
 
-        // Agrupamiento y ejecucion de query
-        $inscripciones = $query->groupBy([
-            'inscripcions.centro_id',
-            'cursos.id',
-            'cursos.anio',
-            'cursos.division',
-            'cursos.turno',
-            'cursos.plazas'
-        ])->get();
-
-        // Exportacion a Excel
-        if(isset($export)) {
-
-            $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
-            // Contenido
-            foreach($inscripciones as $item) {
-                $content[] = [
-                    $item->ciudad,
-                    $item->nombre,
-                    $item->nivel_servicio,
-                    $item->anio,
-                    $item->division,
-                    $item->turno,
-                    $item->plazas,
-                    $item->matriculas,
-                    $item->vacantes
-                ];
-            }
-
-            MatriculasExport::toExcel("Matriculas cuantitativa $ciclo","Matriculas",$content);
-        }
-
-        return $inscripciones;
+        return $query;
     }
 }
