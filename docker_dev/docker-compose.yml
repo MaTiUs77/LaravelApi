@@ -1,9 +1,9 @@
 version: "3"
 services:
-    api-web:
+    siep-api-web:
       restart: always
       image: nginx:alpine
-      container_name: laravel-api-web
+      container_name: siep-api-web
       working_dir: /application
       volumes:
           - ..:/application
@@ -11,21 +11,22 @@ services:
       ports:
        - "3000:80"
       depends_on:
-          - api-php-fpm
+          - siep-api-php
 
-    api-php-fpm:
+    siep-api-php:
       restart: always
       build: phpdocker/php-fpm
-      container_name: laravel-api-php
+      container_name: siep-api-php
       working_dir: /application
       volumes:
         - ..:/application
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
       environment:
-        - DB_HOST=192.168.1.77
-        - MEMCACHED_HOST=api-memcached
+        - DB_HOST=172.17.0.1
+        - MEMCACHED_HOST=siep-api-memcached
+        - API_HOST_REMOTO=http://172.17.0.1:3000
 
-    api-memcached:
+    siep-api-memcached:
       restart: always
       image: memcached:alpine
-      container_name: laravel-api-memc
+      container_name: siep-api-memcached
