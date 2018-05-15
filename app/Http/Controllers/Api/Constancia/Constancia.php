@@ -15,7 +15,7 @@ class Constancia extends Controller
         'inscripcion_id' => 'required|numeric'
     ];
 
-    public function generarPdf($inscripcion_id)
+    public function inscripcion($inscripcion_id)
     {
         $params = ['inscripcion_id'=>$inscripcion_id];
         $validator = Validator::make($params, $this->validationRules);
@@ -31,9 +31,30 @@ class Constancia extends Controller
         } else {
 
             $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                ->loadView('constancia',array('cursoInscripcions'=>$cursoInscripcions));
+                ->loadView('constancia_inscripcion',array('cursoInscripcions'=>$cursoInscripcions));
 
-            return $pdf->stream("constancia_$inscripcion_id.pdf");
+            return $pdf->stream("constancia_inscripcion_$inscripcion_id.pdf");
+        }
+    }
+
+    public function regular($inscripcion_id)
+    {
+        $params = ['inscripcion_id'=>$inscripcion_id];
+        $validator = Validator::make($params, $this->validationRules);
+        if ($validator->fails()) {
+            return ['error' => $validator->errors()];
+        }
+
+        $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)->first();
+
+        if(!$cursoInscripcions)
+        {
+            return ['error'=>'No se encontro una inscripcion con esa ID'];
+        } else {
+            $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                ->loadView('constancia_regular',array('cursoInscripcions'=>$cursoInscripcions));
+
+            return $pdf->stream("constancia_regular_$inscripcion_id.pdf");
         }
     }
 }
