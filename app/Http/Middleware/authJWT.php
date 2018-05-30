@@ -22,7 +22,7 @@ class authJWT
         $guzzle = new Client();
         try {
 
-            $resp = $guzzle->get(env('API_AUTH_HOST')."/auth/me",[
+            $resp = $guzzle->get(env('API_AUTH_HOST')."/me",[
                 'query' => Input::all()
             ]);
 
