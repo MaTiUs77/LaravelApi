@@ -40,17 +40,22 @@ class MatriculasPorSeccion extends Controller
 
             ciudads.nombre as ciudad,
 
+            centros.cue,
             centros.nombre,
             centros.nivel_servicio,
+            centros.sector,
             
             cursos.anio,
             cursos.division,
             cursos.turno,
+            cursos.tipo,
+            
             cursos.plazas,
             COUNT(inscripcions.id) as matriculas,
             (
               cursos.plazas - COUNT(inscripcions.id)
-            ) as vacantes
+            ) as vacantes,
+            COUNT(personas.sexo) as varones
             ')
         ])
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
@@ -59,26 +64,37 @@ class MatriculasPorSeccion extends Controller
             ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
             ->join('ciudads','centros.ciudad_id','ciudads.id')
 
+            ->leftJoin('alumnos','inscripcions.alumno_id','alumnos.id')
+            ->leftJoin('personas', function ($join) {
+                $join->on('alumnos.persona_id', '=', 'personas.id')
+                    ->where('personas.sexo', '=', 'MASCULINO');
+            })
+
+
             ->where('inscripcions.estado_inscripcion','CONFIRMADA');
 
         $query = $this->aplicarFiltros($query);
 
         // Agrupamiento y ejecucion de query
-        $inscripciones = $query->groupBy([
+        $query = $query->groupBy([
             'inscripcions.centro_id',
             'cursos.id',
             'cursos.anio',
             'cursos.division',
             'cursos.turno',
             'cursos.plazas'
-        ])->get();
+        ]);
 
-        $this->exportar($inscripciones);
 
-        return $inscripciones;
+        $por_pagina = Input::get('por_pagina');
+        $result = $query->customPagination($por_pagina);
+
+        $this->exportar($result);
+
+        return $result;
     }
 
-    private function exportar($lista) {
+    private function exportar($paginationResult) {
         $ciclo = Input::get('ciclo');
 
         // Exportacion a Excel
@@ -86,7 +102,8 @@ class MatriculasPorSeccion extends Controller
             $content = [];
             $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
             // Contenido
-            foreach($lista as $item) {
+
+            foreach($paginationResult as $item) {
                 $content[] = [
                     $item->ciudad,
                     $item->nombre,
@@ -96,7 +113,8 @@ class MatriculasPorSeccion extends Controller
                     $item->turno,
                     $item->plazas,
                     $item->matriculas,
-                    $item->vacantes
+                    $item->vacantes,
+                    $item->varones
                 ];
             }
 

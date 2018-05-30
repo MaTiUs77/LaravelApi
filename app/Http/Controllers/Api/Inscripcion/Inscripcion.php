@@ -3,19 +3,20 @@ namespace App\Http\Controllers\Api\Inscripcion;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
+
 class Inscripcion extends Controller
 {
     public $validationRules = [
-        'ciclo_id' => 'required_without:ciclo|numeric',
-        'ciclo' => 'required_without:ciclo_id|numeric',
+        'ciclo_id' => 'required_without_all:ciclo,alumno_id|numeric',
+        'ciclo' => 'required_without_all:ciclo_id,alumno_id|numeric',
+        'alumno_id' => 'required_without_all:ciclo,ciclo_id|numeric',
         'centro_id' => 'numeric',
+        'ciudad' => 'string',
+        'nivel_servicio' => 'string',
         'curso_id' => 'numeric',
         'turno' => 'string',
         'anio' => 'string',
@@ -35,7 +36,12 @@ class Inscripcion extends Controller
         $ciclo_id = Input::get('ciclo_id');
         $ciclo = Input::get('ciclo');
 
+        $alumno_id= Input::get('alumno_id');
+
         $centro_id = Input::get('centro_id');
+        $ciudad = Input::get('ciudad');
+        $nivel_servicio = Input::get('nivel_servicio');
+
         $curso_id = Input::get('curso_id');
         $turno = Input::get('turno');
         $anio = Input::get('anio');
@@ -48,8 +54,13 @@ class Inscripcion extends Controller
 
         $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
 
+        if($alumno_id) { $query->filtrarAlumnoId($alumno_id); }
+
         if($centro_id) { $query->filtrarCentro($centro_id); }
-        if($curso_id) { $query->where('curso_id',$curso_id); }
+        if($ciudad) { $query->filtrarCiudad($ciudad); }
+        if($nivel_servicio) { $query->filtrarNivelServicio($nivel_servicio); }
+
+        if($curso_id) { $query->filtrarCurso($curso_id); }
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
         if($ciclo) { $query->filtrarCicloNombre($ciclo); }
         if($turno) { $query->filtrarTurno($turno); }
@@ -77,26 +88,6 @@ class Inscripcion extends Controller
             }
         }
 
-        if($por_pagina=='all') {
-            $countQuery= $query->count();
-            $result = $query->paginate($countQuery);
-        } else {
-            if(!is_numeric($por_pagina)) {
-                $por_pagina = 10;
-            }
-            $result = $query->paginate($por_pagina);
-        }
-
-        if(!$result)
-        {
-            return ['error'=>'No se encontraron resultados'];
-        } else {
-            if($result instanceof LengthAwarePaginator) {
-                return $result->appends(Input::all());
-            } else {
-                $data = $result;
-                return compact('data');
-            }
-        }
+        return $query->customPagination($por_pagina);
     }
 }

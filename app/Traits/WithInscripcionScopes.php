@@ -35,8 +35,19 @@ trait WithInscripcionScopes {
             return $q->where('legajo_nro', $filtro);
         });
     }
+    function scopeFiltrarInscripcion($query,$filtro) {
+        $query->whereHas('Inscripcion', function ($q) use($filtro) {
+            return $q->where('id', $filtro);
+        });
+    }
 
     // Filtros de CENTRO
+    function scopeFiltrarCiudad($query,$ciudad)
+    {
+        $query->whereHas('Inscripcion.Centro.Ciudad', function ($q) use($ciudad) {
+            return $q->where('nombre', $ciudad);
+        });
+    }
     function scopeFiltrarCentro($query,$centro_id)
     {
         $query->whereHas('Inscripcion.Centro', function ($centros) use($centro_id) {
@@ -76,10 +87,23 @@ trait WithInscripcionScopes {
         });
     }
 
+    // Filtros de ALUMNO
+    function scopeFiltrarAlumnoId($query,$alumno_id) {
+        $query->whereHas('Inscripcion.Alumno.Persona', function ($q) use($alumno_id) {
+            return $q->where('id', $alumno_id);
+        });
+    }
+
     // Filtros de PERSONA
     function scopeFiltrarPersona($query,$persona_id) {
         $query->whereHas('Inscripcion.Alumno.Persona', function ($q) use($persona_id) {
             return $q->where('id', $persona_id);
+        });
+    }
+    function scopeFiltrarPersonaFullname($query,$personas) {
+        $query->whereHas('Inscripcion.Alumno.Persona', function ($q) use($personas) {
+            return $q->where('nombres','like', "%$personas%")
+                ->orWhere('apellidos','like',"%$personas%");
         });
     }
     function scopeFiltrarPersonaCiudad($query,$ciudad) {

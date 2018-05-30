@@ -70,26 +70,57 @@ class InscripcionFind extends Controller
         }
     }
 
+    public function byPersonaFullname()
+    {
+        $fullname = Input::get('fullname');
+        $validationRules = [
+            'fullname' => 'string',
+            'ver' => 'string'
+        ];
+
+        $params = Input::all();
+        $params['fullname'] = $fullname;
+
+        $validator = Validator::make($params, $validationRules);
+
+        if ($validator->fails()) {
+            return ['error' => $validator->errors()];
+        }
+
+        $cursoInscripcions = CursosInscripcions::filtrarPersonaFullname($fullname)->get();
+
+        if($cursoInscripcions==null || count($cursoInscripcions)<=0)
+        {
+            return ['error'=>'No se encontro una inscripcion con esa ID'];
+        } else {
+
+            switch(Input::get('ver'))
+            {
+                case 'primera':
+                    return $cursoInscripcions->sortBy('inscripcion_id')->first();
+                    break;
+                case 'ultima':
+                    return $cursoInscripcions->sortByDesc('inscripcion_id')->first();
+                    break;
+                default:
+                    return $cursoInscripcions;
+                    break;
+            }
+        }
+    }
+
     public function byLegajo($legajo_nro)
     {
         list($dni,$anio) = explode('-',$legajo_nro);
         if(is_numeric($dni) && is_numeric($anio))
         {
-            $inscripcion = Inscripcions::where('legajo_nro',$legajo_nro)->first();
+            $cursoInscripcions = CursosInscripcions::filtrarLegajo($legajo_nro)->first();
 
-            // Verifica si existe ese legajo en las inscripciones
-            if($inscripcion!=null) {
-                $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion->id)
-                    ->first();
-
-                if($cursoInscripcions==null)
-                {
-                    return ['error'=>'No se encontro una inscripcion con ese legajo'];
-                } else {
-                    return $cursoInscripcions;
-                }
+            if($cursoInscripcions==null)
+            {
+                return ['error'=>'No se encontro una inscripcion con ese legajo'];
             } else {
-                return ['error'=>'No se encontro una inscripcion con ese numero de legajo'];
+                return $cursoInscripcions;
             }
         } else
         {

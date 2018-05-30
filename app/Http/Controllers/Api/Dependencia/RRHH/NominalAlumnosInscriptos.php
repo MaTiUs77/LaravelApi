@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Input;
 
 class NominalAlumnosInscriptos extends Controller
 {
+    public function __construct()
+    {
+        //$this->middleware('jwt');
+    }
+
     public function start()
     {
         // Consume API lista de inscripciones
@@ -37,6 +42,7 @@ class NominalAlumnosInscriptos extends Controller
                     'dni' => $persona['documento_nro'],
                     'nombres' => $persona['nombres'],
                     'apellidos' => $persona['apellidos'],
+                    'nombre_completo' => $persona['nombre_completo'],
                     'ciclo' => $ciclo['nombre'],
                     'centro' => $centro['nombre'],
                     'nivel_servicio' => $centro['nivel_servicio'],

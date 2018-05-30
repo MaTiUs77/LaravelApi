@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Inscripcions extends Model
 {
+    use CustomPaginationScope;
+
     protected $table = 'inscripcions';
     public $timestamps = false;
 
