@@ -19,14 +19,19 @@ class ApiController extends Controller
 
     public function home()
     {
-        $motor = 'laravel';
-        $version = app()::VERSION;
-        $github = env('GITHUB');
-        $api_tag = env('API_TAG');
-        $api_host_remoto = env('API_HOST_REMOTO');
+        $service= 'laravelapi';
+        $status= 'online';
+
+        $motor= "Laravel ".app()->version();
+        $api_gateway = env('API_GATEWAY');
         $server_time = Carbon::now();
 
-        return compact('motor','version','github','api_tag','api_host_remoto','server_time');
+        $github = [
+            'url' => env('GITHUB'),
+            'tag' => env('TAG')
+        ];
+
+        return compact('service','status','motor','api_gateway','github','server_time');
     }
 
     public function login(Request $request) {
