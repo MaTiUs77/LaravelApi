@@ -26,9 +26,13 @@ class ApiController extends Controller
         $api_gateway = env('API_GATEWAY');
         $server_time = Carbon::now();
 
+        $tag = shell_exec('git describe --always --tags');
+        $path = shell_exec('git remote -v');
+        $path = explode(' ',preg_replace('/origin|\t/','',$path))[0];
+
         $github = [
-            'url' => env('GITHUB'),
-            'tag' => env('TAG')
+            'url' => $path,
+            'tag' => trim(preg_replace('/\s\s+/', ' ', $tag))
         ];
 
         return compact('service','status','motor','api_gateway','github','server_time');
