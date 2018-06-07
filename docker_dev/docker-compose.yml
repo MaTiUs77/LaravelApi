@@ -12,6 +12,8 @@ services:
        - "3000:80"
       depends_on:
           - siep-api-php
+      networks:
+        - siep-lan
 
     siep-api-php:
       restart: always
@@ -23,10 +25,23 @@ services:
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
       environment:
         - DB_HOST=172.17.0.1
+        - DB_DATABASE=siep
+        - DB_USERNAME=siep
+        - DB_PASSWORD=siep
+        - CACHE_DRIVER=file
         - MEMCACHED_HOST=siep-api-memcached
         - API_HOST_REMOTO=http://172.17.0.1:3000
+        - API_AUTH_HOST=http://siep-auth-web
+      networks:
+        - siep-lan
 
     siep-api-memcached:
       restart: always
       image: memcached:alpine
       container_name: siep-api-memcached
+      networks:
+        - siep-lan
+
+networks:
+  siep-lan:
+    driver: bridge
