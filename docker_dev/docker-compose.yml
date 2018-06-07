@@ -30,7 +30,7 @@ services:
         - DB_PASSWORD=siep
         - CACHE_DRIVER=file
         - MEMCACHED_HOST=siep-api-memcached
-        - API_HOST_REMOTO=http://172.17.0.1:3000
+        - API_HOST_REMOTO=http://siep-api-web
         - API_AUTH_HOST=http://siep-auth-web
       networks:
         - siep-lan
