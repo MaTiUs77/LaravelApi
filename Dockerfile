@@ -16,7 +16,7 @@ WORKDIR /var/www/html
 COPY . /var/www/html/
 
 RUN chmod 777 /var/www/html/storage -R
-RUN composer install
+RUN composer install --ignore-platform-reqs
 
 EXPOSE 80 443
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
