@@ -61,7 +61,7 @@
             </p>
             @endif
             <p>
-                A pedido del/a interesado/a y al solo efecto de ser presentada ante las autoridades educativas que correspondan
+		A pedido del/a interesado/a y al solo efecto de ser presentada ante quien corresponda 
                 se extiende la presente, sin enmiendas ni raspaduras en la ciudad de <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b>, Provincia de Tierra del Fuego,
                 el <b>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</b>.
             </p>
