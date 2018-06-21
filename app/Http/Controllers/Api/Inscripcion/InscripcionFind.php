@@ -54,33 +54,28 @@ class InscripcionFind extends Controller
         {
             return ['error'=>'No se encontro una inscripcion con esa ID'];
         } else {
-            /*
-             * Este fix permite ordenar los resultados por legajo_nro
-             * Eso es debido a que al ordenar un collection con $collection->sortBy()
-             * por algun motivo se pierde la relacion con los eager loaders
-             *
-             * Hay que informar este bug en los issue de laravel
-             */
-            $byLegajos = $cursoInscripcions->mapWithKeys(function ($item,$index) {
-                $obj = [
-                    'legajo_nro' => $item->inscripcion->legajo_nro,
-                    'index' => $index
-                ];
-                return [$item->inscripcion->legajo_nro => $obj];
-            });
-            $ordered = $byLegajos->sortBy('legajo_nro');
-            //// FIN DEL FIX ////
+            $eagers = [
+                'curso',
+                'inscripcion.ciclo',
+                'inscripcion.centro.ciudad',
+                'inscripcion.alumno.persona.ciudad'
+            ];
 
             switch(Input::get('ver'))
             {
                 case 'primera':
-                    $index = $ordered->first()['index'];
-                    return $cursoInscripcions->get($index);
+                    // Luego de usar sortBy || sortByDesc es necesario recargar los eager loaders
+                    $sorted = $cursoInscripcions->sortBy('inscripcion.legajo_nro')->first();
+                    $sorted->load($eagers);
+                    return $sorted;
                     break;
                 case 'ultima':
                     //return $cursoInscripcions->sortByDesc('inscripcion.legajo_nro')->first(); <--- BUG, pierde la relacion de los eager loaders
-                    $index = $ordered->last()['index'];
-                    return $cursoInscripcions->get($index);
+
+                    // Luego de usar sortBy || sortByDesc es necesario recargar los eager loaders
+                    $sorted = $cursoInscripcions->sortByDesc('inscripcion.legajo_nro')->first();
+                    $sorted->load($eagers);
+                    return $sorted;
                     break;
                 default:
                     return $cursoInscripcions;
