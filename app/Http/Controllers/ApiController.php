@@ -19,6 +19,20 @@ class ApiController extends Controller
 
     public function home()
     {
+	try {
+		$git = json_decode(file_get_contents('http://localhost/master.json'));
+
+		$github = [
+			'commit' => substr($git->sha,0,7),
+			'sha' => $git->sha,
+			'message' => $git->commit->message
+		];
+
+	} catch(\Exception $ex) 
+	{
+		$github = ['error'=>'Error al descargar master.json'];
+	}
+
         $service= 'laravelapi';
         $status= 'online';
 
@@ -29,11 +43,6 @@ class ApiController extends Controller
         $tag = shell_exec('git describe --always --tags');
         $path = shell_exec('git remote -v');
         $path = explode(' ',preg_replace('/origin|\t/','',$path))[0];
-
-        $github = [
-            'url' => $path,
-            'tag' => trim(preg_replace('/\s\s+/', ' ', $tag))
-        ];
 
         return compact('service','status','motor','api_gateway','github','server_time');
     }
