@@ -16,7 +16,7 @@ class NominalAlumnosInscriptos extends Controller
     {
         // Consume API lista de inscripciones
         $guzzle = new Client();
-        $consumeApi = $guzzle->get(env('API_HOST_REMOTO')."/api/inscripcion/lista",[
+        $consumeApi = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
             'query' => Input::all()
         ]);
 

@@ -13,7 +13,7 @@ class InscripcionExport extends Controller
     {
         $guzzle = new Client();
 
-        $data = $guzzle->get(env('API_HOST_REMOTO')."/api/inscripcion/lista",[
+        $data = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
             'query' => Input::all()
         ]);
 

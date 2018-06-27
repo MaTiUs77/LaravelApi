@@ -22,7 +22,7 @@ class authJWT
         $guzzle = new Client();
         try {
 
-            $resp = $guzzle->get(env('API_AUTH_HOST')."/me",[
+            $resp = $guzzle->get(env('SIEP_AUTH_API')."/me",[
                 'query' => Input::all()
             ]);
 
