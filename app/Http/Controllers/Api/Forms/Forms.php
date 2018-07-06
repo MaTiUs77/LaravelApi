@@ -7,6 +7,7 @@ use App\Ciudades;
 use App\Cursos;
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
+use App\Inscripcions;
 
 class Forms extends Controller
 {
@@ -47,5 +48,9 @@ class Forms extends Controller
     public function tipos()
     {
         return Cursos::select('tipo')->groupBy('tipo')->get();
+    }
+    public function estado_inscripcion()
+    {
+        return Inscripcions::select('estado_inscripcion')->groupBy('estado_inscripcion')->get();
     }
 }
