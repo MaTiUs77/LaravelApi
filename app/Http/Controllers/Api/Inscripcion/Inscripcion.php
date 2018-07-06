@@ -38,6 +38,8 @@ class Inscripcion extends Controller
 
         $alumno_id= Input::get('alumno_id');
 
+        $sector= Input::get('sector');
+
         $centro_id = Input::get('centro_id');
         $ciudad = Input::get('ciudad');
         $nivel_servicio = Input::get('nivel_servicio');
@@ -55,6 +57,7 @@ class Inscripcion extends Controller
         $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
 
         if($alumno_id) { $query->filtrarAlumnoId($alumno_id); }
+        if($sector) { $query->filtrarSector($sector); }
 
         if($centro_id) { $query->filtrarCentro($centro_id); }
         if($ciudad) { $query->filtrarCiudad($ciudad); }
