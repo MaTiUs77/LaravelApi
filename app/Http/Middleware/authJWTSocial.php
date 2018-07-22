@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Input;
 
-class authJWT
+class authJWTSocial
 {
     public function handle($request, Closure $next)
     {
@@ -23,7 +23,7 @@ class authJWT
         try {
             $basicauth = new Client(['base_uri' => env('SIEP_AUTH_API')]);
             $token = Input::get('token');
-            $authResponse = $basicauth->request('GET','/me', [
+            $authResponse = $basicauth->request('GET','/social/me', [
                 'headers' => [
                     'Authorization' => "Bearer {$token}"
                 ]
