@@ -4,17 +4,25 @@ namespace App\Http\Controllers\Api\Personas;
 
 use App\Ciudades;
 use App\Http\Controllers\Controller;
-use App\Pases;
 use App\Personas;
 use App\UserSocial;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
 class PersonasCrud extends Controller
 {
-    public function __construct()
+    public function __construct(Request $req)
     {
-        $this->middleware('jwt.social');
+        $this->middleware('jwt.social',['except'=>['index']]);
+
+    }
+
+    public function index()
+    {
+        $authApi = env('SIEP_AUTH_API');
+        $laravelApi = env('SIEP_LARAVEL_API');
+        return compact('authApi','laravelApi');
     }
 
     // Create
