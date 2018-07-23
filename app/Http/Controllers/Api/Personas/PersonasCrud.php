@@ -14,15 +14,7 @@ class PersonasCrud extends Controller
 {
     public function __construct(Request $req)
     {
-        $this->middleware('jwt.social',['except'=>['index']]);
-
-    }
-
-    public function index()
-    {
-        $authApi = env('SIEP_AUTH_API');
-        $laravelApi = env('SIEP_LARAVEL_API');
-        return compact('authApi','laravelApi');
+        $this->middleware('jwt.social');
     }
 
     // Create
@@ -37,10 +29,15 @@ class PersonasCrud extends Controller
             'documento_nro' => 'required|numeric',
             'fecha_nac' => 'required|date',
             'email' => 'required|email',
-            'telefono_nro' => 'required|numeric',
-            'direccion' => 'required|string',
             'ciudad' => 'required|string',
-            'observaciones' => 'string'
+            'telefono_nro' => 'required|numeric',
+            'calle_nombre' => 'required|string',
+            'calle_nro' => 'required|numeric',
+            'depto_casa' => 'string',
+            'tira_edificio' => 'string',
+            'observaciones' => 'string',
+            'familiar' => 'numeric',
+            'alumno' => 'numeric'
         ];
 
         // Se validan los parametros
@@ -69,12 +66,22 @@ class PersonasCrud extends Controller
             $persona->fecha_nac = Input::get('fecha_nac');
             $persona->email = Input::get('email');
             $persona->telefono_nro = Input::get('telefono_nro');
-            $persona->calle_nombre= Input::get('direccion');
+            $persona->calle_nombre= Input::get('calle_nombre');
+            $persona->calle_nro= Input::get('calle_nro');
+            $persona->depto_casa= Input::get('depto_casa');
+            $persona->tira_edificio= Input::get('tira_edificio');
             $persona->ciudad_id= $ciudad->id;
             $persona->observaciones= Input::get('observaciones');
 
-            // Por defecto el modo de la persona es familiar
-            $persona->familiar = 1;
+            if(Input::get('familiar'))
+            {
+                $persona->familiar = 1;
+            }
+
+            if(Input::get('alumno'))
+            {
+                $persona->alumno = 1;
+            }
 
             // Campos sin default value en la db
             $persona->pcia_nac='';

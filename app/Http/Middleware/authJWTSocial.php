@@ -44,6 +44,11 @@ class authJWTSocial
             $resp = $ex->getResponse();
             $jsonBody = json_decode($resp->getBody(), true);
             return response()->json($jsonBody);
+        } catch (\Exception $ex) {
+            $resp = $ex->getMessage();
+            return response()->json([
+                'error'=>$resp
+            ]);
         }
 
         return $next($request);
