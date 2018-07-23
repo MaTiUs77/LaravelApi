@@ -14,7 +14,49 @@ class PersonasCrud extends Controller
 {
     public function __construct(Request $req)
     {
-        $this->middleware('jwt.social');
+        $this->middleware('jwt.social',['except'=>['index']]);
+    }
+
+    public function index(Request $req)
+    {
+        $validationRules = [
+            'nombres' => 'string',
+            'documento_nro' => 'numeric',
+            'familiar' => 'numeric',
+            'alumno' => 'numeric',
+        ];
+
+        // Se validan los parametros
+        $validator = Validator::make(Input::all(), $validationRules);
+        if ($validator->fails()) {
+            return ['error' => $validator->errors()];
+        }
+        $documento_nro = Input::get('documento_nro');
+        $nombres = Input::get('nombres');
+        $alumno= Input::get('alumno');
+        $familiar= Input::get('familiar');
+
+        if($documento_nro) {
+            $persona = Personas::where('documento_nro',$documento_nro);
+        }
+
+        if($nombres) {
+            $persona = Personas::where('nombres','like', "%$nombres%")
+                ->orWhere('apellidos','like',"%$nombres%");
+        }
+
+        // Filtros
+        if($alumno){
+            $persona->where('alumno',1);
+        }
+        if($familiar){
+            $persona->where('familiar',1);
+        }
+
+        // Por defecto devuelve 10 resultados de la busqueda...
+        $persona = $persona->take(10)->get();
+
+        return compact('persona');
     }
 
     // Create
@@ -91,18 +133,29 @@ class PersonasCrud extends Controller
             unset($persona['0']);
 
             $persona->save();
+        }
 
-            // Update UserSocial persona_id
-            $jwt_user = (object) request()->get('jwt_user');
-            if($jwt_user->id)
-            {
-                $socialUser = UserSocial::where('id',$jwt_user->id)->first();
-                $socialUser->persona_id = $persona->id;
-                $socialUser->save();
-            }
+        // La persona deberia existir en este punto
+        // si es familiar, y no es un alumno, se relaciona con el UserSocial (tutor)
+        if( $persona != null   &&
+            $persona->familiar &&
+            !$persona->alumno)
+        {
+            $this->updatePersonaIdFromUserSocial($persona->id);
         }
 
         return compact('persona');
+    }
+
+    private function updatePersonaIdFromUserSocial($persona_id) {
+        // la variable jwt_user es enviada por el middleware, luego de verificar el token
+        $jwt_user = (object) request()->get('jwt_user');
+        if($jwt_user->id)
+        {
+            $socialUser = UserSocial::where('id',$jwt_user->id)->first();
+            $socialUser->persona_id = $persona_id;
+            $socialUser->save();
+        }
     }
 
     // Edit
