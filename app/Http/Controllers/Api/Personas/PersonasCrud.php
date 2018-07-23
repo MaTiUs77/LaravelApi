@@ -6,7 +6,7 @@ use App\Ciudades;
 use App\Http\Controllers\Controller;
 use App\Pases;
 use App\Personas;
-use Illuminate\Http\Request;
+use App\UserSocial;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,29 +17,7 @@ class PersonasCrud extends Controller
         $this->middleware('jwt.social');
     }
 
-    // Index
-    public function index(Request $req)
-    {
-        return 'index';
-    }
-
-    // Show
-    public function show($id)
-    {
-        // Relacion de modelo
-        $with = ['Ciudad'];
-
-        if(Input::get('with')) {
-            $appendWith = explode(',',Input::get('with'));
-            $with = collect($with)->merge($appendWith)->unique()->toArray();
-        }
-
-        $query = Personas::with($with)->where('id',$id)->first();
-
-        return $query;
-    }
-
-    // Add
+    // Create
     public function store()
     {
         $validationRules = [
@@ -63,18 +41,21 @@ class PersonasCrud extends Controller
             return ['error' => $validator->errors()];
         }
 
-        // Verificar existencia
-        $persona = Personas::where('email',Input::get('email'))->first();
         $ciudad = Ciudades::where('nombre',Input::get('ciudad'))->first();
+
+        // Verificar existencia de la persona, segun EMAIL o DNI
+        $persona = Personas::where('email',Input::get('email'))
+            ->orWhere('documento_nro',Input::get('documento_nro'))
+            ->first();
 
         if(!$ciudad) { return ['error'=>'La ciudad es invalida']; }
 
         // Si no existe la persona... se crea!
         if(!$persona) {
             $persona = new Personas();
-            $persona->apellidos = Input::get('apellidos');
-            $persona->nombres= Input::get('nombres');
-            $persona->sexo = Input::get('sexo');
+            $persona->apellidos = strtoupper(Input::get('apellidos'));
+            $persona->nombres= strtoupper(Input::get('nombres'));
+            $persona->sexo = strtoupper(Input::get('sexo'));
             $persona->documento_tipo = Input::get('documento_tipo');
             $persona->documento_nro = Input::get('documento_nro');
             $persona->fecha_nac = Input::get('fecha_nac');
@@ -87,14 +68,23 @@ class PersonasCrud extends Controller
             // Por defecto el modo de la persona es familiar
             $persona->familiar = 1;
 
-            // Sin default value
+            // Campos sin default value en la db
             $persona->pcia_nac='';
             $persona->nacionalidad='';
 
-            // Elimina el atributo $append del modelo
+            // Elimina el atributo $append del modelo persona
             unset($persona['0']);
 
             $persona->save();
+
+            // Update UserSocial persona_id
+            $jwt_user = (object) request()->get('jwt_user');
+            if($jwt_user->id)
+            {
+                $socialUser = UserSocial::where('id',$jwt_user->id)->first();
+                $socialUser->persona_id = $persona->id;
+                $socialUser->save();
+            }
         }
 
         return compact('persona');
@@ -117,31 +107,6 @@ class PersonasCrud extends Controller
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
-        }
-    }
-
-    // Delete
-    public function destroy($id)
-    {
-        $validationRules = [
-            'id' => 'required|numeric'
-        ];
-
-        // Se validan los parametros
-        $validator = Validator::make(['id'=>$id], $validationRules);
-        if ($validator->fails()) {
-            return ['error' => $validator->errors()];
-        }
-
-        $query = Pases::find($id);
-
-        if($query!=null)
-        {
-            $query->delete();
-
-            return ['success'=>'Pase eliminado con exito'];
-        }  else {
-            return ['error'=>'El ID del pase no existe'];
         }
     }
 }
