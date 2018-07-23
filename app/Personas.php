@@ -8,6 +8,12 @@ class Personas extends Model
 {
     protected $table = 'personas';
 
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'modified';
+
+    protected $fillable = [
+    ];
+
     // Nombre completo dinamico
     protected $attributes = ['nombre_completo'];
     protected $appends = ['nombre_completo'];

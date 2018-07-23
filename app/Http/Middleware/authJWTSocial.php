@@ -11,7 +11,15 @@ class authJWTSocial
 {
     public function handle($request, Closure $next)
     {
-        if (!$request->has('token')) {
+        // Verifica token en los parametros
+        $token = $request->get('token');
+        if (!$token) {
+            // Si no esta definido, busca token en Bearer de Authentication
+            $token = $request->bearerToken();
+        }
+
+        // Si el token sigue indefinido.. se encuentra missing
+        if (!$token) {
             $code = 401;
             return response([
                 'code' => $code,
@@ -19,10 +27,8 @@ class authJWTSocial
             ], $code);
         }
 
-
         try {
             $basicauth = new Client(['base_uri' => env('SIEP_AUTH_API')]);
-            $token = Input::get('token');
             $authResponse = $basicauth->request('GET','/social/me', [
                 'headers' => [
                     'Authorization' => "Bearer {$token}"
