@@ -63,7 +63,7 @@ class PersonasCrud extends Controller
     public function store()
     {
         $validationRules = [
-            'vinculo' => 'required|string',
+            //'vinculo' => 'required|string',
             'apellidos' => 'required|string',
             'nombres' => 'required|string',
             'sexo' => 'required|string',
@@ -82,6 +82,12 @@ class PersonasCrud extends Controller
             'alumno' => 'numeric'
         ];
 
+        if(Input::get('alumno'))
+        {
+            // El email no es requerido para un alumno
+            $validationRules['email'] = 'email';
+        }
+
         // Se validan los parametros
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
@@ -90,10 +96,8 @@ class PersonasCrud extends Controller
 
         $ciudad = Ciudades::where('nombre',Input::get('ciudad'))->first();
 
-        // Verificar existencia de la persona, segun EMAIL o DNI
-        $persona = Personas::where('email',Input::get('email'))
-            ->orWhere('documento_nro',Input::get('documento_nro'))
-            ->first();
+        // Verificar existencia de la persona, segun DNI
+        $persona = Personas::where('documento_nro',Input::get('documento_nro'))->first();
 
         if(!$ciudad) { return ['error'=>'La ciudad es invalida']; }
 
