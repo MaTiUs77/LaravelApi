@@ -21,6 +21,7 @@ class Forms extends Controller
         $centro = Centros::select($campo);
 
         $nivel_servicio = Input::get('nivel_servicio');
+        $ciudad = Input::get('ciudad');
         $ciudad_id = Input::get('ciudad_id');
         $sector = Input::get('sector');
 
@@ -30,6 +31,11 @@ class Forms extends Controller
 
         if($ciudad_id) {
             $centro->where('ciudad_id',$ciudad_id);
+        }
+
+        if($ciudad) {
+            $ciudad = Ciudades::where('nombre',$ciudad)->first();
+            $centro->where('ciudad_id',$ciudad->id);
         }
 
         if($sector) {
