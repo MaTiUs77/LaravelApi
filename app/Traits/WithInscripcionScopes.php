@@ -111,4 +111,9 @@ trait WithInscripcionScopes {
             return $ciudades->where('nombre', $ciudad);
         });
     }
+    function scopeFiltrarPersonaDocumentoNro($query,$documento_nro) {
+        $query->whereHas('Inscripcion.Alumno.Persona', function ($persona) use($documento_nro) {
+            return $persona->where('documento_nro', $documento_nro);
+        });
+    }
 }
