@@ -9,7 +9,7 @@ Route::prefix('matriculas')->group(function () {
         Route::get('por_establecimiento', 'Api\Matriculas\MatriculasPorEstablecimiento@start');
     });
 
-    Route::get('recuento/vacantes/{cicloNombre}', 'Api\Matriculas\Matriculas@recuentoVacantes');
+    Route::get('recuento/vacantes', 'Api\Matriculas\Matriculas@recuentoVacantes');
     Route::get('recuento/{cicloNombre}', 'Api\Matriculas\Matriculas@recuento');
     Route::get('reset', 'Api\Matriculas\Matriculas@resetMatriculaYPlazas');
 

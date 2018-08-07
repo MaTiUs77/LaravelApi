@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Matriculas;
 
+use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Cursos;
 use Illuminate\Http\Request;
@@ -167,13 +168,100 @@ class Matriculas extends Controller
         }
     }
 
-    public function recuentoVacantes($cicloNombre)
+    public function recuentoVacantes(Request $request)
     {
+        $validationRules = [
+            'ciclo_id' => 'required_without_all:ciclo|numeric',
+            'ciclo' => 'required_without_all:ciclo_id|numeric',
+            'centro_id' => 'numeric',
+            'anio' => 'string',
+        ];
+
+        // Validacion de datos
+        $validator = Validator::make($request->all(), $validationRules);
+        if ($validator->fails()) {
+            return ['error' => $validator->errors()];
+        }
+
+        // Minimo requerido
+        $ciclo_id = Input::get('ciclo_id');
+        $ciclo = Input::get('ciclo');
+
+        // Centros
+        $centro_id = Input::get('centro_id');
+        $nivel_servicio = Input::get('nivel_servicio');
+        $anio = Input::get('anio');
+
+        // Ejecuta una normalizacion de las plazas, matriculas y vacantes del ciclo solicitado en sus secciones sin division
+        $normalizacion = $this->normalizacionDeCursosSinDivision();
+
+        // Inicia eloquent
+        $query = CursosInscripcions::query();
+
+        // Quita las relaciones pre-programadas con $with en el modelo
+        $query->setEagerLoads([]);
+        $query->with('Curso');
+
+        if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
+        if($ciclo) { $query->filtrarCicloNombre($ciclo); }
+        if($centro_id) { $query->filtrarCentro($centro_id); }
+        if($anio) { $query->filtrarAnio($anio); }
+
+        //$query->filtrarEstadoInscripcion('CONFIRMADA');
+
+        // Es necesario quitar al curso Otro?...
+        $query->whereHas('Curso', function ($cursos) {
+            return $cursos->where('turno', '<>','Otro');
+        });
+
+        $agrupado = $query->get()->groupBy('Curso.id');
+
+        $output = [];
+        foreach($agrupado as $curso_id => $ins) {
+            $curso = $ins->first()->curso;
+
+            $plazas = $curso->plazas;
+            $matricula = $curso->matricula;
+            $vacantes = $curso->vacantes;
+
+            $new_plazas = $plazas;
+            $new_matricula = count($ins);
+            $new_vacantes = $new_plazas - $new_matricula;
+
+            $updcurso = Cursos::find($curso_id);
+            $updcurso->plazas = $new_plazas;
+            $updcurso->matricula = $new_matricula;
+            $updcurso->vacantes = $new_vacantes;
+            $updcurso->save();
+
+            $map = [
+                'curso_id' => $curso_id,
+                'old' => [
+                    'plazas' => $plazas,
+                    'matricula' => $matricula,
+                    'vacantes' => $vacantes,
+                ],
+                'new' => [
+                    'plazas' => $new_plazas,
+                    'matricula' => $new_matricula,
+                    'vacantes' => $new_vacantes,
+                ]
+            ];
+
+            $output[] = $map;
+        }
+
+        return $output;
+    }
+
+    // Agrupa las secciones con division, suma el total de plazas, matriculas, y vacantes para luego
+    // las guardar en la seccion respectiva sin division
+    private function normalizacionDeCursosSinDivision() {
         $cursos = Cursos::with('Centro')
             ->where('division', '')
             ->where('turno', '<>', 'Otro')
             //->where('turno', 'tarde')
-            //->where('centro_id', '80')
+            //->where('centro_id', '118')
             //->where('anio', 'Sala de 4 años')
             ->get();
 
@@ -181,7 +269,7 @@ class Matriculas extends Controller
         foreach ($cursos as $curso) {
 
             // Unidades en plazas, matriculas y vacantes de cursos sin division del centro
-            $recuento = $this->cuantificarMatriculasSinDivision(
+            $recuento = $this->cuantificarMatriculaConDivisionDesdeCursos(
                 $curso->centro_id,
                 $curso->anio,
                 $curso->turno
@@ -205,7 +293,7 @@ class Matriculas extends Controller
         return $output;
     }
 
-    private function cuantificarMatriculasSinDivision($centro_id,$anio,$turno)
+    private function cuantificarMatriculaConDivisionDesdeCursos($centro_id,$anio,$turno)
     {
         $query = Cursos::select(
             DB::raw("       

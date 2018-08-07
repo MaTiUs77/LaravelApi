@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Validator;
 class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
-        $nivel_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
+        $nivel_servicio_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
+        $estado_inscripcion_rule = is_array(Input::get('estado_inscripcion')) ? 'array' : 'string';
 
         // Reglas de validacion
         $validationRules = [
@@ -21,10 +22,12 @@ class MatriculasPorSeccion extends Controller
             'ciudad' => 'string',
             'ciudad_id' => 'numeric',
             'centro_id' => 'numeric',
-            'nivel_servicio' => $nivel_rule,
+            'nivel_servicio' => $nivel_servicio_rule,
+            'estado_inscripcion' => $estado_inscripcion_rule,
             'anio' => 'string',
             'division' => 'string',
-            'sector' => 'string'
+            'sector' => 'string',
+            'status' => 'string'
         ];
 
         // Se validan los parametros
@@ -102,6 +105,7 @@ class MatriculasPorSeccion extends Controller
         ]);
 
         $por_pagina = Input::get('por_pagina');
+
         $result = $query->customPagination($por_pagina);
 
         $this->exportar($result);
@@ -148,8 +152,32 @@ class MatriculasPorSeccion extends Controller
         $nivel_servicio = Input::get('nivel_servicio');
         $sector= Input::get('sector');
         $estado_inscripcion= Input::get('estado_inscripcion');
+        $status= Input::get('status');
 
-        $query = $query->where('cursos.status',1);
+        // Por defecto Curso.status = 1
+        if(isset($status)) {
+            if(is_numeric($status)) {
+                $query = $query->where('cursos.status',$status);
+            }
+        } else {
+            $query = $query->where('cursos.status',1);
+        }
+
+        // Por defecto se listan las inscripciones confirmadas
+        if(isset($estado_inscripcion)) {
+            if(is_array($estado_inscripcion))
+            {
+                $query = $query->where(function($subquery)
+                {
+                    foreach(Input::get('estado_inscripcion') as $select) {
+                        $subquery->orWhere('inscripcions.estado_inscripcion',$select);
+                    }
+                });
+            } else
+            {
+                $query = $query->where('inscripcions.estado_inscripcion','CONFIRMADA');
+            }
+        }
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -195,12 +223,6 @@ class MatriculasPorSeccion extends Controller
             } else {
                 $query = $query->where('cursos.division',$division);
             }
-        }
-        if(isset($estado_inscripcion)) {
-            $query = $query->where('inscripcions.estado_inscripcion',$estado_inscripcion);
-        } else {
-            // Por defecto se listan las inscripciones confirmadas
-            $query = $query->where('inscripcions.estado_inscripcion','CONFIRMADA');
         }
 
         return $query;
