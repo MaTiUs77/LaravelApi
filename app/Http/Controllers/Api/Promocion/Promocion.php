@@ -54,8 +54,8 @@ class Promocion extends Controller
         $inscripciones =  Inscripcions::whereIn('id',$ids)->get();
 
         // Ciclo hard-codeado
-        $this->cicloFrom = Ciclos::where('nombre',2017)->first();
-        $this->cicloTo = Ciclos::where('nombre',2018)->first();
+        $this->cicloFrom = Ciclos::where('nombre',2018)->first();
+        $this->cicloTo = Ciclos::where('nombre',2019)->first();
 
         $this->user =  User::where('id',$user_id)->first();
         $this->centro =  Centros::where('id',$centro_id)->first();
