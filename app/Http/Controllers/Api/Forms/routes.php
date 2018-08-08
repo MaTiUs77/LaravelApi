@@ -10,5 +10,6 @@ Route::prefix('forms')->group(function () {
     Route::get('divisiones', 'Api\Forms\Forms@divisiones');
     Route::get('turnos', 'Api\Forms\Forms@turnos');
     Route::get('tipos', 'Api\Forms\Forms@tipos');
+    Route::get('estado_inscripcion', 'Api\Forms\Forms@estado_inscripcion');
 });
 

@@ -5,8 +5,9 @@ use App\Centros;
 use App\Ciclos;
 use App\Ciudades;
 use App\Cursos;
-use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
+use App\Inscripcions;
+use Illuminate\Support\Facades\Input;
 
 class Forms extends Controller
 {
@@ -14,10 +15,34 @@ class Forms extends Controller
     {
         return Ciclos::select('id','nombre')->get();
     }
-
     public function centros()
     {
-        return Centros::select('id','nombre')->get();
+        $campo = ['id','nombre','ciudad_id','nivel_servicio','direccion','sector','telefono'];
+        $centro = Centros::select($campo);
+
+        $nivel_servicio = Input::get('nivel_servicio');
+        $ciudad = Input::get('ciudad');
+        $ciudad_id = Input::get('ciudad_id');
+        $sector = Input::get('sector');
+
+        if($nivel_servicio) {
+            $centro->where('nivel_servicio',$nivel_servicio);
+        }
+
+        if($ciudad_id) {
+            $centro->where('ciudad_id',$ciudad_id);
+        }
+
+        if($ciudad) {
+            $ciudad = Ciudades::where('nombre',$ciudad)->first();
+            $centro->where('ciudad_id',$ciudad->id);
+        }
+
+        if($sector) {
+            $centro->where('sector',$sector);
+        }
+
+        return $centro->get();
     }
     public function ciudades()
     {
@@ -47,5 +72,9 @@ class Forms extends Controller
     public function tipos()
     {
         return Cursos::select('tipo')->groupBy('tipo')->get();
+    }
+    public function estado_inscripcion()
+    {
+        return Inscripcions::select('estado_inscripcion')->groupBy('estado_inscripcion')->get();
     }
 }

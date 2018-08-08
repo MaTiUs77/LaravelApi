@@ -132,6 +132,8 @@ class MatriculasPorSeccion extends Controller
         $division = Input::get('division');
         $nivel_servicio = Input::get('nivel_servicio');
 
+        $query = $query->where('cursos.status',1);
+
         // Aplicacion de filtros
         if(isset($ciclo)) {
             $query = $query->where('ciclos.nombre',$ciclo);

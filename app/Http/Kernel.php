@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         'jwt' => \App\Http\Middleware\authJWT::class,
+        'jwt.social' => \App\Http\Middleware\authJWTSocial::class,
     ];
 }
