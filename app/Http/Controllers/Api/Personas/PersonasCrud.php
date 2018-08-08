@@ -20,6 +20,7 @@ class PersonasCrud extends Controller
     public function index(Request $req)
     {
         $validationRules = [
+            'id' => 'numeric',
             'nombres' => 'string',
             'documento_nro' => 'numeric',
             'familiar' => 'numeric',
@@ -31,17 +32,25 @@ class PersonasCrud extends Controller
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
         }
+
+        $id = Input::get('id');
         $documento_nro = Input::get('documento_nro');
         $nombres = Input::get('nombres');
         $alumno= Input::get('alumno');
         $familiar= Input::get('familiar');
 
+        $persona = Personas::with(['Ciudad']);
+
+        if($id) {
+            return $persona->where('id',$id)->first();
+        }
+
         if($documento_nro) {
-            $persona = Personas::where('documento_nro',$documento_nro);
+            $persona = $persona->where('documento_nro',$documento_nro);
         }
 
         if($nombres) {
-            $persona = Personas::where('nombres','like', "%$nombres%")
+            $persona = $persona->where('nombres','like', "%$nombres%")
                 ->orWhere('apellidos','like',"%$nombres%");
         }
 
@@ -53,10 +62,7 @@ class PersonasCrud extends Controller
             $persona->where('familiar',1);
         }
 
-        // Por defecto devuelve 10 resultados de la busqueda...
-        $persona = $persona->take(10)->get();
-
-        return compact('persona');
+        return $persona->paginate(10);
     }
 
     // Create
@@ -151,6 +157,12 @@ class PersonasCrud extends Controller
         return compact('persona');
     }
 
+    // View
+    public function show($id)
+    {
+        return $id;
+    }
+
     private function updatePersonaIdFromUserSocial($persona_id) {
         // la variable jwt_user es enviada por el middleware, luego de verificar el token
         $jwt_user = (object) request()->get('jwt_user');
@@ -162,7 +174,7 @@ class PersonasCrud extends Controller
         }
     }
 
-    // Edit
+/*    // Edit
     public function update($id)
     {
         $validationRules = [
@@ -180,5 +192,5 @@ class PersonasCrud extends Controller
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
         }
-    }
+    }*/
 }
