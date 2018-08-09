@@ -108,6 +108,21 @@ class MatriculasPorSeccion extends Controller
 
         $result = $query->customPagination($por_pagina);
 
+        if(Input::get('ciclo')==2019)
+        {
+            foreach($result->items() as $transform)
+            {
+                switch ($transform->nivel_servicio)
+                {
+                    case 'Común - Inicial':
+                    case 'Común - Primario':
+                        $transform->plazas = 21;
+                        $transform->vacantes= $transform->plazas - $transform->matriculas;
+                        break;
+                }
+            }
+        }
+
         $this->exportar($result);
 
         return $result;
