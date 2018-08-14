@@ -25,7 +25,14 @@ trait WithCursoScopes {
     function scopeFiltrarDivision($query,$division)
     {
         $query->whereHas('Curso', function ($cursos) use($division) {
-            return $cursos->where('division', $division);
+
+            if($division=='vacia' || $division=='sin' || $division == 'null') {
+                return $cursos->where('division','');
+            } else if($division=='con'){
+                return $cursos->where('division','<>','');
+            } else {
+                return $cursos->where('division',$division);
+            }
         });
     }
     function scopeFiltrarConDivision($query)
