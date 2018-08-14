@@ -64,9 +64,7 @@ class Matriculas extends Controller
                 where
                 
                 ci.nombre = $cicloNombre AND 
-               (ins.estado_inscripcion = 'CONFIRMADA' or ins.estado_inscripcion = 'NO CONFIRMADA')
---              ins.centro_id = 7 
---              curso.division <> ''
+                ins.estado_inscripcion = 'CONFIRMADA'
 
                 group by 
     
