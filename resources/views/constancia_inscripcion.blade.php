@@ -30,7 +30,7 @@
                 </tr>
             </table>
             <br>
-            <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
+            <h3>CONSTANCIA DE INSCRIPCIÓN | Estado: {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
             <p>
                 @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                     La Supervisión Técnica de Supervisión Escolar,
@@ -38,14 +38,27 @@
                     Se
                 @endif
                 deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
-                ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
-                en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
+                ha sido INSCRIPTO/A en esta dependencia: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
+                en la Sección: <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
             <p>
-                IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
-                <div style="float:right;border-top: 1px solid #000;">Sello y firma de supervisor</div>
+            @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Secundario')
+                IMPORTANTE: La inscripción toma carácter de <b>NO CONFIRMADA</b> hasta tanto finalicen los plazos de inscripción.
+                Se confirmará automáticamente si no se superan las plazas disponibles.<br>
+
+                El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
+                institución el día <b>Sábado 1 de Septiembre</b>. Tener en cuenta que las puertas del establecimiento se cerrarán a las 08:45 AM.
+                El sorteo se realizará a las 09:00 AM.
+            @endif
+
+        {{--
+                        IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
+        --}}
+        <br>
+        <br>
+        <div style="float:right;border-top: 1px solid #000;">Sello y firma de autoridad institucional</div>
             </p>
             <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
             <hr />
@@ -71,7 +84,7 @@
                 </tr>
             </table>
             <br>
-            <h3>CONSTANCIA DE INSCRIPCIÓN {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
+            <h3>CONSTANCIA DE INSCRIPCIÓN | Estado: {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
             <p>
                 @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
                     La Supervisión Técnica de Supervisión Escolar,
@@ -84,11 +97,23 @@
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
                 en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
             </p>
-            <p>
-                IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
-                <div style="float:right;border-top: 1px solid #000;">Sello y firma de supervisor</div>
-            </p>
+        <p>
+            @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Secundario')
+                IMPORTANTE: La inscripción toma carácter de <b>NO CONFIRMADA</b> hasta tanto finalicen los plazos de inscripción.
+                Se confirmará automáticamente si no se superan las plazas disponibles.<br>
+
+                El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
+                institución el día <b>Sábado 1 de Septiembre</b>. Tener en cuenta que las puertas del establecimiento se cerrarán a las 08:45 AM.
+                El sorteo se realizará a las 09:00 AM.
+        @endif
+
+        {{--
+                        IMPORTANTE: El padre/tutor tiene 24 horas para presentarse en la Escuela indicada, caso contrario el/la niño/a perderá la vacante.
+        --}}
+        <br>
+        <br>
+        <div style="float:right;border-top: 1px solid #000;">Sello y firma de autoridad institucional</div>
+        </p>
             <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
-            <hr />
         </div>
 </body></html>
