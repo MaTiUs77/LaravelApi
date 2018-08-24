@@ -8,3 +8,7 @@ yarn-error.log
 .helm-developerc
 
 composer\.lock
+
+supervisord\.log
+
+supervisord\.pid

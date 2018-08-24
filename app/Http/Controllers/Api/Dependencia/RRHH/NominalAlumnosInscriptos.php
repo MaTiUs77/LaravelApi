@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Dependencia\RRHH;
 
+use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Input;
@@ -16,7 +17,7 @@ class NominalAlumnosInscriptos extends Controller
     {
         // Consume API lista de inscripciones
         $guzzle = new Client();
-        $consumeApi = $guzzle->get(env('API_HOST_REMOTO')."/api/inscripcion/lista",[
+        $consumeApi = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
             'query' => Input::all()
         ]);
 
@@ -57,9 +58,54 @@ class NominalAlumnosInscriptos extends Controller
 
             $lista['data'] = $formatted;
 
+            // Exportacion a Excel si es solicitado
+            $this->exportar($formatted);
+
             return $lista;
         }
 
         return $lista;
+    }
+
+    private function exportar($lista) {
+        $ciclo = Input::get('ciclo');
+        // Exportacion a Excel
+        if(Input::get('export')) {
+            $content = [];
+            $content[] = [
+                'Ciclo',
+                'Centro',
+                'Nivel Servicio',
+                'Nombre',
+                'Apellido',
+                'DNI',
+                'Año',
+                'Division',
+                'Turno',
+                'Fecha Alta',
+                'Fecha Baja',
+                'Fecha Egreso',
+            ];
+            // Contenido
+            foreach($lista as $item) {
+                $item = (object) $item;
+                $content[] = [
+                    $item->ciclo,
+                    $item->centro,
+                    $item->nivel_servicio,
+                    $item->nombres,
+                    $item->apellidos,
+                    $item->dni,
+                    $item->año,
+                    $item->division,
+                    $item->turno,
+                    $item->fecha_alta,
+                    $item->fecha_baja,
+                    $item->fecha_egreso
+                ];
+            }
+
+            Export::toExcel("RRHH_AlumnosNominal","RRHH_AlumnosNominal",$content);
+        }
     }
 }

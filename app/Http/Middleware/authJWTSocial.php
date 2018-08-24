@@ -7,11 +7,19 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\Input;
 
-class authJWT
+class authJWTSocial
 {
     public function handle($request, Closure $next)
     {
-        if (!$request->has('token')) {
+        // Verifica token en los parametros
+        $token = $request->get('token');
+        if (!$token) {
+            // Si no esta definido, busca token en Bearer de Authentication
+            $token = $request->bearerToken();
+        }
+
+        // Si el token sigue indefinido.. se encuentra missing
+        if (!$token) {
             $code = 401;
             return response([
                 'code' => $code,
@@ -19,11 +27,9 @@ class authJWT
             ], $code);
         }
 
-
         try {
             $basicauth = new Client(['base_uri' => env('SIEP_AUTH_API')]);
-            $token = Input::get('token');
-            $authResponse = $basicauth->request('GET','/me', [
+            $authResponse = $basicauth->request('GET','/social/me', [
                 'headers' => [
                     'Authorization' => "Bearer {$token}"
                 ]
@@ -38,6 +44,11 @@ class authJWT
             $resp = $ex->getResponse();
             $jsonBody = json_decode($resp->getBody(), true);
             return response()->json($jsonBody);
+        } catch (\Exception $ex) {
+            $resp = $ex->getMessage();
+            return response()->json([
+                'error'=>$resp
+            ]);
         }
 
         return $next($request);

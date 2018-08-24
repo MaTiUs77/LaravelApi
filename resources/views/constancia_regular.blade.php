@@ -1,9 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
-<body>
+</head><body>
 @php
     $fecha_inscripcion = $cursoInscripcions->inscripcion->modified;
     if($fecha_inscripcion!=null)
@@ -61,7 +59,7 @@
             </p>
             @endif
             <p>
-                A pedido del/a interesado/a y al solo efecto de ser presentada ante las autoridades educativas que correspondan
+		A pedido del/a interesado/a y al solo efecto de ser presentada ante quien corresponda 
                 se extiende la presente, sin enmiendas ni raspaduras en la ciudad de <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b>, Provincia de Tierra del Fuego,
                 el <b>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</b>.
             </p>
@@ -74,5 +72,4 @@
             <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
             <hr />
         </div>
-</body>
-</html>
+</body></html>
