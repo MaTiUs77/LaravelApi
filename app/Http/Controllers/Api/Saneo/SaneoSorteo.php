@@ -46,7 +46,7 @@ class SaneoSorteo extends Controller
 
                 $new = [
                     'estado_inscripcion' => 'BAJA',
-                    'legajo_nro' => $inscripcion['legajo_nro'].'-SINVACANTE_1',
+                    'legajo_nro' => $inscripcion['legajo_nro'].'-SINVACANTE_2',
                 ];
 
                 $fix = Inscripcions::find($inscripcion_id);
