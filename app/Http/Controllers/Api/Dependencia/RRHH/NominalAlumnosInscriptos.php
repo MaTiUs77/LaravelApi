@@ -41,6 +41,7 @@ class NominalAlumnosInscriptos extends Controller
 
                 return [
                     'documento_tipo' => $persona['documento_tipo'],
+                    'inscripcion_id' => $inscripcion['id'],
                     'dni' => $persona['documento_nro'],
                     'nombres' => $persona['nombres'],
                     'apellidos' => $persona['apellidos'],
