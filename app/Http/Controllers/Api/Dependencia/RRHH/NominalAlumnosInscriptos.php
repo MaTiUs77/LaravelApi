@@ -55,7 +55,13 @@ class NominalAlumnosInscriptos extends Controller
                     'turno' => $curso['turno'],
                     'fecha_alta' => $inscripcion['fecha_alta'],
                     'fecha_baja' => $inscripcion['fecha_baja'],
-                    'fecha_egreso' => $inscripcion['fecha_egreso']
+                    'fecha_egreso' => $inscripcion['fecha_egreso'],
+                    'calle_nombre' =>$persona['calle_nombre'],
+                    'calle_nro' =>$persona['calle_nro'],
+                    'pcia_nac' =>$persona['pcia_nac'],
+                    'email' =>$persona['email'],
+                    'telefono_nro' =>$persona['telefono_nro'],
+                    'observaciones' =>$persona['observaciones']
                 ];
             });
 
