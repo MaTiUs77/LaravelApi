@@ -55,20 +55,20 @@ class Handler extends ExceptionHandler
             {
                 return response()->json([
                     'error' => 'La ruta a la que intenta acceder no existe',
-                    'code' => 404
-                ],404);
+                    'code' => $exception->getStatusCode()
+                ],$exception->getStatusCode());
             } else {
 
                 if($exception instanceof MethodNotAllowedHttpException)
                 {
                     return response()->json([
                         'error' => 'El metodo de acceso no esta permitido',
-                        'code' => 405
-                    ],405);
+                        'code' => $exception->getStatusCode()
+                    ],$exception->getStatusCode());
                 } else {
                     return response()->json([
                         'error' => $exception->getMessage(),
-                        'code' => $exception->getCode()
+                        'code' => $exception->getStatusCode()
                     ]);
                 }
             }

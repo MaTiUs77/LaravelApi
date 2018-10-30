@@ -36,9 +36,7 @@ class CentrosCrud extends Controller
         if($centro) {
             return $centro;
         } else {
-            $error = [
-                'message' => 'No se encontro un centro con esa ID'
-            ];
+            abort(406,'No se encontro un centro con esa ID');
 
             return compact('error');
         }
