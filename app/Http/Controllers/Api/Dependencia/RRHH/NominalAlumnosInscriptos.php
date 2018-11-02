@@ -62,7 +62,8 @@ class NominalAlumnosInscriptos extends Controller
                     'pcia_nac' =>$persona['pcia_nac'],
                     'email' =>$persona['email'],
                     'telefono_nro' =>$persona['telefono_nro'],
-                    'observaciones' =>$persona['observaciones']
+                    'observaciones' =>$persona['observaciones'],
+                    'fecha_nac' => $persona['fecha_nac']
                 ];
             });
 
