@@ -17,7 +17,7 @@ class Forms extends Controller
     }
     public function centros()
     {
-        $campo = ['id','nombre','ciudad_id','nivel_servicio','direccion','sector','telefono'];
+        $campo = ['id','cue','nombre','ciudad_id','nivel_servicio','direccion','sector','telefono'];
         $centro = Centros::select($campo);
 
         $nivel_servicio = Input::get('nivel_servicio');
