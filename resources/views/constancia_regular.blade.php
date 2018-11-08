@@ -51,11 +51,11 @@
                 del servicio y nivel <b>{{ $cursoInscripcions->inscripcion->centro->nivel_servicio }}</b>
             </p>
 
-            @if(!empty($cursoInscripcions->inscripcion->alumno->observaciones))
+            @if(!empty($cursoInscripcions->inscripcion->observaciones))
             <h4>Datos complementarios</h4>
 
             <p>
-                {{ $cursoInscripcions->inscripcion->alumno->observaciones }}
+                {{ $cursoInscripcions->inscripcion->observaciones }}
             </p>
             @endif
             <p>
