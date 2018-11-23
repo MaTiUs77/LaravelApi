@@ -68,7 +68,7 @@ class Forms extends Controller
     }
     public function divisiones()
     {
-        return Cursos::select('division')->groupBy('division')->get();
+        return Cursos::select('division')->groupBy('division')->where('division','<>','')->get();
     }
     public function turnos()
     {
