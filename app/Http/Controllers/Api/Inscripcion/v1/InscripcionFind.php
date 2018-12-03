@@ -176,7 +176,7 @@ class InscripcionFind extends Controller
     {
         if(is_numeric($documento_nro))
         {
-            $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
+            $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->first();
 
             if($cursoInscripcions==null)
             {
