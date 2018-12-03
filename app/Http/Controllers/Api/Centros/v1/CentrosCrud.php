@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Centros;
+namespace App\Http\Controllers\Api\Centros\v1;
 
 use App\Centros;
 use App\Http\Controllers\Controller;
@@ -36,10 +36,9 @@ class CentrosCrud extends Controller
         if($centro) {
             return $centro;
         } else {
-            abort(406,'No se encontro un centro con esa ID');
+            abort(400,'No se encontro un centro con esa ID');
 
             return compact('error');
         }
-
     }
 }

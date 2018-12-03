@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Personas;
+namespace App\Http\Controllers\Api\Personas\v1;
 
 use App\Ciudades;
 use App\Http\Controllers\Controller;
@@ -160,7 +160,10 @@ class PersonasCrud extends Controller
     // View
     public function show($id)
     {
-        return $id;
+        return [
+            'v1'=>$id,
+            'dato_extra' => 'hola'
+        ];
     }
 
     private function updatePersonaIdFromUserSocial($persona_id) {

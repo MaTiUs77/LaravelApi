@@ -14,4 +14,10 @@ class Cursos extends Model
     {
         return $this->hasOne('App\Centros', 'id', 'centro_id');
     }
+
+    function Titulacion()
+    {
+        return $this->hasOne('App\Titulacion', 'id', 'titulacion_id');
+    }
+
 }
