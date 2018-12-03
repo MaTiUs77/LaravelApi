@@ -24,6 +24,7 @@ class Forms extends Controller
         $ciudad = Input::get('ciudad');
         $ciudad_id = Input::get('ciudad_id');
         $sector = Input::get('sector');
+        $nombre = Input::get('nombre');
 
         if($nivel_servicio) {
             $centro->where('nivel_servicio',$nivel_servicio);
@@ -40,6 +41,10 @@ class Forms extends Controller
 
         if($sector) {
             $centro->where('sector',$sector);
+        }
+
+        if($nombre) {
+            $centro->where('nombre','like','%'.$nombre.'%');
         }
 
         return $centro->get();
@@ -63,7 +68,7 @@ class Forms extends Controller
     }
     public function divisiones()
     {
-        return Cursos::select('division')->groupBy('division')->get();
+        return Cursos::select('division')->groupBy('division')->where('division','<>','')->get();
     }
     public function turnos()
     {

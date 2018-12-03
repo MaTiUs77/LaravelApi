@@ -82,7 +82,10 @@ class MatriculasPorSeccion extends Controller
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
-            ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
+            ->join('cursos', function($join){
+                $join->on('cursos_inscripcions.curso_id','cursos.id')
+                    ->where('division','<>','');
+            })
             ->join('ciudads','centros.ciudad_id','ciudads.id')
 
             ->leftJoin('alumnos','inscripcions.alumno_id','alumnos.id')
