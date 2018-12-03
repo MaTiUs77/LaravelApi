@@ -173,8 +173,8 @@ class InscripcionFind extends Controller
     {
         if(is_numeric($documento_nro))
         {
-            $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
 
+            $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
             if($cursoInscripcions==null)
             {
                 return ['error'=>'No se encontro una inscripcion con ese numero de documento'];
