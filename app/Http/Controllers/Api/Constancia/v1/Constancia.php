@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Constancia;
+namespace App\Http\Controllers\Api\Constancia\v1;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
