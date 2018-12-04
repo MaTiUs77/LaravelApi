@@ -38,6 +38,8 @@
                     Se
                 @endif
                 deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
+                documento tipo: <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_tipo) }}</b>, N°
+                <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_nro) }}</b>,
                 ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
@@ -79,6 +81,8 @@
                     Se
                 @endif
                 deja constancia que el/la niño/a <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
+                documento tipo: <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_tipo) }}</b>, N°
+                <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_nro) }}</b>,
                 ha sido INSCRIPTO/A en esta dependencia, para la Escuela Provincial/Jardín de Infantes: <b>{{ $cursoInscripcions->inscripcion->centro->nombre }}</b>
                 en el grado/sala <b>{{ $cursoInscripcions->curso->anio }} {{ $cursoInscripcions->curso->division }} {{ $cursoInscripcions->curso->turno }}</b>
                 para el Ciclo Escolar <b>{{ $cursoInscripcions->inscripcion->ciclo->nombre }}</b>
