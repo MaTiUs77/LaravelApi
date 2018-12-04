@@ -9,9 +9,12 @@ class Centros extends Model
 {
     protected $table = 'centros';
 
+    // REVISION: Los with de este modelo "Centros" deberian manejarse desde el controlador
+    /*
     protected $with=[
         'Cursos'
     ];
+    */
 
     function Barrio()
     {
@@ -28,15 +31,18 @@ class Centros extends Model
         return $this->hasOne('App\Departamentos', 'id', 'departamento_id');
     }
 
+    // REVISION: Al relacionar los cursos deberian ser todos, los filtros se aplican desde el controlador
+    /*
     function Cursos()
-    {
-        $division = Input::get('division');
+        {
+            $division = Input::get('division');
 
-        $curso = $this->hasOne('App\Cursos', 'centro_id', 'id');
+            $curso = $this->hasOne('App\Cursos', 'centro_id', 'id');
 
-        if($division){
-            $curso->where('division','<>','');
+            if($division){
+                $curso->where('division','<>','');
+            }
+            return $curso;
         }
-        return $curso;
-    }
+    */
 }
