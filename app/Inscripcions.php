@@ -11,6 +11,9 @@ class Inscripcions extends Model
 
     protected $table = 'inscripcions';
     public $timestamps = false;
+    protected $fillable = [
+        'estado_inscripcion', 'legajo_nro'
+    ];
 
     function Alumno()
     {

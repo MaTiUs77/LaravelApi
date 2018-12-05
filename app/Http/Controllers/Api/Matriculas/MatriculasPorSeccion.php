@@ -13,15 +13,21 @@ use Illuminate\Support\Facades\Validator;
 class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
+        $nivel_servicio_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
+        $estado_inscripcion_rule = is_array(Input::get('estado_inscripcion')) ? 'array' : 'string';
+
         // Reglas de validacion
         $validationRules = [
             'ciclo' => 'required|numeric',
             'ciudad' => 'string',
             'ciudad_id' => 'numeric',
             'centro_id' => 'numeric',
-            'nivel_servicio' => 'string',
+            'nivel_servicio' => $nivel_servicio_rule,
+            'estado_inscripcion' => $estado_inscripcion_rule,
             'anio' => 'string',
-            'division' => 'string'
+            'division' => 'string',
+            'sector' => 'string',
+            'status' => 'string'
         ];
 
         // Se validan los parametros
@@ -58,6 +64,21 @@ class MatriculasPorSeccion extends Controller
             COUNT(personas.sexo) as varones
             ')
         ])
+            /*
+             * REQUIERE OPTIMIZAR
+             *
+            (
+                select count(ins.id) as hermanos
+                from  cursos_inscripcions as curi
+                left join inscripcions as ins on ins.id = curi.inscripcion_id
+                where
+                   ins.tipo_inscripcion = "Hermano de alumno regular"
+                and ins.centro_id = centros.id
+                and curi.curso_id = cursos.id
+            ) as por_hermano
+
+             */
+
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
@@ -68,12 +89,10 @@ class MatriculasPorSeccion extends Controller
             ->leftJoin('personas', function ($join) {
                 $join->on('alumnos.persona_id', '=', 'personas.id')
                     ->where('personas.sexo', '=', 'MASCULINO');
-            })
-
-
-            ->where('inscripcions.estado_inscripcion','CONFIRMADA');
+            });
 
         $query = $this->aplicarFiltros($query);
+        $query = $this->aplicarOrden($query);
 
         // Agrupamiento y ejecucion de query
         $query = $query->groupBy([
@@ -85,9 +104,24 @@ class MatriculasPorSeccion extends Controller
             'cursos.plazas'
         ]);
 
-
         $por_pagina = Input::get('por_pagina');
+
         $result = $query->customPagination($por_pagina);
+
+        if(Input::get('ciclo')==2019)
+        {
+            foreach($result->items() as $transform)
+            {
+                switch ($transform->nivel_servicio)
+                {
+                    case 'Común - Inicial':
+                    case 'Común - Primario':
+                        $transform->plazas = 21;
+                        $transform->vacantes= $transform->plazas - $transform->matriculas;
+                        break;
+                }
+            }
+        }
 
         $this->exportar($result);
 
@@ -131,6 +165,34 @@ class MatriculasPorSeccion extends Controller
         $anio = Input::get('anio');
         $division = Input::get('division');
         $nivel_servicio = Input::get('nivel_servicio');
+        $sector= Input::get('sector');
+        $estado_inscripcion= Input::get('estado_inscripcion');
+        $status= Input::get('status');
+
+        // Por defecto Curso.status = 1
+        if(isset($status)) {
+            if(is_numeric($status)) {
+                $query = $query->where('cursos.status',$status);
+            }
+        } else {
+            $query = $query->where('cursos.status',1);
+        }
+
+        // Por defecto se listan las inscripciones confirmadas
+        if(isset($estado_inscripcion)) {
+            if(is_array($estado_inscripcion))
+            {
+                $query = $query->where(function($subquery)
+                {
+                    foreach(Input::get('estado_inscripcion') as $select) {
+                        $subquery->orWhere('inscripcions.estado_inscripcion',$select);
+                    }
+                });
+            } else
+            {
+                $query = $query->where('inscripcions.estado_inscripcion','CONFIRMADA');
+            }
+        }
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -148,16 +210,46 @@ class MatriculasPorSeccion extends Controller
         if(isset($curso_id)) {
             $query = $query->where('cursos.id',$curso_id);
         }
+        if(isset($sector)) {
+            $query = $query->where('centros.sector',$sector);
+        }
         if(isset($nivel_servicio)) {
-            $query = $query->where('centros.nivel_servicio',$nivel_servicio);
+            if(is_array($nivel_servicio))
+            {
+                $query = $query->where(function($subquery)
+                {
+                    foreach(Input::get('nivel_servicio') as $select) {
+                        $subquery->orWhere('centros.nivel_servicio', $select);
+                    }
+                });
+            } else
+            {
+                $query = $query->where('centros.nivel_servicio',$nivel_servicio);
+            }
         }
         if(isset($anio)) {
             $query = $query->where('cursos.anio',$anio);
         }
         if(isset($division)) {
-            $query = $query->where('cursos.division',$division);
+            if($division=='vacia' || $division=='sin' || $division == null) {
+                $query = $query->where('cursos.division','');
+            } else if($division=='con'){
+                $query = $query->where('cursos.division','<>','');
+            } else {
+                $query = $query->where('cursos.division',$division);
+            }
         }
 
+        return $query;
+    }
+
+    private function aplicarOrden($query) {
+        $orderBy = Input::get('order');
+        $orderDir = Input::get('order_dir');
+        if($orderBy)
+        {
+            $query = $query->orderBy($orderBy,$orderDir);
+        }
         return $query;
     }
 }

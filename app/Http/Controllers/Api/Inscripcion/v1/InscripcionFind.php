@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Inscripcion;
+namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Validator;
 class InscripcionFind extends Controller
 {
     public function startFind() {
-        $inscripcion_id = Input::get('inscripcion_id');
+        // Resultados unicos
+        $inscripcion_id = Input::get('id');
         $persona_id= Input::get('persona_id');
         $legajo_nro= Input::get('legajo_nro');
-        $fullname= Input::get('fullname');
         $documento_nro= Input::get('documento_nro');
+
+        // Multiples resultados
+        $fullname= Input::get('fullname');
 
         if($inscripcion_id){
             return $this->byId($inscripcion_id);
@@ -23,16 +26,16 @@ class InscripcionFind extends Controller
             return $this->byPersona($persona_id);
         }
 
-        if($fullname){
-            return $this->byPersonaFullname();
-        }
-
         if($legajo_nro){
             return $this->byLegajo($legajo_nro);
         }
 
         if($documento_nro){
             return $this->byDocumentoNro($documento_nro);
+        }
+
+        if($fullname){
+            return $this->byPersonaFullname();
         }
 
         return ['error'=> 'No definio ningun filtro'];
@@ -173,9 +176,9 @@ class InscripcionFind extends Controller
     {
         if(is_numeric($documento_nro))
         {
-
             $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
-            if($cursoInscripcions==null)
+
+            if($cursoInscripcions==null || count($cursoInscripcions)<=0)
             {
                 return ['error'=>'No se encontro una inscripcion con ese numero de documento'];
             } else {
