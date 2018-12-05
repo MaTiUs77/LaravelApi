@@ -52,8 +52,7 @@
             Se confirmará automáticamente si no se superan las plazas disponibles.<br>
 
             El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
-            institución el día <b>Sábado 1 de Septiembre</b>. Tener en cuenta que las puertas del establecimiento se cerrarán a las 08:45 AM.
-            El sorteo se realizará a las 09:00 AM.
+            institución el día <b>Miércoles 12 de Diciembre</b>.
         @endif
 
         <br>
@@ -108,8 +107,7 @@
             Se confirmará automáticamente si no se superan las plazas disponibles.<br>
 
             El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
-            institución el día <b>Sábado 1 de Septiembre</b>. Tener en cuenta que las puertas del establecimiento se cerrarán a las 08:45 AM.
-            El sorteo se realizará a las 09:00 AM.
+            institución el día <b>Miércoles 12 de Diciembre</b>.
         @endif
 
         <br>
