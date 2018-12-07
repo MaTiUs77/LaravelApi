@@ -77,9 +77,9 @@ class InscripcionEgreso extends Controller
         if($anio=='6to') {
             if (
                 ($cue == '940007700') ||
-                ($cue == '940008300') ||
-                ($cue == '940015900') ||
-                ($cue == '940015700')
+                ($cue == '940008300')
+                //($cue == '940015900') ||
+                //($cue == '940015700')
             ) {
                 $egresar = false;
             } else {
