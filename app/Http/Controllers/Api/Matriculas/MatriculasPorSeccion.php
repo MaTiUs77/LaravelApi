@@ -55,7 +55,7 @@ class MatriculasPorSeccion extends Controller
             cursos.division,
             cursos.turno,
             cursos.tipo,
-            
+            cursos.titulacion_id,
             cursos.plazas,
             COUNT(inscripcions.id) as matriculas,
             (
@@ -101,6 +101,7 @@ class MatriculasPorSeccion extends Controller
             'cursos.anio',
             'cursos.division',
             'cursos.turno',
+            'cursos.titulacion_id',
             'cursos.plazas'
         ]);
 
