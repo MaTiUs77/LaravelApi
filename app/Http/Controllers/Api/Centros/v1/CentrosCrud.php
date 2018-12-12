@@ -18,7 +18,7 @@ class CentrosCrud extends Controller
     public function show($id)
     {
         $validationRules = [
-            'id' => 'required|numeric',
+            'id' => 'required|numeric'
         ];
 
         $inputs = Input::all();
@@ -30,8 +30,17 @@ class CentrosCrud extends Controller
             return ['error' => $validator->errors()];
         }
 
-        $centros = Centros::with(['Ciudad','Barrio']);
-        $centro = $centros->find($id);
+        // Relacion por defecto
+        $with = ['Ciudad','Barrio'];
+        // Relacion adicional por medio de urlquery
+        if(Input::get('with')) {
+            $appendWith = explode(',',Input::get('with'));
+            $with = collect($with)->merge($appendWith)->unique()->toArray();
+        }
+
+        // Localiza el centro en cuestion
+        $query = Centros::with($with);
+        $centro = $query->find($id);
 
         if($centro) {
             return $centro;
