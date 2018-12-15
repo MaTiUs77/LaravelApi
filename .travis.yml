@@ -11,4 +11,4 @@ before_script:
   - node_modules/.bin/newman --version
 
 script:
-  - node_modules/.bin/newman run postman/collection.json -e postman/master.env.json
+  - node_modules/.bin/newman run postman/collection.json -e postman/$TRAVIS_BRANCH.env.json
