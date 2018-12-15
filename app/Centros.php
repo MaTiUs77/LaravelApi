@@ -8,6 +8,11 @@ class Centros extends Model
 {
     protected $table = 'centros';
 
+    protected $casts = [
+        'lat' => 'decimal:2',
+        'lng' => 'decimal:2'
+    ];
+
     function Barrio()
     {
         return $this->hasOne('App\Barrios', 'id', 'barrio_id');
