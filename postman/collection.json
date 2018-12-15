@@ -373,12 +373,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/role",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/role",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -417,12 +415,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/role",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/role",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -461,12 +457,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/role",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/role",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -492,12 +486,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/role/{rol}",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/role/{rol}",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -524,12 +516,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/role/{rol}/{userid}",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/role/{rol}/{userid}",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -563,12 +553,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -607,12 +595,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -651,12 +637,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -682,12 +666,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission/abm",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission/abm",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -714,12 +696,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission/abm",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission/abm",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -746,12 +726,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://localhost:7777/auth/acl/permission/abm",
-									"protocol": "http",
+									"raw": "{{host}}/auth/acl/permission/abm",
 									"host": [
-										"localhost"
+										"{{host}}"
 									],
-									"port": "7777",
 									"path": [
 										"auth",
 										"acl",
@@ -826,25 +804,21 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://api.sieptdf.org/api/v1/centros/1ggg",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/centros",
 							"host": [
-								"api",
-								"sieptdf",
-								"org"
+								"{{host}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"centros",
-								"1ggg"
+								"centros"
 							]
 						},
 						"description": "#### Parametros\n            \n* `nivel_servicio` (string) Nivel de servicio \n* `ciudad` (string) Nombre de ciudad\n* `ciudad_id` (int) ID de ciudad\n* `sector` (string) Sector ESTATAL o PRIVADO\n* `nombre` (string) Nombre total o parcial del centro\n\n#### Atencion\n* Al los filtros \"ciudad\" y \"ciudad_id\" no se pueden aplicar de forma simultanea"
 					},
 					"response": [
 						{
-							"name": "Busqueda por documento",
+							"name": "Busqueda por ciudad",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -853,24 +827,19 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://api.sieptdf.org/api/v1/inscripcion/find?documento_nro=45889038",
-									"protocol": "http",
+									"raw": "{{host}}/api/v1/centros?ciudad=Ushuaia",
 									"host": [
-										"api",
-										"sieptdf",
-										"org"
+										"{{host}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"inscripcion",
-										"find"
+										"centros"
 									],
 									"query": [
 										{
-											"key": "documento_nro",
-											"value": "45889038",
-											"description": "Documento de alumno inscripto"
+											"key": "ciudad",
+											"value": "Ushuaia"
 										}
 									]
 								}
@@ -893,62 +862,27 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://api.sieptdf.org/api/v1/centros/{centro_id}",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/centros/:centro_id",
 							"host": [
-								"api",
-								"sieptdf",
-								"org"
+								"{{host}}"
 							],
 							"path": [
 								"api",
 								"v1",
 								"centros",
-								"{centro_id}"
+								":centro_id"
+							],
+							"variable": [
+								{
+									"key": "centro_id",
+									"value": "",
+									"description": "ID del centro"
+								}
 							]
 						},
 						"description": "#### Parametros\n            \n* `with` (array(string)) Datos disponibles \"Cursos\" , \"Cursos.Titulacion\", \"Barrio\", \"Ciudad\""
 					},
-					"response": [
-						{
-							"name": "Busqueda por documento",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://api.sieptdf.org/api/v1/inscripcion/find?documento_nro=45889038",
-									"protocol": "http",
-									"host": [
-										"api",
-										"sieptdf",
-										"org"
-									],
-									"path": [
-										"api",
-										"v1",
-										"inscripcion",
-										"find"
-									],
-									"query": [
-										{
-											"key": "documento_nro",
-											"value": "45889038",
-											"description": "Documento de alumno inscripto"
-										}
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				}
 			]
 		},
