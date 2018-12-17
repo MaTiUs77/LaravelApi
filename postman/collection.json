@@ -14,14 +14,28 @@
 					"item": [
 						{
 							"name": "Autentificar",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e80cfce3-7c67-4b4a-a14d-0489b7d01afa",
+										"exec": [
+											"pm.test(\"Status code is 422\", function () {",
+											"    pm.response.to.have.status(422);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
 									{
 										"key": "Content-Type",
 										"name": "Content-Type",
-										"type": "text",
-										"value": "application/x-www-form-urlencoded"
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
 									}
 								],
 								"body": {
@@ -42,12 +56,9 @@
 									]
 								},
 								"url": {
-									"raw": "https://api.sieptdf.org/auth/login",
-									"protocol": "https",
+									"raw": "{{host}}/auth/login",
 									"host": [
-										"api",
-										"sieptdf",
-										"org"
+										"{{host}}"
 									],
 									"path": [
 										"auth",
@@ -87,12 +98,9 @@
 											]
 										},
 										"url": {
-											"raw": "https://api.sieptdf.org/auth/login",
-											"protocol": "https",
+											"raw": "{{host}}/auth/login",
 											"host": [
-												"api",
-												"sieptdf",
-												"org"
+												"{{host}}"
 											],
 											"path": [
 												"auth",
@@ -168,6 +176,20 @@
 						},
 						{
 							"name": "Me",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9ee6e2e9-b0fe-40ba-96a1-aeb85f32296f",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -181,12 +203,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://api.sieptdf.org/auth/me",
-									"protocol": "https",
+									"raw": "{{host}}/auth/me",
 									"host": [
-										"api",
-										"sieptdf",
-										"org"
+										"{{host}}"
 									],
 									"path": [
 										"auth",
@@ -211,12 +230,9 @@
 											"raw": ""
 										},
 										"url": {
-											"raw": "https://api.sieptdf.org/auth/me",
-											"protocol": "https",
+											"raw": "{{host}}/auth/me",
 											"host": [
-												"api",
-												"sieptdf",
-												"org"
+												"{{host}}"
 											],
 											"path": [
 												"auth",
@@ -292,6 +308,20 @@
 						},
 						{
 							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "620a5098-7a62-44b8-a8d1-0745df6c1582",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -305,12 +335,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://api.sieptdf.org/auth/logout",
-									"protocol": "https",
+									"raw": "{{host}}/auth/logout",
 									"host": [
-										"api",
-										"sieptdf",
-										"org"
+										"{{host}}"
 									],
 									"path": [
 										"auth",
@@ -323,6 +350,20 @@
 						},
 						{
 							"name": "Refresh",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "253e31d2-5c99-47e9-a3e8-2f5b9574d2cb",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -336,12 +377,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://api.sieptdf.org/auth/refresh",
-									"protocol": "https",
+									"raw": "{{host}}/auth/refresh",
 									"host": [
-										"api",
-										"sieptdf",
-										"org"
+										"{{host}}"
 									],
 									"path": [
 										"auth",
@@ -360,6 +398,20 @@
 					"item": [
 						{
 							"name": "Listar roles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3f098407-cf0c-4fc1-9c12-58b61e2843d6",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -389,6 +441,20 @@
 						},
 						{
 							"name": "Crear rol",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d507f485-cf85-41a4-b1b2-dbecb36d4f39",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -431,6 +497,20 @@
 						},
 						{
 							"name": "Eliminar rol",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9e2c8b88-2b6f-45eb-8ac3-46fd5285f34f",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "DELETE",
 								"header": [
@@ -473,6 +553,20 @@
 						},
 						{
 							"name": "Listar permisos de un rol",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "db73689f-a009-44c4-8538-2ee44824f61d",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -503,6 +597,20 @@
 						},
 						{
 							"name": "Asignar rol a usuario",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b52c6797-e845-486a-93e3-e527cac57891",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -540,6 +648,20 @@
 					"item": [
 						{
 							"name": "Listar permisos",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3320c2b8-1619-46cb-bb89-7ff15f738935",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [
@@ -569,6 +691,20 @@
 						},
 						{
 							"name": "Crear permiso",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f43987ef-5a96-457d-aa4e-7e85104891f7",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -611,6 +747,20 @@
 						},
 						{
 							"name": "Eliminar permiso",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d1b3bbb1-726b-4c99-8346-12cf6714e0c1",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "DELETE",
 								"header": [
@@ -653,6 +803,20 @@
 						},
 						{
 							"name": "Agregar permisos a roles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bbad79f7-64aa-4d88-9f23-6a9348e190db",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -683,6 +847,20 @@
 						},
 						{
 							"name": "Sincronizar permisos en roles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "616d2cce-a46c-4436-9d84-95231de9f9ef",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -713,6 +891,20 @@
 						},
 						{
 							"name": "Eliminar permisos en roles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b5ec5c2a-6167-4184-b19d-df9ef67eae95",
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "DELETE",
 								"header": [
@@ -777,20 +969,16 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "06d80601-2aa5-4811-b6cd-1bada42da710",
+								"id": "bbc1f4b4-cb87-47c1-956f-ba48d5fbca66",
 								"exec": [
-									"pm.test(\"Status code 200\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
 									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
 									"    pm.expect(pm.response.responseTime).to.be.below(800);",
 									"});",
-									"",
-									"pm.test(\"Propiedad ID del centro presente\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('id');",
-									"});"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -854,6 +1042,29 @@
 				},
 				{
 					"name": "Informacion de un centro especifico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd0b0e09-6dfd-440e-ab36-e408250aecfb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									"",
+									"pm.test(\"Propiedad ID del centro presente\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -875,7 +1086,7 @@
 							"variable": [
 								{
 									"key": "centro_id",
-									"value": "",
+									"value": "1",
 									"description": "ID del centro"
 								}
 							]
@@ -890,69 +1101,26 @@
 			"name": "Inscripcion",
 			"item": [
 				{
-					"name": "Buscar inscripcion por ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "http://api.sieptdf.org/api/inscripcion/find/id/{inscripcion_id}",
-							"protocol": "http",
-							"host": [
-								"api",
-								"sieptdf",
-								"org"
-							],
-							"path": [
-								"api",
-								"inscripcion",
-								"find",
-								"id",
-								"{inscripcion_id}"
-							]
-						},
-						"description": "#### Parametros\n* `inscripcion_id` Route required \n\n#### Test\n[http://constancia.sieptdf.tk/api/inscripcion/find/id/2](http://constancia.sieptdf.tk/api/inscripcion/find/id/2).\n\n\n#### Success\n* Modelo `Curso`\n* Modelo `Inscripcion` \n\n#### Error\n* `{ \"error\": \"El ID es inválido\" }`\n* `{ \"error\": \"No se encontro una inscripcion con esa ID\" }`"
-					},
-					"response": [
+					"name": "Buscar inscripcion",
+					"event": [
 						{
-							"name": "Default",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/id/{inscripcion_id}",
-									"protocol": "http",
-									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
-									],
-									"path": [
-										"api",
-										"inscripcion",
-										"find",
-										"id",
-										"{inscripcion_id}"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
+							"listen": "test",
+							"script": {
+								"id": "5e7a6cdb-d01a-49b1-82ea-618a1fbd3353",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				{
-					"name": "Buscar inscripcion por LegajoNro",
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -961,26 +1129,22 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/legajo/{legajo_nro}",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/inscripcion/find",
 							"host": [
-								"constancia",
-								"sieptdf",
-								"tk"
+								"{{host}}"
 							],
 							"path": [
 								"api",
+								"v1",
 								"inscripcion",
-								"find",
-								"legajo",
-								"{legajo_nro}"
+								"find"
 							]
 						},
-						"description": "#### Parametros\n* `legajo_nro` Route required\n\n#### Test\n[http://constancia.sieptdf.tk/api/inscripcion/find/legajo/46029081-17](http://constancia.sieptdf.tk/api/inscripcion/find/legajo/46029081-17).\n\n\n#### Success\n* Modelo `Curso`\n* Modelo `Inscripcion` \n\n#### Error\n* `{ \"error\": \"El ID es inválido\" }`\n* `{ \"error\": \"No se encontro una inscripcion con esa ID\" }`"
+						"description": "#### Parametros\n\nEl api no acepta filtros simultaneos\n\n* `id` (int) ID de inscripcion \n* `persona_id` (int) ID de persona\n* `legajo_nro` (regex) Numero de legajo (documento_nro-ciclo)\n* `documento_nro` (int) Numero de documento\n* `fullname` (string) Nombre y/o apellido total o parcial\n\n#### Respuestas\n* En la busqueda por \"id\", \"persona_id\", \"legajo_nro\" el resultado es unico\n* En la busqueda por \"documento_nro\", \"fullname\" devuelve una paginación de los resultados"
 					},
 					"response": [
 						{
-							"name": "Default",
+							"name": "Busqueda por documento",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -989,19 +1153,22 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/legajo/{legajo_nro}",
-									"protocol": "http",
+									"raw": "{{host}}/api/v1/inscripcion/find?documento_nro=45889038",
 									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
+										"{{host}}"
 									],
 									"path": [
 										"api",
+										"v1",
 										"inscripcion",
-										"find",
-										"legajo",
-										"{legajo_nro}"
+										"find"
+									],
+									"query": [
+										{
+											"key": "documento_nro",
+											"value": "45889038",
+											"description": "Documento de alumno inscripto"
+										}
 									]
 								}
 							},
@@ -1015,6 +1182,25 @@
 				},
 				{
 					"name": "Lista de inscriptos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0c3d97d-8cfe-40c8-8dce-39f1493ededc",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1023,82 +1209,49 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://constancia.sieptdf.tk/api/inscripcion/lista",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/inscripcion/lista?",
 							"host": [
-								"constancia",
-								"sieptdf",
-								"tk"
+								"{{host}}"
 							],
 							"path": [
 								"api",
+								"v1",
 								"inscripcion",
 								"lista"
+							],
+							"query": [
+								{
+									"key": "ciclo",
+									"value": "2019",
+									"disabled": true
+								}
 							]
 						},
 						"description": "#### Parametros\n* `centro_id` Required | Numeric\n* `ciclo_id` Required | Numeric\n* `ciclo` Required | Numeric | Si no se define ciclo_id\n* `turno` String\n* `anio` String\n* `curso_id` Numeric\n* `por_pagina` Numeric\n\n#### Test\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018](http://constancia.sieptdf.tk/api/inscripcion/lista?ciclo_id=4&centro_id=78)\n\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018 turno Tarde](http://constancia.sieptdf.tk/api/inscripcion/lista?ciclo_id=4&centro_id=78&turno=Tarde)\n\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018 turno Tarde  año 1ro ](http://constancia.sieptdf.tk/api/inscripcion/lista?ciclo_id=4&centro_id=78&turno=Tarde&anio=1ro) \n\n\n#### Success\n* Modelo `Curso`\n* Modelo `Inscripcion` \n* Datos de paginacion\n"
 					},
-					"response": [
-						{
-							"name": "Default",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/inscripcion/lista?centro_id=78&ciclo_id=3&turno=tarde&anio=1ro&curso_id=98&por_pagina=2",
-									"protocol": "http",
-									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
-									],
-									"path": [
-										"api",
-										"inscripcion",
-										"lista"
-									],
-									"query": [
-										{
-											"key": "centro_id",
-											"value": "78"
-										},
-										{
-											"key": "ciclo_id",
-											"value": "3"
-										},
-										{
-											"key": "turno",
-											"value": "tarde"
-										},
-										{
-											"key": "anio",
-											"value": "1ro"
-										},
-										{
-											"key": "curso_id",
-											"value": "98"
-										},
-										{
-											"key": "por_pagina",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "Exportar lista de inscriptos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "24c3c674-08d4-469d-b402-38c222bc32ac",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1107,15 +1260,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://constancia.sieptdf.tk/api/inscripcion/export/excel",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/inscripcion/export/excel",
 							"host": [
-								"constancia",
-								"sieptdf",
-								"tk"
+								"{{host}}"
 							],
 							"path": [
 								"api",
+								"v1",
 								"inscripcion",
 								"export",
 								"excel"
@@ -1123,38 +1274,7 @@
 						},
 						"description": "#### Parametros\n* `centro_id` Required | Numeric\n* `ciclo_id` Required | Numeric\n* `turno` String\n* `anio` String\n* `curso_id` Numeric\n* `por_pagina` Numeric\n\n#### Test\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018](http://constancia.sieptdf.tk/api/inscripcion/export?ciclo_id=4&centro_id=78)\n\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018 turno Tarde](http://constancia.sieptdf.tk/api/inscripcion/export?ciclo_id=4&centro_id=78&turno=Tarde)\n\n* [Alumnos de ESCUELA PROVINCIAL Nº 26 en el ciclo 2018 turno Tarde  año 1ro ](http://constancia.sieptdf.tk/api/inscripcion/export?ciclo_id=4&centro_id=78&turno=Tarde&anio=1ro) \n\n\n#### Success\n* Exportacion en excel\n* Modelo `Curso`\n* Modelo `Inscripcion` \n* Datos de paginacion\n"
 					},
-					"response": [
-						{
-							"name": "Default",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/inscripcion/lista",
-									"protocol": "http",
-									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
-									],
-									"path": [
-										"api",
-										"inscripcion",
-										"lista"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				}
 			]
 		},
@@ -1162,7 +1282,26 @@
 			"name": "Persona",
 			"item": [
 				{
-					"name": "Buscar persona",
+					"name": "Informacion de una persona",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d021e441-3877-43b3-ba65-41d43628d735",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1171,57 +1310,76 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/persona/{persona_id}",
-							"protocol": "http",
+							"raw": "{{host}}/api/v1/personas/:id",
 							"host": [
-								"constancia",
-								"sieptdf",
-								"tk"
+								"{{host}}"
 							],
 							"path": [
 								"api",
-								"inscripcion",
-								"find",
-								"persona",
-								"{persona_id}"
+								"v1",
+								"personas",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
 							]
 						},
-						"description": "#### Parametros\n* `persona_id` Route required\n* `ver` primera|ultima \n\n#### Test\n[Buscar a la persona_id 334](http://constancia.sieptdf.tk/api/inscripcion/find/persona/334).\n\n[Buscar la ultima inscripcion de la persona_id 334](http://constancia.sieptdf.tk/api/inscripcion/find/persona/334?ver=ultima).\n"
+						"description": "#### Parametros\n* `id` (int) Id de persona\n* `nombres` (string) Nombre total y/o parcial\n* `documento_nro` (int) Buscar persona por Numero de Documento\n* `familiar` (bool) Listar solo personas del tipo familiar\n* `alumno` (bool) Listar solo personas del tipo alumno"
 					},
-					"response": [
+					"response": []
+				},
+				{
+					"name": "Lista de personas",
+					"event": [
 						{
-							"name": "Default",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/legajo/45889038-17",
-									"protocol": "http",
-									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
-									],
-									"path": [
-										"api",
-										"inscripcion",
-										"find",
-										"legajo",
-										"45889038-17"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
+							"listen": "test",
+							"script": {
+								"id": "d021e441-3877-43b3-ba65-41d43628d735",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(800);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/personas",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"personas"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a",
+									"disabled": true
+								}
+							]
+						},
+						"description": "#### Parametros\n* `id` (int) Id de persona\n* `nombres` (string) Nombre total y/o parcial\n* `documento_nro` (int) Buscar persona por Numero de Documento\n* `familiar` (bool) Listar solo personas del tipo familiar\n* `alumno` (bool) Listar solo personas del tipo alumno"
+					},
+					"response": []
 				}
 			]
 		},
@@ -1233,6 +1391,25 @@
 					"item": [
 						{
 							"name": "Por seccion",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "acecd641-4f86-47ca-9415-477dad67a6c1",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(800);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1241,12 +1418,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_seccion",
-									"protocol": "http",
+									"raw": "{{host}}/api/matriculas/cuantitativa/por_seccion",
 									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
+										"{{host}}"
 									],
 									"path": [
 										"api",
@@ -1257,43 +1431,29 @@
 								},
 								"description": "#### Parametros\n* `ciclo` Required | String \n* `ciudad` String\n* `ciudad_id` Numeric\n* `centro_id` Numeric\n* `nivel_servicio` String\n* `anio` String\n* `division` String\n* `export` String o Numeric\n\n#### Test\n[Cuantitativa ciclo 2018](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_seccion?ciclo=2018).\n\n[Exportar ciclo 2018 de la ciudad de Ushuaia](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_seccion?ciclo=2018&ciudad=Ushuaia&export=1).\n"
 							},
-							"response": [
-								{
-									"name": "Default",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/id/1",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"inscripcion",
-												"find",
-												"id",
-												"1"
-											]
-										}
-									},
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								}
-							]
+							"response": []
 						},
 						{
 							"name": "Por nivel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "46b906b3-13c0-4405-9cf3-f5a4162c2e99",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(800);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1302,12 +1462,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel",
-									"protocol": "http",
+									"raw": "{{host}}/api/matriculas/cuantitativa/por_nivel",
 									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
+										"{{host}}"
 									],
 									"path": [
 										"api",
@@ -1318,75 +1475,29 @@
 								},
 								"description": "#### Parametros\n* `ciclo` Required | String \n* `ciudad` String\n* `ciudad_id` Numeric\n* `centro_id` Numeric\n* `nivel_servicio` String\n* `export` String o Numeric\n\n#### Test\n[Cuantitativa ciclo 2018](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel?ciclo=2018).\n\n[Exportar ciclo 2018 de la ciudad de Ushuaia](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel?ciclo=2018&ciudad=Ushuaia&export=1).\n"
 							},
-							"response": [
-								{
-									"name": "Default",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/id/1",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"inscripcion",
-												"find",
-												"id",
-												"1"
-											]
-										}
-									},
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								},
-								{
-									"name": "Por nivel ",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"matriculas",
-												"cuantitativa",
-												"por_nivel"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								}
-							]
+							"response": []
 						},
 						{
 							"name": "Por año",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cb27c2d6-a169-4621-869a-a2de982a24cd",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(800);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1395,12 +1506,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_anio",
-									"protocol": "http",
+									"raw": "{{host}}/api/matriculas/cuantitativa/por_anio",
 									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
+										"{{host}}"
 									],
 									"path": [
 										"api",
@@ -1411,75 +1519,29 @@
 								},
 								"description": "#### Parametros\n* `ciclo` Required | String \n* `ciudad` String\n* `ciudad_id` Numeric\n* `centro_id` Numeric\n* `nivel_servicio` String\n* `anio` String\n* `export` String o Numeric\n\n#### Test\n[Cuantitativa ciclo 2018](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_anio?ciclo=2018).\n\n[Exportar ciclo 2018 de la ciudad de Ushuaia](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_anio?ciclo=2018&ciudad=Ushuaia&export=1).\n"
 							},
-							"response": [
-								{
-									"name": "Default",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/id/1",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"inscripcion",
-												"find",
-												"id",
-												"1"
-											]
-										}
-									},
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								},
-								{
-									"name": "Por nivel ",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"matriculas",
-												"cuantitativa",
-												"por_nivel"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								}
-							]
+							"response": []
 						},
 						{
 							"name": "Por establecimiento",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4eda1283-922d-4484-b259-ce7c730e6303",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Tiempo de respuesta menor a 800ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(800);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1488,12 +1550,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_establecimiento",
-									"protocol": "http",
+									"raw": "{{host}}/api/matriculas/cuantitativa/por_establecimiento",
 									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
+										"{{host}}"
 									],
 									"path": [
 										"api",
@@ -1504,72 +1563,7 @@
 								},
 								"description": "#### Parametros\n* `ciclo` Required | String \n* `ciudad` String\n* `ciudad_id` Numeric\n* `centro_id` Numeric\n* `nivel_servicio` String\n* `anio` String\n* `export` String o Numeric\n\n#### Test\n[Cuantitativa ciclo 2018](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_establecimiento?ciclo=2018).\n\n[Exportar ciclo 2018 de la ciudad de Ushuaia](http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_establecimiento?ciclo=2018&ciudad=Ushuaia&export=1).\n"
 							},
-							"response": [
-								{
-									"name": "Default",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/inscripcion/find/id/1",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"inscripcion",
-												"find",
-												"id",
-												"1"
-											]
-										}
-									},
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								},
-								{
-									"name": "Por nivel ",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "http://constancia.sieptdf.tk/api/matriculas/cuantitativa/por_nivel",
-											"protocol": "http",
-											"host": [
-												"constancia",
-												"sieptdf",
-												"tk"
-											],
-											"path": [
-												"api",
-												"matriculas",
-												"cuantitativa",
-												"por_nivel"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "",
-									"header": [],
-									"cookie": [],
-									"body": ""
-								}
-							]
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -1581,6 +1575,30 @@
 			"item": [
 				{
 					"name": "Imprimir Constancia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c3584f90-ef1b-46aa-b14e-8c909a25a0b7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tiempo de respuesta menor a 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Generacion de constancia en PDF\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/pdf\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1589,53 +1607,32 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://constancia.sieptdf.tk/api/constancia/{inscripcion_id}",
-							"protocol": "http",
+							"raw": "{{host}}/api/constancia/:inscripcion_id",
 							"host": [
-								"constancia",
-								"sieptdf",
-								"tk"
+								"{{host}}"
 							],
 							"path": [
 								"api",
 								"constancia",
-								"{inscripcion_id}"
+								":inscripcion_id"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "inscripcion_id",
+									"value": "1"
+								}
 							]
 						},
 						"description": "#### Parametros\n* `inscripcion_id`  Route required\n\n#### Success\n>Genera un archivo PDF\n\n#### Error\n* `{ \"error\": \"El ID es inválido\" }`\n* `{ \"error\": \"No se encontro una inscripcion con esa ID\" }`"
 					},
-					"response": [
-						{
-							"name": "Default",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "http://constancia.sieptdf.tk/api/constancia/{inscripcion_id}",
-									"protocol": "http",
-									"host": [
-										"constancia",
-										"sieptdf",
-										"tk"
-									],
-									"path": [
-										"api",
-										"constancia",
-										"{inscripcion_id}"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				}
 			]
 		},

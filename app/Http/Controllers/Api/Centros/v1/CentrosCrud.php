@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
 
 class CentrosCrud extends Controller
 {
@@ -85,7 +84,6 @@ class CentrosCrud extends Controller
         }
     }
 
-    // View
     public function show($id)
     {
         $validationRules = [
