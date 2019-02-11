@@ -14,7 +14,7 @@ class PersonasCrud extends Controller
 {
     public function __construct(Request $req)
     {
-        $this->middleware('jwt.social',['except'=>['index']]);
+        $this->middleware('jwt.social',['except'=>['index','show']]);
     }
 
     public function index(Request $req)
@@ -30,7 +30,10 @@ class PersonasCrud extends Controller
         // Se validan los parametros
         $validator = Validator::make(Input::all(), $validationRules);
         if ($validator->fails()) {
-            return ['error' => $validator->errors()];
+            return [
+                'error' => 'Parametros invalidos',
+                'message' => $validator->errors()
+            ];
         }
 
         $id = Input::get('id');
@@ -160,10 +163,21 @@ class PersonasCrud extends Controller
     // View
     public function show($id)
     {
-        return [
-            'v1'=>$id,
-            'dato_extra' => 'hola'
+        $validationRules = [
+            'id' => 'numeric'
         ];
+
+        // Se validan los parametros
+        $validator = Validator::make(['id'=>$id], $validationRules);
+        if ($validator->fails()) {
+            return [
+                'error' => 'Parametros invalidos',
+                'message' => $validator->errors()
+            ];
+        }
+
+        $persona = Personas::with(['Ciudad']);
+        return $persona->where('id',$id)->first();
     }
 
     private function updatePersonaIdFromUserSocial($persona_id) {

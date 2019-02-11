@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -50,29 +51,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-//        if($request->is('api/*')){
-            if($exception instanceof NotFoundHttpException)
+        if($exception instanceof NotFoundHttpException)
+        {
+            return response()->json([
+                'error' => 'La ruta a la que intenta acceder no existe',
+                'code' => $exception->getStatusCode()
+            ],$exception->getStatusCode());
+        } else {
+
+            if($exception instanceof MethodNotAllowedHttpException)
             {
                 return response()->json([
-                    'error' => 'La ruta a la que intenta acceder no existe',
+                    'error' => 'El metodo de acceso no esta permitido',
                     'code' => $exception->getStatusCode()
                 ],$exception->getStatusCode());
             } else {
-
-                if($exception instanceof MethodNotAllowedHttpException)
-                {
-                    return response()->json([
-                        'error' => 'El metodo de acceso no esta permitido',
-                        'code' => $exception->getStatusCode()
-                    ],$exception->getStatusCode());
-                } else {
-                    return response()->json([
-                        'error' => $exception->getMessage(),
-                        'code' => 400
-                    ]);
-                }
+                return response()->json([
+                    'error' => $exception->getMessage()
+                ]);
             }
-//        }
+        }
 
         return parent::render($request, $exception);
     }

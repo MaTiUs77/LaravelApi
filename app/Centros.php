@@ -9,8 +9,8 @@ class Centros extends Model
     protected $table = 'centros';
 
     protected $casts = [
-        'lat' => 'decimal:2',
-        'lng' => 'decimal:2'
+        'lat' => 'float',
+        'lng' => 'float'
     ];
 
     function Barrio()
