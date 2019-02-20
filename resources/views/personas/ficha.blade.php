@@ -105,7 +105,7 @@
                 <th>Estado inscripcion</th>
                 <th>Legajo</th>
             </tr>
-            @foreach($trayectoria as $item)
+            @foreach(collect($trayectoria)->sortBy('inscripcion.legajo_nro') as $item)
             <tr>
                 <td>{{ $item['inscripcion']['ciclo']['nombre'] }}</td>
                 <td>{{ $item['curso']['anio'] }}</td>
