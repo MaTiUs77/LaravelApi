@@ -8,8 +8,6 @@ class Alumnos extends Model
 {
     protected $table = 'alumnos';
 
-    //protected $hidden = ['centro_id'];
-
     function Persona()
     {
         return $this->hasOne('App\Personas', 'id', 'persona_id');
@@ -22,6 +20,6 @@ class Alumnos extends Model
 
     function Inscripcion()
     {
-        return $this->hasOne('App\Inscripcions', 'alumno_id', 'id');
+        return $this->belongsToMany('App\Inscripcions', 'alumno_id', 'id');
     }
 }

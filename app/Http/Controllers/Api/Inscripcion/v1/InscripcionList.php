@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
+use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class InscripcionList extends Controller
 {
+
     public $validationRules = [
         'ciclo_id' => 'required_without_all:ciclo,alumno_id,documento_nro|numeric',
         'ciclo' => 'required_without_all:ciclo_id,alumno_id,documento_nro|numeric',
@@ -59,7 +61,8 @@ class InscripcionList extends Controller
 
         $por_pagina = Input::get('por_pagina');
 
-        $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
+        $with = WithOnDemand::set([],request('with'));
+        $query = CursosInscripcions::with($with);
 
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
         if($ciclo) { $query->filtrarCicloNombre($ciclo); }

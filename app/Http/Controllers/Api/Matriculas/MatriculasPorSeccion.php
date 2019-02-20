@@ -115,14 +115,14 @@ class MatriculasPorSeccion extends Controller
             // Se carga la relacion con el modelo Titulacion
             $item->titulacion = Titulacion::select('nombre','nombre_abreviado')->find($item->titulacion_id);
 
-            // Modifica las plazas y vacantes del ciclo 2019 a 21 por defecto
+            // Modifica las plazas y vacantes del ciclo 2019
             if(Input::get('ciclo')==2019)
             {
                 switch ($item->nivel_servicio)
                 {
                     case 'Común - Inicial':
                     case 'Común - Primario':
-                        $item->plazas = 21;
+                        $item->plazas = 24;
                         $item->vacantes= $item->plazas - $item->matriculas;
                         break;
                 }

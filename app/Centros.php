@@ -37,4 +37,10 @@ class Centros extends Model
     {
         return $this->hasMany('App\CentrosTitulacions', 'centro_id', 'id');
     }
+
+    function NivelServicio()
+    {
+        return $this->hasOne('App\NivelServicio', 'nombre', 'nivel_servicio');
+    }
+
 }

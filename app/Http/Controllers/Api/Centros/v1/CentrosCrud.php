@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Centros\v1;
 
 use App\Centros;
 use App\Ciudades;
+use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -19,100 +20,64 @@ class CentrosCrud extends Controller
 
     public function index()
     {
-        $validationRules = [
+        // Se validan los parametros
+        $input = request()->all();
+        $rules = [
             'nivel_servicio' => 'string',
             'ciudad' => 'string',
             'ciudad_id' => 'numeric',
             'sector' => 'string',
             'nombre' => 'string'
         ];
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        // Se validan los parametros
-        $validator = Validator::make(Input::all(), $validationRules);
-        if ($validator->fails()) {
-            return [
-                'error' => 'Parametros invalidos',
-                'parametros' => $validator->errors()
-            ];
-        }
-
-        // Adjunta foregin keys on demand
-        $with = WithOnDemand::set(['Ciudad'], Input::get('with'));
-
-        // Opciones de UrlQuery
-        $nivel_servicio = Input::get('nivel_servicio');
-        $ciudad = Input::get('ciudad');
-        $ciudad_id = Input::get('ciudad_id');
-        $sector = Input::get('sector');
-        $nombre = Input::get('nombre');
-
+        // Adjunta relaciones a demanda con el parametro "with"
+        $with = WithOnDemand::set(['Ciudad'], request('with'));
         $query = Centros::with($with);
 
-        if($nivel_servicio) {
-            $query->where('nivel_servicio',$nivel_servicio);
-        }
+        $query->when(request('ciudad_id'), function ($q, $v) {
+            return $q->where('ciudad_id', $v);
+        });
 
-        if($ciudad_id) {
-            $query->where('ciudad_id',$ciudad_id);
-        }
+        $query->when(request('ciudad'), function ($q, $v) {
+            $ciudad = Ciudades::where('nombre',$v)->firstOrFail();
+            return $q->where('ciudad_id', $ciudad->id);
+        });
 
-        if($ciudad) {
-            $ciudad = Ciudades::where('nombre',$ciudad)->first();
-            if($ciudad!=null) {
-                $query->where('ciudad_id',$ciudad->id);
-            } else {
-                abort(400,'La ciudad solicitada no existe');
-            }
-        }
+        $query->when(request('sector'), function ($q, $v) {
+            return $q->where('sector', $v);
+        });
 
-        if($sector) {
-            $query->where('sector',$sector);
-        }
+        $query->when(request('nivel_servicio'), function ($q, $v) {
+            return $q->where('nivel_servicio', $v);
+        });
 
-        if($nombre) {
-            $query->where('nombre','like','%'.$nombre.'%');
-        }
-
+        $query->when(request('nombre'), function ($q, $v) {
+            return $q->where('nombre','like',"%$v%");
+        });
 
         $centro = $query->get();
 
-        if($centro !=null || count($centro)<=0) {
+        if($centro->isNotEmpty()) {
             return $centro;
         } else {
-            abort(400,'No se encontraron centros con el filtro aplicado');
-
-            return compact('error');
+            abort(204,'No se encontraron resultados con el filtro aplicado');
         }
     }
 
     public function show($id)
     {
-        $validationRules = [
-            'id' => 'required|numeric'
-        ];
-
-        $inputs = Input::all();
-        $inputs['id'] = $id;
-
         // Se validan los parametros
-        $validator = Validator::make($inputs, $validationRules);
-        if ($validator->fails()) {
-            return ['error' => $validator->errors()];
-        }
+        $input = ['id'=>$id];
+        $rules = ['id'=>'required|numeric'];
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        // Adjunta foregin keys on demand
-        $with = WithOnDemand::set(['Ciudad'], Input::get('with'));
-
-        // Localiza el centro en cuestion
+        // Adjunta relaciones a demanda con el parametro "with"
+        $with = WithOnDemand::set(['Ciudad'], request('with'));
         $query = Centros::with($with);
-        $centro = $query->find($id);
+        // Localiza el centro en cuestion
+        $centro = $query->findOrFail($id);
 
-        if($centro) {
-            return $centro;
-        } else {
-            abort(400,'No se encontro un centro con esa ID');
-
-            return compact('error');
-        }
+        return $centro;
     }
 }
