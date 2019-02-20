@@ -100,13 +100,23 @@
                 <th>Año</th>
                 <th>Division</th>
                 <th>Turno</th>
+                <th>Centro</th>
+                <th>Nivel de servicio</th>
+                <th>Estado inscripcion</th>
+                <th>Legajo</th>
             </tr>
+            @foreach($trayectoria as $item)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $item['inscripcion']['ciclo']['nombre'] }}</td>
+                <td>{{ $item['curso']['anio'] }}</td>
+                <td>{{ $item['curso']['division'] }}</td>
+                <td>{{ $item['curso']['turno'] }}</td>
+                <td>{{ $item['inscripcion']['centro']['nombre'] }}</td>
+                <td>{{ $item['inscripcion']['centro']['nivel_servicio'] }}</td>
+                <td>{{ $item['inscripcion']['estado_inscripcion'] }}</td>
+                <td>{{ $item['inscripcion']['legajo_nro'] }}</td>
             </tr>
+            @endforeach
         </table>
 
         </div>

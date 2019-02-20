@@ -17,7 +17,7 @@ class Ficha extends Controller
         $rules = ['persona_id'=>'required|numeric'];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        // Consumo de API
+        // Consumo API Personas
         $persona = new ApiConsume();
         $persona->get("personas/$persona_id",[
             "with" => "barrio"
@@ -25,13 +25,23 @@ class Ficha extends Controller
 
         if($persona->hasError()) { return $persona->getError(); }
 
+
+        // Consumo API Inscripciones
+        $trayectoria = new ApiConsume();
+        $trayectoria->get("inscripcion/find",[
+            "persona_id" => $persona_id
+        ]);
+
+        if($trayectoria->hasError()) { return $trayectoria->getError(); }
+
         // Renderizacion de PDF
         $options = [
             'isHtml5ParserEnabled' => true,
             'isRemoteEnabled' => true
         ];
         $pdf = PDF::setOptions($options)->loadView('personas.ficha',[
-            'persona' => $persona->response()
+            'persona' => $persona->response(),
+            'trayectoria' => $trayectoria->response()
         ]);
 
         return $pdf->stream("persona_ficha_$persona_id.pdf");
