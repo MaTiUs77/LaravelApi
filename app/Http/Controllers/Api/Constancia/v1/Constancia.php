@@ -22,7 +22,7 @@ class Constancia extends Controller
         $input = ['inscripcion_id'=>$inscripcion_id];
         if($fail = DefaultValidator::make($input,$this->validationRules)) return $fail;
 
-        $cursoInscripcions = CursosInscripcions::findOrFail($inscripcion_id);
+        $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)->first();
 
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('constancia_inscripcion',array('cursoInscripcions'=>$cursoInscripcions));
