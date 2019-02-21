@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Constancia\v1;
 
 use App\CursosInscripcions;
+use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 
 use Barryvdh\DomPDF\Facade as PDF;
@@ -19,14 +20,7 @@ class Constancia extends Controller
     {
         // Se validan los parametros
         $input = ['inscripcion_id'=>$inscripcion_id];
-        $validator = Validator::make($input,$this->validationRules);
-
-        if ($validator->fails()) {
-            return [
-                'error_type' => 'ValidationException',
-                'error' => $validator->errors()
-            ];
-        }
+        if($fail = DefaultValidator::make($input,$this->validationRules)) return $fail;
 
         $cursoInscripcions = CursosInscripcions::findOrFail($inscripcion_id);
 
