@@ -24,6 +24,10 @@ class Constancia extends Controller
 
         $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)->first();
 
+        if(!$cursoInscripcions) {
+            return ['error' => 'No se encontro una inscripcion con esa ID'];
+        }
+
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('constancia_inscripcion',array('cursoInscripcions'=>$cursoInscripcions));
 
@@ -32,18 +36,13 @@ class Constancia extends Controller
 
     public function regular($inscripcion_id)
     {
-        // Se validan los parametros
         $input = ['inscripcion_id'=>$inscripcion_id];
-        $validator = Validator::make($input,$this->validationRules);
+        if($fail = DefaultValidator::make($input,$this->validationRules)) return $fail;
 
-        if ($validator->fails()) {
-            return [
-                'error_type' => 'ValidationException',
-                'error' => $validator->errors()
-            ];
+        $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)->first();
+        if(!$cursoInscripcions) {
+            return ['error' => 'No se encontro una inscripcion con esa ID'];
         }
-
-        $cursoInscripcions = CursosInscripcions::findOrFail($inscripcion_id);
 
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('constancia_regular',array('cursoInscripcions'=>$cursoInscripcions));
