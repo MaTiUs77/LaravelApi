@@ -93,6 +93,22 @@ class PersonasCrud extends Controller
         if($persona != null && $persona->familiar && !$persona->alumno) {
             $this->updatePersonaIdFromUserSocial($persona->id);
         }
+
+      $validationRules = [
+            'id' => 'numeric'
+        ];
+
+        // Se validan los parametros
+        $validator = Validator::make(['id'=>$id], $validationRules);
+        if ($validator->fails()) {
+            return [
+                'error' => 'Parametros invalidos',
+                'message' => $validator->errors()
+            ];
+        }
+
+        $persona = Personas::with(['Ciudad']);
+        return $persona->where('id',$id)->first();
     }
 
     private function updatePersonaIdFromUserSocial($persona_id) {
