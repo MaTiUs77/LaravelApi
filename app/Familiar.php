@@ -10,6 +10,6 @@ class Familiar extends Model
 
     function Persona()
     {
-        return $this->hasOne('App\Personas', 'id', 'persona_id');
+        return $this->belongsTo('App\Personas', 'persona_id', 'id');
     }
 }

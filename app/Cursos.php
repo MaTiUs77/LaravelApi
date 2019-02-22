@@ -12,7 +12,7 @@ class Cursos extends Model
 
     function Centro()
     {
-        return $this->hasOne('App\Centros', 'id', 'centro_id');
+        return $this->belongsToMany('App\Centros', 'id', 'centro_id');
     }
 
     function Titulacion()

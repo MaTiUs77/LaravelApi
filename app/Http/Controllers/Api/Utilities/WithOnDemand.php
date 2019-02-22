@@ -10,8 +10,13 @@ class WithOnDemand extends Controller
         // Adjunta "with" al modelo
         if($withAppend) {
             $appendWith = explode(',',$withAppend);
-            $withDefault = collect($withDefault)->merge($appendWith)->unique()->toArray();
+            $uniques= collect($withDefault)->merge($appendWith)->unique();
+
+            return $uniques->transform(function ($item) {
+                return strtolower($item);
+            })->toArray();
         }
+
         return $withDefault;
     }
 }

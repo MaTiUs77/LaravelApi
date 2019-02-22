@@ -89,7 +89,7 @@ trait WithInscripcionScopes {
 
     // Filtros de ALUMNO
     function scopeFiltrarAlumnoId($query,$alumno_id) {
-        $query->whereHas('Inscripcion.Alumno.Persona', function ($q) use($alumno_id) {
+        $query->whereHas('Inscripcion.Alumno', function ($q) use($alumno_id) {
             return $q->where('id', $alumno_id);
         });
     }
