@@ -25,14 +25,21 @@ class Ficha extends Controller
 
         if($persona->hasError()) { return $persona->getError(); }
 
-
         // Consumo API Inscripciones
         $trayectoria = new ApiConsume();
         $trayectoria->get("inscripcion/find",[
-            "persona_id" => $persona_id
+            "persona_id" => $persona_id,
+            "with" => "inscripcion.alumno.familiares.persona"
         ]);
 
         if($trayectoria->hasError()) { return $trayectoria->getError(); }
+
+        $cursoIns = $trayectoria->response();
+        $soloFamiliares= collect($cursoIns)->map(function($v){
+            return $v['inscripcion']['alumno']['familiares'];
+        });
+
+        $familiares = $soloFamiliares->flatten(1)->unique('id');
 
         // Renderizacion de PDF
         $options = [
@@ -41,7 +48,8 @@ class Ficha extends Controller
         ];
         $pdf = PDF::setOptions($options)->loadView('personas.ficha',[
             'persona' => $persona->response(),
-            'trayectoria' => $trayectoria->response()
+            'trayectoria' => $trayectoria->response(),
+            'familiares' => $familiares
         ]);
 
         return $pdf->stream("persona_ficha_$persona_id.pdf");

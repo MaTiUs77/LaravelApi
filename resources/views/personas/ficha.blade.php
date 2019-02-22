@@ -85,12 +85,14 @@
                 <th>Telefono</th>
                 <th>Email</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @foreach($familiares as $item)
+                <tr>
+                    <td>{{ $item['vinculo'] }}</td>
+                    <td>{{ $item['persona']['nombre_completo'] }}</td>
+                    <td>{{ $item['persona']['telefono_nro'] }}</td>
+                    <td>{{ $item['persona']['email'] }}</td>
+                </tr>
+            @endforeach
         </table>
 
         <h3>TRAYECTO ESCOLAR</h3>
