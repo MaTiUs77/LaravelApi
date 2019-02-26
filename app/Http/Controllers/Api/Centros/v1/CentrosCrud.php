@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 
@@ -56,6 +57,10 @@ class CentrosCrud extends Controller
             return $q->where('nombre','like',"%$v%");
         });
 
+       $query->when(request('division'), function ($q, $v) {
+           $q->filtrarCursos($v);
+        });
+
         $centro = $query->get();
 
         if($centro->isNotEmpty()) {
@@ -75,6 +80,11 @@ class CentrosCrud extends Controller
         // Adjunta relaciones a demanda con el parametro "with"
         $with = WithOnDemand::set(['Ciudad'], request('with'));
         $query = Centros::with($with);
+
+        $query->when(request('division'), function ($q, $v) {
+            $q->filtrarCursos($v);
+        });
+        
         // Localiza el centro en cuestion
         $centro = $query->findOrFail($id);
 

@@ -29,7 +29,13 @@
 </head><body>
     <div style="font-size: 14px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
         <p>
-            COLEGIO PROVINCIAL “ERNESTO SABATO”
+            {{ $trayectoria->last()['inscripcion']['centro']['nombre']  }}
+        </p>
+
+        <p class="fecha">
+            {{ $fechaActual->format('d/m/Y')  }}
+            a las
+            {{ $fechaActual->format('H:i')  }}
         </p>
 
         <h2 style="text-align: center">
@@ -44,9 +50,6 @@
 
         <hr>
 
-        <p class="fecha">
-            4 DE SEPTIEMBRE DEL 20XX A LAS 16:30
-        </p>
         <h3>DATOS DE PERSONALES DEL ALUMNO</h3>
         <table class="tabla">
             <tr>
@@ -85,12 +88,14 @@
                 <th>Telefono</th>
                 <th>Email</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @foreach($familiares as $item)
+                <tr>
+                    <td>{{ $item['vinculo'] }}</td>
+                    <td>{{ $item['persona']['nombre_completo'] }}</td>
+                    <td>{{ $item['persona']['telefono_nro'] }}</td>
+                    <td>{{ $item['persona']['email'] }}</td>
+                </tr>
+            @endforeach
         </table>
 
         <h3>TRAYECTO ESCOLAR</h3>
@@ -105,7 +110,7 @@
                 <th>Estado inscripcion</th>
                 <th>Legajo</th>
             </tr>
-            @foreach(collect($trayectoria)->sortBy('inscripcion.legajo_nro') as $item)
+            @foreach($trayectoria as $item)
             <tr>
                 <td>{{ $item['inscripcion']['ciclo']['nombre'] }}</td>
                 <td>{{ $item['curso']['anio'] }}</td>

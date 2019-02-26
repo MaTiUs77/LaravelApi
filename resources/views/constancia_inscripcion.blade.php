@@ -26,7 +26,7 @@
             </td>
             <td>
                 <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
-                <div style="text-align: right;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
+                <div style="text-align: right; font-size: 12px">“2019 – AÑO DEL CENTENARIO DEL NACIMIENTO DE EVA DUARTE DE PERÓN”</div>
             </td>
         </tr>
     </table>
@@ -47,6 +47,7 @@
         en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
     </p>
     <p>
+        {{--
         @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Secundario')
             IMPORTANTE: La inscripción toma carácter de <b>NO CONFIRMADA</b> hasta tanto finalicen los plazos de inscripción.
             Se confirmará automáticamente si no se superan las plazas disponibles.<br>
@@ -54,7 +55,7 @@
             El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
             institución el día <b>Miércoles 12 de Diciembre</b>.
         @endif
-
+        --}}
         <br>
         <br>
     </p>
@@ -81,7 +82,7 @@
             </td>
             <td>
                 <h2 style="text-align: right">INSCRIPCIÓN NÚMERO | {{ $cursoInscripcions->inscripcion->legajo_nro }}</h2>
-                <div style="text-align: right;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
+                <div style="text-align: right; font-size: 12px">“2019 – AÑO DEL CENTENARIO DEL NACIMIENTO DE EVA DUARTE DE PERÓN”</div>
             </td>
         </tr>
     </table>
@@ -102,6 +103,7 @@
         en <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
     </p>
     <p>
+        {{--
         @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Secundario')
             IMPORTANTE: La inscripción toma carácter de <b>NO CONFIRMADA</b> hasta tanto finalicen los plazos de inscripción.
             Se confirmará automáticamente si no se superan las plazas disponibles.<br>
@@ -109,7 +111,7 @@
             El padre/madre/tutor, en caso de que las inscripciones superen la cantidad de plazas disponibles, deberá presentarse en esta
             institución el día <b>Miércoles 12 de Diciembre</b>.
         @endif
-
+        --}}
         <br>
         <br>
     </p>

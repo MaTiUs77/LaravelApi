@@ -8,14 +8,26 @@ class Alumnos extends Model
 {
     protected $table = 'alumnos';
 
+    function Familiares()
+    {
+        return $this->hasManyThrough(
+            'App\Familiar',
+            'App\AlumnosFamiliar',
+            'alumno_id', // Foreign key on users table...
+            'id', // Foreign key on posts table...
+            'id', // Local key on countries table...
+            'familiar_id' // Local key on users table...
+        );
+    }
+
     function Persona()
     {
-        return $this->hasOne('App\Personas', 'id', 'persona_id');
+        return $this->belongsTo('App\Personas', 'persona_id', 'id');
     }
 
     function Centro()
     {
-        return $this->hasOne('App\Centros', 'id', 'centro_id');
+        return $this->belongsTo('App\Centros', 'centro_id','id');
     }
 
     function Inscripcion()
