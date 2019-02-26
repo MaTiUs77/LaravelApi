@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class Ficha extends Controller
 {
@@ -26,21 +27,23 @@ class Ficha extends Controller
         if($persona->hasError()) { return $persona->getError(); }
 
         // Consumo API Inscripciones
-        $trayectoria = new ApiConsume();
-        $trayectoria->get("inscripcion/find",[
+        $inscripciones = new ApiConsume();
+        $inscripciones->get("inscripcion/find",[
             "persona_id" => $persona_id,
             "with" => "inscripcion.alumno.familiares.persona"
         ]);
 
-        if($trayectoria->hasError()) { return $trayectoria->getError(); }
+        if($inscripciones->hasError()) { return $inscripciones->getError(); }
 
-        $cursoIns = $trayectoria->response();
-        $soloFamiliares= collect($cursoIns)->map(function($v){
+        $trayectoria = collect($inscripciones->response())->sortBy('inscripcion.legajo_nro');
+
+        $soloFamiliares= $trayectoria->map(function($v){
             return $v['inscripcion']['alumno']['familiares'];
         });
 
         $familiares = $soloFamiliares->flatten(1)->unique('id');
-
+        $fechaActual = Carbon::now();
+        
         // Renderizacion de PDF
         $options = [
             'isHtml5ParserEnabled' => true,
@@ -48,8 +51,9 @@ class Ficha extends Controller
         ];
         $pdf = PDF::setOptions($options)->loadView('personas.ficha',[
             'persona' => $persona->response(),
-            'trayectoria' => $trayectoria->response(),
-            'familiares' => $familiares
+            'trayectoria' => $trayectoria,
+            'familiares' => $familiares,
+            'fechaActual' => $fechaActual,
         ]);
 
         return $pdf->stream("persona_ficha_$persona_id.pdf");
