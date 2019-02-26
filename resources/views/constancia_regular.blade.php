@@ -24,7 +24,7 @@
                         @endif
                     </td>
                     <td>
-                        <div style="text-align: right;line-height: 150px;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
+                        <div style="text-align:right; line-height: 150px; font-size: 11px">“2019 – AÑO DEL CENTENARIO DEL NACIMIENTO DE EVA DUARTE DE PERÓN”</div>
                     </td>
                 </tr>
             </table>
