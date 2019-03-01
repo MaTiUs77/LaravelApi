@@ -30,8 +30,8 @@ class Alumnos extends Model
         return $this->belongsTo('App\Centros', 'centro_id','id');
     }
 
-    function Inscripcion()
+    function Inscripciones()
     {
-        return $this->belongsToMany('App\Inscripcions', 'alumno_id', 'id');
+        return $this->hasMany('App\Inscripcions', 'alumno_id','id');
     }
 }
