@@ -28,7 +28,7 @@ class Personas extends Model
 
     public function getNombreCompletoAttribute()
     {
-        return "{$this->nombres}, {$this->apellidos}";
+        return "{$this->apellidos}, {$this->nombres}";
     }
 
     function Ciudad()
