@@ -28,29 +28,23 @@
 </style>
 </head><body>
     <div style="font-size: 14px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
-        <p>
-            {{ $trayectoria->last()['inscripcion']['centro']['nombre']  }}
+        <p style="text-align:right">
+            SIEP | {{ $trayectoria->last()['inscripcion']['centro']['nombre']  }}
         </p>
 
-        <p class="fecha">
+        <p class="fecha" style="text-align:right">
             {{ $fechaActual->format('d/m/Y')  }}
             a las
             {{ $fechaActual->format('H:i')  }}
         </p>
 
-        <h2 style="text-align: center">
-            LEGAJO DEL ALUMNO
-        </h2>
-
-        <h2 class="alumno">
-           {{ $persona['nombre_completo']  }}
-            -
-            DNI {{ $persona['documento_nro'] }}
+        <h2 style="text-align: rigth">
+            FICHA DEL ALUMNO | {{ $persona['nombre_completo'] }} [ DNI {{ $persona['documento_nro'] }} ]
         </h2>
 
         <hr>
 
-        <h3>DATOS DE PERSONALES DEL ALUMNO</h3>
+        <h3>ALUMNO | DATOS DE PERSONA</h3>
         <table class="tabla">
             <tr>
                 <th>Fecha de nacimiento</th>
@@ -63,11 +57,11 @@
                 <td>{{ $persona['nacionalidad'] }}</td>
             </tr>
         </table>
-
-        <h3>DATOS DE CONTACTO DEL ALUMNO</h3>
+        <hr>
+        <h3>ALUMNO | DATOS DE CONTACTO</h3>
         <table class="tabla">
             <tr>
-                <th>Domicilio</th>
+                <th>Dirección</th>
                 <th>Barrio</th>
                 <th>Telefono</th>
                 <th>Email</th>
@@ -79,12 +73,14 @@
                 <td>{{ $persona['email'] }}</td>
             </tr>
         </table>
-
-        <h3>FAMILIARES</h3>
+        <hr>
+        <h3>FAMILIARES | DATOS DE CONTACTO</h3>
         <table class="tabla">
             <tr>
                 <th>Vinculo</th>
                 <th>Nombre completo</th>
+                <th>Dirección</th>
+                <th>Barrio</th>
                 <th>Telefono</th>
                 <th>Email</th>
             </tr>
@@ -92,13 +88,15 @@
                 <tr>
                     <td>{{ $item['vinculo'] }}</td>
                     <td>{{ $item['persona']['nombre_completo'] }}</td>
+                    <td>{{ $item['persona']['calle_nombre'] }} {{ $item['persona']['calle_nro'] }}</td>
+                    <td>{{ $persona['barrio']['nombre'] }}</td>
                     <td>{{ $item['persona']['telefono_nro'] }}</td>
                     <td>{{ $item['persona']['email'] }}</td>
                 </tr>
             @endforeach
         </table>
-
-        <h3>TRAYECTO ESCOLAR</h3>
+        <hr>
+        <h3>ALUMNO | TRAYECTORIA ESCOLAR [ 2017 - {{ $fechaActual->format('Y') }} ]</h3>
         <table class="tabla">
             <tr>
                 <th>Ciclo</th>
