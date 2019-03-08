@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;

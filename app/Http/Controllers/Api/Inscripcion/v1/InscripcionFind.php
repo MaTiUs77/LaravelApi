@@ -96,8 +96,6 @@ class InscripcionFind extends Controller
         ];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $with = WithOnDemand::set(,request('with'));
-
         $query= CursosInscripcions::withOnDemand([
             'curso',
             'inscripcion.ciclo',
