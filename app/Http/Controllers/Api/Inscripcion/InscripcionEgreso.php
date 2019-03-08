@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class InscripcionEgreso extends Controller
@@ -30,8 +29,6 @@ class InscripcionEgreso extends Controller
         $error = [];
         $success = [];
 
-        $allslack = [];
-
         foreach($cursoInscripcion as $curins)
         {
             $inscripcion = $curins->inscripcion;
@@ -43,24 +40,12 @@ class InscripcionEgreso extends Controller
                     $inscripcion->estado_inscripcion = "EGRESO";
                     $inscripcion->save();
                     $success[$inscripcion->id] = "success";
-
-                    $slack = $this->slackFormat($inscripcion);
-                    $slack['operacion'] = "completa";
-
                 } else {
                     $error[$inscripcion->id] = "No puede egresar";
-
-                    $slack = $this->slackFormat($inscripcion);
-                    $slack['operacion'] = "No puede egresar";
                 }
             } else {
                 $error[$inscripcion->id] = "Ya se encuentra egresado";
-
-                $slack = $this->slackFormat($inscripcion);
-                $slack['operacion'] = "Ya se encuentra egresado";
             }
-
-            $allslack[] = $slack;
         }
 
         $output['success'] = $success;
@@ -69,15 +54,6 @@ class InscripcionEgreso extends Controller
         {
             $output['error'] = $error;
         }
-
-        // SLACK
-        Log::channel('siep_desarrollo')
-            ->debug("InscripcionEgreso::start()",[
-                'user'=>$user->username,
-                'centro'=>$user->centro->nombre,
-                'IDs para Egreso'=>request('id'),
-                'detalle'=>$allslack
-        ]);
 
         return $output;
     }
@@ -124,17 +100,5 @@ class InscripcionEgreso extends Controller
         }
 
         return $egresar;
-    }
-
-    private function slackFormat($inscripcion) {
-        return $inscripcion->only(
-            'id',
-            'legajo_nro',
-            'fecha_egreso',
-            'estado_inscripcion',
-            'alumno_id',
-            'ciclo_id',
-            'centro_id'
-        );
     }
 }
