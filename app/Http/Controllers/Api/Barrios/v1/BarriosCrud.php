@@ -10,12 +10,8 @@ class BarriosCrud extends Controller
 {
     public function index()
     {
-        // Adjunta relaciones a demanda con el parametro "with"
-        $with = WithOnDemand::set([], request('with'));
-        $query = Barrios::with($with);
-
+        $query = Barrios::withOnDemand();
         $response = $query->get();
-
         return $response;
     }
 }

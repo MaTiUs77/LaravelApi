@@ -5,20 +5,10 @@ namespace App\Http\Controllers\Api\Centros\v1;
 use App\Centros;
 use App\Ciudades;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
 
 class CentrosCrud extends Controller
 {
-    public function __construct(Request $req)
-    {
-    }
-
     public function index()
     {
         // Se validan los parametros
@@ -31,8 +21,8 @@ class CentrosCrud extends Controller
             'nombre' => 'string'
         ];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
-
-        $query = Centros::with(['ciudad']);
+        
+        $query = Centros::withOnDemand(['ciudad']);
 
         $query->when(request('ciudad_id'), function ($q, $v) {
             return $q->where('ciudad_id', $v);
@@ -75,7 +65,7 @@ class CentrosCrud extends Controller
         $rules = ['id'=>'required|numeric'];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $query = Centros::with(['ciudad']);
+        $query = Centros::withOnDemand(['ciudad']);
 
         $query->when(request('division'), function ($q, $v) {
             $q->byCursosDivision($v);
@@ -83,7 +73,7 @@ class CentrosCrud extends Controller
         
         // Localiza el centro en cuestion
         $centro = $query->findOrFail($id);
-        
+
         return $centro;
     }
 }

@@ -59,14 +59,12 @@ class InscripcionList extends Controller
 
         $por_pagina = Input::get('por_pagina');
 
-        $with = WithOnDemand::set([
-            'Curso',
-            'Inscripcion.Ciclo',
-            'Inscripcion.Centro.Ciudad',
-            'Inscripcion.Alumno.Persona.Ciudad',
-        ],request('with'));
-
-        $query = CursosInscripcions::with($with);
+        $query = CursosInscripcions::withOnDemand([
+            'curso',
+            'inscripcion.ciclo',
+            'inscripcion.centro.ciudad',
+            'inscripcion.alumno.persona.ciudad',
+        ]);
 
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
         if($ciclo) { $query->filtrarCicloNombre($ciclo); }

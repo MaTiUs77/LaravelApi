@@ -10,9 +10,8 @@ class CiudadesCrud extends Controller
 {
     public function index()
     {
-        // Adjunta relaciones a demanda con el parametro "with"
-        $with = WithOnDemand::set([], request('with'));
-        $query = Ciudades::select(['id','nombre','departamento_id'])->with($with);
+        $query = Ciudades::withOnDemand()
+            ->select(['id','nombre','departamento_id']);
 
         $ciudades = $query->get();
 

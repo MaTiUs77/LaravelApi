@@ -56,7 +56,6 @@ class PersonasCrud extends Controller
 
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-//        $with = WithOnDemand::set(['Ciudad'], request('with'));
         // Continua si las validaciones son efectuadas
         $persona = Personas::withOnDemand(['ciudad']);
         return $persona->findOrFail($id);
