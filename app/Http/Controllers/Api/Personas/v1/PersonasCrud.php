@@ -6,7 +6,6 @@ use App\Ciudades;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudIndexReq;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudStoreReq;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use App\Personas;
 use App\UserSocial;
@@ -19,9 +18,10 @@ class PersonasCrud extends Controller
         $this->middleware('jwt.social',['except'=>['index','show']]);
     }
 
+    // List
     public function index(PersonasCrudIndexReq $req)
     {
-        $persona = Personas::with(['ciudad']);
+        $persona = Personas::withOnDemand(['ciudad']);
 
         $persona->when(request('id'), function ($q, $v) {
             return $q->findOrFail($v);
@@ -47,6 +47,21 @@ class PersonasCrud extends Controller
         return $persona->customPagination();
     }
 
+    // View
+    public function show($id)
+    {
+        // Se validan los parametros
+        $input = ['id'=>$id];
+        $rules = ['id'=>'numeric'];
+
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
+
+//        $with = WithOnDemand::set(['Ciudad'], request('with'));
+        // Continua si las validaciones son efectuadas
+        $persona = Personas::withOnDemand(['ciudad']);
+        return $persona->findOrFail($id);
+    }
+
     // Create
     public function store(PersonasCrudStoreReq $req)
     {
@@ -68,20 +83,6 @@ class PersonasCrud extends Controller
         }
 
         return compact('persona');
-    }
-
-    // View
-    public function show($id)
-    {
-        // Se validan los parametros
-        $input = ['id'=>$id];
-        $rules = ['id'=>'numeric'];
-
-        if($fail = DefaultValidator::make($input,$rules)) return $fail;
-
-        // Continua si las validaciones son efectuadas
-        $persona = Personas::with(['ciudad']);
-        return $persona->findOrFail($id);
     }
 
     private function updatePersonaIdFromUserSocial($persona_id) {
