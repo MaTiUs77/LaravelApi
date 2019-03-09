@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Input;
 trait CustomPaginationScope {
 
     function scopeCustomPagination($query,$per_page=10) {
+        if(request('por_pagina'))
+        {
+            $per_page = request('por_pagina');
+        }
+        
         if($per_page=='all') {
             $countQuery= $query->count();
             $result = $query->paginate($countQuery);

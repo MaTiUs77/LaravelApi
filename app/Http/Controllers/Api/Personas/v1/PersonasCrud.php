@@ -6,7 +6,6 @@ use App\Ciudades;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudIndexReq;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudStoreReq;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use App\Personas;
 use App\UserSocial;
@@ -16,13 +15,13 @@ class PersonasCrud extends Controller
 {
     public function __construct(Request $req)
     {
-        $this->middleware('jwt.social',['except'=>['index','show','store']]);
+        $this->middleware('jwt.social',['except'=>['index','show']]);
     }
 
+    // List
     public function index(PersonasCrudIndexReq $req)
     {
-        $with = WithOnDemand::set(['Ciudad'], request('with'));
-        $persona = Personas::with($with);
+        $persona = Personas::withOnDemand(['ciudad']);
 
         $persona->when(request('id'), function ($q, $v) {
             return $q->findOrFail($v);
@@ -45,7 +44,21 @@ class PersonasCrud extends Controller
             $persona->where('familiar',request('familiar'));
         }
 
-        return $persona->customPagination(request('por_pagina'));
+        return $persona->customPagination();
+    }
+
+    // View
+    public function show($id)
+    {
+        // Se validan los parametros
+        $input = ['id'=>$id];
+        $rules = ['id'=>'numeric'];
+
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
+
+        // Continua si las validaciones son efectuadas
+        $persona = Personas::withOnDemand(['ciudad']);
+        return $persona->findOrFail($id);
     }
 
     // Create
@@ -64,51 +77,11 @@ class PersonasCrud extends Controller
             $persona = Personas::create($req->all());
         }
 
-        // Ejecutar solo cuando el TOKEN pertenezca a UserSocial
-        //$this->executeUserSocialJwt($persona);
-
-        return compact('persona');
-    }
-
-    // View
-    public function show($id)
-    {
-        $with = WithOnDemand::set(['Ciudad'], request('with'));
-
-        // Se validan los parametros
-        $input = ['id'=>$id];
-        $rules = ['id'=>'numeric'];
-
-        if($fail = DefaultValidator::make($input,$rules)) return $fail;
-
-        // Continua si las validaciones son efectuadas
-        $persona = Personas::with($with);
-        return $persona->findOrFail($id);
-    }
-
-    private function executeUserSocialJwt($persona)
-    {
-        // La persona existe en este punto
-        // si es familiar, y no es un alumno, se relaciona con el UserSocial (tutor)
         if($persona != null && $persona->familiar && !$persona->alumno) {
             $this->updatePersonaIdFromUserSocial($persona->id);
         }
 
-      $validationRules = [
-            'id' => 'numeric'
-        ];
-
-        // Se validan los parametros
-        $validator = Validator::make(['id'=>$id], $validationRules);
-        if ($validator->fails()) {
-            return [
-                'error' => 'Parametros invalidos',
-                'message' => $validator->errors()
-            ];
-        }
-
-        $persona = Personas::with(['Ciudad']);
-        return $persona->where('id',$id)->first();
+        return compact('persona');
     }
 
     private function updatePersonaIdFromUserSocial($persona_id) {

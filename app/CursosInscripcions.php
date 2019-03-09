@@ -5,11 +5,12 @@ namespace App;
 use App\Traits\CustomPaginationScope;
 use App\Traits\WithCursoScopes;
 use App\Traits\WithInscripcionScopes;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class CursosInscripcions extends Model
 {
-    use WithInscripcionScopes, WithCursoScopes, CustomPaginationScope;
+    use WithInscripcionScopes, WithCursoScopes, CustomPaginationScope, WithOnDemandTrait;
 
     protected $table = 'cursos_inscripcions';
     public $timestamps = false;
