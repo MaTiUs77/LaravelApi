@@ -1,4 +1,4 @@
-FROM decyt/nginx-php-fpm:latest
+FROM decyt/nginx-php-fpm:7.2-fpm
 
 # Configure nginx
 COPY nginx-php-fpm/nginx/nginx.conf /etc/nginx/nginx.conf
