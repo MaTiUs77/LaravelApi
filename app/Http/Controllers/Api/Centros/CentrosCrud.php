@@ -21,7 +21,6 @@ class CentrosCrud extends Controller
             'id' => 'required|numeric',
         ];
 
-        $_sda =
         $inputs = Input::all();
         $inputs['id'] = $id;
 
