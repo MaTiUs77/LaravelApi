@@ -45,11 +45,7 @@ class Ficha extends Controller
         $fechaActual = Carbon::now();
         
         // Renderizacion de PDF
-        $options = [
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true
-        ];
-        $pdf = PDF::setOptions($options)->loadView('personas.ficha',[
+        $pdf = PDF::loadView('personas.ficha',[
             'persona' => $persona->response(),
             'trayectoria' => $trayectoria,
             'familiares' => $familiares,

@@ -37,8 +37,10 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
+
         $this->mapWebRoutes();
-        //$this->customWebRoutes();
+
+        //
     }
 
     /**
@@ -71,26 +73,6 @@ class RouteServiceProvider extends ServiceProvider
         foreach($files as $file) {
             Route::prefix('api')
                 ->middleware('api')
-                ->namespace($this->namespace)
-                ->group($file->getRealPath());
-        }
-    }
-
-    /**
-     * Define the "custom" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function customWebRoutes()
-    {
-        $files = Finder::create()
-            ->in(app_path('Http/Controllers'))
-            ->name('routes.php');
-
-        foreach($files as $file) {
-            Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group($file->getRealPath());
         }

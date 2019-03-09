@@ -15,7 +15,7 @@
     <table style="width: 100%;" class="header">
         <tr>
             <td>
-                <img src="escudo.png" style="margin-left:30px;width: 100px">
+                <img src="img/escudo.png" style="margin-left:30px;width: 100px">
                 <div style="font-style: italic">Provincia de Tierra del Fuego,</div>
                 <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                 <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
@@ -71,7 +71,7 @@
     <table style="width: 100%;" class="header">
         <tr>
             <td>
-                <img src="escudo.png" style="margin-left:30px;width: 100px">
+                <img src="img/escudo.png" style="margin-left:30px;width: 100px">
                 <div style="font-style: italic">Provincia de Tierra del Fuego,</div>
                 <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                 <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>

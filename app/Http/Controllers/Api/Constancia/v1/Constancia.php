@@ -28,8 +28,7 @@ class Constancia extends Controller
             return ['error' => 'No se encontro una inscripcion con esa ID'];
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('constancia_inscripcion',array('cursoInscripcions'=>$cursoInscripcions));
+        $pdf = PDF::loadView('constancia_inscripcion',array('cursoInscripcions'=>$cursoInscripcions));
 
         return $pdf->stream("constancia_inscripcion_$inscripcion_id.pdf");
     }
@@ -44,8 +43,7 @@ class Constancia extends Controller
             return ['error' => 'No se encontro una inscripcion con esa ID'];
         }
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('constancia_regular',array('cursoInscripcions'=>$cursoInscripcions));
+        $pdf = PDF::loadView('constancia_regular',array('cursoInscripcions'=>$cursoInscripcions));
 
         return $pdf->stream("constancia_regular_$inscripcion_id.pdf");
     }

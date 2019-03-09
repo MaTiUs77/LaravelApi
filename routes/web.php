@@ -1,7 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin:*');
-header('Access-Control-Allow-Methods:GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers:Origin, Content-Type, Accept, Authorization, X-Requested-With');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +10,7 @@ header('Access-Control-Allow-Headers:Origin, Content-Type, Accept, Authorization
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/home', 'HomeController@index');
+Route::get('/', function () {
+    return view('welcome');
+});
