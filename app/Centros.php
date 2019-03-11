@@ -2,15 +2,20 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
+use App\Traits\Scopes\CursosScopes;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Input;
 
 class Centros extends Model
 {
+    use CursosScopes, CustomPaginationScope, WithOnDemandTrait;
+
     protected $table = 'centros';
 
-    protected $with=[
-        'Cursos'
+    protected $casts = [
+        'lat' => 'float',
+        'lng' => 'float'
     ];
 
     function Barrio()
@@ -23,20 +28,25 @@ class Centros extends Model
         return $this->hasOne('App\Ciudades', 'id', 'ciudad_id');
     }
 
-    function Departamentos()
+    function Departamento()
     {
         return $this->hasOne('App\Departamentos', 'id', 'departamento_id');
     }
 
     function Cursos()
     {
-        $division = Input::get('division');
+        return $this->hasMany('App\Cursos', 'centro_id', 'id');
+    }
 
-        $curso = $this->hasOne('App\Cursos', 'centro_id', 'id');
+    function Titulaciones()
+    {
+        return $this->hasMany('App\CentrosTitulacions', 'centro_id', 'id');
+    }
 
-        if($division){
-            $curso->where('division','<>','');
-        }
-        return $curso;
+    function NivelServicio()
+    {
+        return $this->hasOne('App\NivelServicio', 'nombre', 'nivel_servicio');
     }
 }
+
+

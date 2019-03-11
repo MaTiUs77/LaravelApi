@@ -2,26 +2,40 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Alumnos extends Model
 {
+    use WithOnDemandTrait, CustomPaginationScope;
+
     protected $table = 'alumnos';
 
-    //protected $hidden = ['centro_id'];
+    function Familiares()
+    {
+        return $this->hasManyThrough(
+            'App\Familiar',
+            'App\AlumnosFamiliar',
+            'alumno_id', // Foreign key on users table...
+            'id', // Foreign key on posts table...
+            'id', // Local key on countries table...
+            'familiar_id' // Local key on users table...
+        );
+    }
 
     function Persona()
     {
-        return $this->hasOne('App\Personas', 'id', 'persona_id');
+        return $this->belongsTo('App\Personas', 'persona_id', 'id');
     }
 
     function Centro()
     {
-        return $this->hasOne('App\Centros', 'id', 'centro_id');
+        return $this->belongsTo('App\Centros', 'centro_id','id');
     }
 
-    function Inscripcion()
+    function Inscripciones()
     {
-        return $this->hasOne('App\Inscripcions', 'alumno_id', 'id');
+        return $this->hasMany('App\Inscripcions', 'alumno_id','id');
     }
 }

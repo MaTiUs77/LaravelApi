@@ -1,7 +1,8 @@
 <?php
-namespace App\Http\Controllers\Api\Inscripcion;
+namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
+use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -9,11 +10,14 @@ use Illuminate\Support\Facades\Validator;
 class InscripcionFind extends Controller
 {
     public function startFind() {
-        $inscripcion_id = Input::get('inscripcion_id');
+        // Resultados unicos
+        $inscripcion_id = Input::get('id');
         $persona_id= Input::get('persona_id');
         $legajo_nro= Input::get('legajo_nro');
-        $fullname= Input::get('fullname');
         $documento_nro= Input::get('documento_nro');
+
+        // Multiples resultados
+        $fullname= Input::get('fullname');
 
         if($inscripcion_id){
             return $this->byId($inscripcion_id);
@@ -21,10 +25,6 @@ class InscripcionFind extends Controller
 
         if($persona_id){
             return $this->byPersona($persona_id);
-        }
-
-        if($fullname){
-            return $this->byPersonaFullname();
         }
 
         if($legajo_nro){
@@ -35,23 +35,28 @@ class InscripcionFind extends Controller
             return $this->byDocumentoNro($documento_nro);
         }
 
+        if($fullname){
+            return $this->byPersonaFullname();
+        }
+
         return ['error'=> 'No definio ningun filtro'];
     }
 
     // INSCRIPCIONES
     public function byId($inscripcion_id)
     {
-        $validationRules = [
-            'inscripcion_id' => 'numeric'
-        ];
+        $input = ['inscripcion_id'=>$inscripcion_id];
+        $rules = ['inscripcion_id' => 'numeric'];
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $validator = Validator::make(['inscripcion_id'=>$inscripcion_id], $validationRules);
-
-        if ($validator->fails()) {
-            return ['error' => $validator->errors()];
-        }
-
-        $cursoInscripcions = CursosInscripcions::where('inscripcion_id',$inscripcion_id)->first();
+        $cursoInscripcions = CursosInscripcions::withOnDemand([
+            'curso',
+            'inscripcion.ciclo',
+            'inscripcion.centro.ciudad',
+            'inscripcion.alumno.persona.ciudad',
+        ])
+            ->where('inscripcion_id',$inscripcion_id)
+            ->first();
 
         if($cursoInscripcions==null)
         {
@@ -82,53 +87,42 @@ class InscripcionFind extends Controller
     // PERSONAS
     public function byPersona($persona_id)
     {
-        $validationRules = [
-            'persona_id' => 'numeric',
-            'ver' => 'string'
+        $input = [
+            'personas_id'=>$persona_id,
         ];
+        $rules = [
+            'persona_id' => 'numeric',
+            'ver' => 'string',
+        ];
+        if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $params = Input::all();
-        $params['persona_id'] = $persona_id;
+        $query= CursosInscripcions::withOnDemand([
+            'curso',
+            'inscripcion.ciclo',
+            'inscripcion.centro.ciudad',
+            'inscripcion.alumno.persona.ciudad',
+        ]);
 
-        $validator = Validator::make($params, $validationRules);
-
-        if ($validator->fails()) {
-            return ['error' => $validator->errors()];
-        }
-
-        $cursoInscripcions = CursosInscripcions::filtrarPersona($persona_id)->get();
+        $cursoInscripcions = $query->filtrarPersona($persona_id)->get();
 
         if($cursoInscripcions==null || count($cursoInscripcions)<=0)
         {
             return ['error'=>'No se encontro una inscripcion con esa ID'];
         } else {
-            $eagers = [
-                'curso',
-                'inscripcion.ciclo',
-                'inscripcion.centro.ciudad',
-                'inscripcion.alumno.persona.ciudad'
-            ];
-
-            switch(Input::get('ver'))
+            switch(request('ver'))
             {
                 case 'primera':
-                    // Luego de usar sortBy || sortByDesc es necesario recargar los eager loaders
-                    $sorted = $cursoInscripcions->sortBy('inscripcion.legajo_nro')->first();
-                    $sorted->load($eagers);
-                    return $sorted;
+                    $result = $cursoInscripcions->sortBy('inscripcion.legajo_nro')->first();
                     break;
                 case 'ultima':
-                    //return $cursoInscripcions->sortByDesc('inscripcion.legajo_nro')->first(); <--- BUG, pierde la relacion de los eager loaders
-
-                    // Luego de usar sortBy || sortByDesc es necesario recargar los eager loaders
-                    $sorted = $cursoInscripcions->sortByDesc('inscripcion.legajo_nro')->first();
-                    $sorted->load($eagers);
-                    return $sorted;
-                    break;
+                    $result = $cursoInscripcions->sortByDesc('inscripcion.legajo_nro')->first();
+                break;
                 default:
-                    return $cursoInscripcions;
-                    break;
+                    $result = $cursoInscripcions;
+                break;
             }
+
+            return $result;
         }
     }
     public function byPersonaFullname()
@@ -173,9 +167,9 @@ class InscripcionFind extends Controller
     {
         if(is_numeric($documento_nro))
         {
-
             $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
-            if($cursoInscripcions==null)
+
+            if($cursoInscripcions==null || count($cursoInscripcions)<=0)
             {
                 return ['error'=>'No se encontro una inscripcion con ese numero de documento'];
             } else {

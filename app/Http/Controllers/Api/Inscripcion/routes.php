@@ -1,4 +1,5 @@
 <?php
+// Deprecar
 Route::prefix('inscripcion')->group(function () {
 
     Route::prefix('find')->group(function () {
@@ -21,5 +22,15 @@ Route::prefix('inscripcion')->group(function () {
 
     Route::post('/egreso', 'Api\Inscripcion\InscripcionEgreso@start');
     Route::post('/reubicacion', 'Api\Inscripcion\InscripcionReubicacion@start');
+});
+
+// API v1
+Route::prefix('v1')->group(function () {
+    Route::prefix('inscripcion')->group(function () {
+        Route::get('find', 'Api\Inscripcion\v1\InscripcionFind@startFind');
+
+        Route::get('lista', 'Api\Inscripcion\v1\InscripcionList@lista');
+        Route::get('lista/excel', 'Api\Inscripcion\v1\InscripcionExport@excel');
+    });
 });
 

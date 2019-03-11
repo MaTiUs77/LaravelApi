@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Matriculas;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
+use App\Titulacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -42,6 +43,7 @@ class MatriculasPorSeccion extends Controller
             
             inscripcions.centro_id,
             cursos.id as curso_id,
+            cursos.titulacion_id,
             ciudads.id as ciudad_id,
 
             ciudads.nombre as ciudad,
@@ -55,7 +57,7 @@ class MatriculasPorSeccion extends Controller
             cursos.division,
             cursos.turno,
             cursos.tipo,
-            
+
             cursos.plazas,
             COUNT(inscripcions.id) as matriculas,
             (
@@ -82,10 +84,7 @@ class MatriculasPorSeccion extends Controller
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
-            ->join('cursos', function($join){
-                $join->on('cursos_inscripcions.curso_id','cursos.id')
-                    ->where('division','<>','');
-            })
+            ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
             ->join('ciudads','centros.ciudad_id','ciudads.id')
 
             ->leftJoin('alumnos','inscripcions.alumno_id','alumnos.id')
@@ -104,6 +103,7 @@ class MatriculasPorSeccion extends Controller
             'cursos.anio',
             'cursos.division',
             'cursos.turno',
+            'cursos.titulacion_id',
             'cursos.plazas'
         ]);
 
@@ -111,20 +111,24 @@ class MatriculasPorSeccion extends Controller
 
         $result = $query->customPagination($por_pagina);
 
-        if(Input::get('ciclo')==2019)
-        {
-            foreach($result->items() as $transform)
+        foreach($result->items() as $item) {
+            // Se carga la relacion con el modelo Titulacion
+            $item->titulacion = Titulacion::select('nombre','nombre_abreviado')->find($item->titulacion_id);
+
+            // Modifica las plazas y vacantes del ciclo 2019
+            if(Input::get('ciclo')==2019)
             {
-                switch ($transform->nivel_servicio)
+                switch ($item->nivel_servicio)
                 {
                     case 'Común - Inicial':
                     case 'Común - Primario':
-                        $transform->plazas = 21;
-                        $transform->vacantes= $transform->plazas - $transform->matriculas;
+                        $item->plazas = 24;
+                        $item->vacantes= $item->plazas - $item->matriculas;
                         break;
                 }
             }
         }
+
 
         $this->exportar($result);
 
