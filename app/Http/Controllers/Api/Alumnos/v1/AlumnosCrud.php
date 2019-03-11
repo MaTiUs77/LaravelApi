@@ -9,11 +9,11 @@ class AlumnosCrud extends Controller
 {
     public function index()
     {
-        return Alumnos::customPagination();
+        return Alumnos::withOnDemand()->customPagination();
     }
 
     public function show($id)
     {
-        return Alumnos::findOrFail($id);
+        return Alumnos::withOnDemand()->findOrFail($id);
     }
 }
