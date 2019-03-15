@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Matriculas;
+namespace App\Http\Controllers\Api\Matriculas\v1;
 
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
@@ -141,7 +141,7 @@ class MatriculasPorSeccion extends Controller
         // Exportacion a Excel
         if(Input::get('export')) {
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes'];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes','Varones'];
             // Contenido
 
             foreach($paginationResult as $item) {
