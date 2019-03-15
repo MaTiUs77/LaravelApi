@@ -248,15 +248,21 @@ class MatriculasPorSeccion extends Controller
         }
 
         return $query;
-    }
+    }   
 
     private function aplicarOrden($query) {
-        $orderBy = Input::get('order');
-        $orderDir = Input::get('order_dir');
-        if($orderBy)
-        {
-            $query = $query->orderBy($orderBy,$orderDir);
+        $orderBy = [
+            'centros.nombre' => 'asc',
+            'cursos.anio' => 'asc',
+            'cursos.division' => 'asc'
+        ];
+
+        if($orderBy) {
+            foreach ($orderBy as $order => $dir) {
+                $query = $query->orderBy($order,$dir);
+            }
         }
+
         return $query;
     }
 }
