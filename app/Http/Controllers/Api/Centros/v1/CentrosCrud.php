@@ -41,6 +41,10 @@ class CentrosCrud extends Controller
             return $q->where('nivel_servicio', $v);
         });
 
+        $query->when(request('ambito'), function ($q, $v) {
+            return $q->where('ambito', $v);
+        });
+
         $query->when(request('nombre'), function ($q, $v) {
             return $q->where('nombre','like',"%$v%");
         });

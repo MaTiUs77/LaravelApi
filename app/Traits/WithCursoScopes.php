@@ -41,4 +41,11 @@ trait WithCursoScopes {
             return $cursos->where('division','<>', '');
         });
     }
+    function scopeFiltrarCursoStatus($query, $status)
+    {
+        $query->whereHas('Curso', function ($cursos) use($status) {
+            return $cursos->where('status', $status);
+        });
+    }
+
 }
