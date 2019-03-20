@@ -86,7 +86,7 @@ class PersonasCrud extends Controller
     }
 
     // Update
-    public function update(PersonasCrudUpdateReq $req, $id)
+    public function update($id,PersonasCrudUpdateReq $req)
     {
         // Verificar existencia de la persona, segun DNI
         $persona = Personas::findOrFail($id);
