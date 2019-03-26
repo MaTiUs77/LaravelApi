@@ -35,13 +35,13 @@ class Inscripcions extends Model
         return $this->hasOne('App\Centros', 'id', 'centro_id');
     }
 
-   function Promocion()
+    function Promocion()
     {
-        return $this->hasOne('App\CursosInscripcions', 'id', 'promocionado');
+        return $this->belongsTo('App\CursosInscripcions', 'promocionado', 'id')->with(['curso']);
     }
 
     function CursosInscripcions()
     {
-        return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id');
+        return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id')->with('curso');
     }
 }
