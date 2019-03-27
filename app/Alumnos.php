@@ -38,4 +38,9 @@ class Alumnos extends Model
     {
         return $this->hasMany('App\Inscripcions', 'alumno_id','id');
     }
+
+    function UltimaInscripcion()
+    {
+        return $this->hasOne('App\Inscripcions', 'alumno_id','id')->orderBy('ciclo_id','desc');
+    }
 }
