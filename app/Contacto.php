@@ -16,6 +16,6 @@ class Contacto extends Model
     const UPDATED_AT = 'updated_at';
 
     protected $fillable = [
-        'user_social_id','message'
+        'user_social_id','message','origin'
     ];
 }

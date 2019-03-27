@@ -56,6 +56,7 @@ class ContactoCrud extends Controller
         if(isset($req["jwt_user"]["id"])){
             $data = [
                 "message" => $req["message"],
+                "origin" => $req["origin"],
                 "user_social_id" => $req["jwt_user"]["id"]
             ];
             $contacto = Contacto::create($data);
