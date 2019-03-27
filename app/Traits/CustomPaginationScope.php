@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Http\Controllers\Api\Exportar\v1\Resources\ListaAlumnosResource;
+use App\Http\Controllers\Api\Exportar\v1\Resources\ListaPromocionResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 
@@ -28,11 +30,24 @@ trait CustomPaginationScope {
             return ['error'=>'Error al paginar'];
         } else {
             if($result instanceof LengthAwarePaginator) {
-                return $result->appends(Input::all());
+                $result->appends(Input::all());
             } else {
                 $data = $result;
-                return compact('data');
+                $result = compact('data');
             }
+        }
+
+        // Custom Resource Beta
+        switch (request('transform')) {
+            case 'ListaAlumnosResource':
+                return ListaAlumnosResource::collection($result);
+                break;
+            case 'ListaPromocionResource':
+                return ListaPromocionResource::collection($result);
+                break;
+            default:
+                return $result;
+                break;
         }
     }
 }
