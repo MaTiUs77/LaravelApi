@@ -15,6 +15,7 @@ class ContactoCrudStoreReq extends FormRequest
     {
         return [
             'message' => 'required|string',
+            'origin' => 'required|string'
         ];
     }
 
@@ -22,13 +23,15 @@ class ContactoCrudStoreReq extends FormRequest
     {
         return [
             'message' => 'El campo Mensaje',
+            'origin' => 'El campo Origen',
         ];
     }
 
     public function messages()
     {
         return [
-            'message.required' => 'El Mensaje es Requerido'
+            'message.required' => 'El Mensaje es Requerido',
+            'origin.required' => 'El Origen es Requerido'
         ];
     }
 }
