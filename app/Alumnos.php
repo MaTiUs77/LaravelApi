@@ -12,6 +12,13 @@ class Alumnos extends Model
 
     protected $table = 'alumnos';
 
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'modified';
+
+    protected $fillable = [
+        'persona_id','centro_id','legajo_fisico_nro','pendiente'
+    ];
+
     function Familiares()
     {
         return $this->hasManyThrough(
