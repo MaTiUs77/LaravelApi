@@ -2,10 +2,15 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
+use App\Traits\WithCursoScopes;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Cursos extends Model
 {
+    use WithOnDemandTrait, CustomPaginationScope;
+
     protected $table = 'cursos';
 
     public $timestamps = false;

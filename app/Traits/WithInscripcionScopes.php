@@ -38,11 +38,25 @@ trait WithInscripcionScopes {
             switch($param){
                 case 'si':
                 case 'con':
-                    return $q->whereNotNull('promocionado');
+                    return $q->whereNotNull('promocion_id');
                     break;
                 case 'no':
                 case 'sin':
-                    return $q->whereNull('promocionado');
+                    return $q->whereNull('promocion_id');
+                    break;
+            }
+        });
+    }
+    function scopeFiltrarRepitencia($query,$param) {
+        $query->whereHas('Inscripcion', function ($q) use($param){
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $q->whereNotNull('repitencia_id');
+                    break;
+                case 'no':
+                case 'sin':
+                    return $q->whereNull('repitencia_id');
                     break;
             }
         });

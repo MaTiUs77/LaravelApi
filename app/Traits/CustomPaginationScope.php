@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Http\Controllers\Api\Exportar\v1\Resources\ListaAlumnosResource;
-use App\Http\Controllers\Api\Exportar\v1\Resources\ListaPromocionResource;
+use App\Resources\ListaAlumnosResource;
+use App\Resources\ListaPromocionResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 

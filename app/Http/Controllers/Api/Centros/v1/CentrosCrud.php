@@ -50,7 +50,11 @@ class CentrosCrud extends Controller
         });
 
        $query->when(request('division'), function ($q, $v) {
-           $q->byCursosDivision($v);
+           $q->manyCursosDivision($v);
+        });
+
+       $query->when(request('anio'), function ($q, $v) {
+           $q->manyCursosAnio($v);
         });
 
         $centro = $query->get();
@@ -72,9 +76,13 @@ class CentrosCrud extends Controller
         $query = Centros::withOnDemand(['ciudad']);
 
         $query->when(request('division'), function ($q, $v) {
-            $q->byCursosDivision($v);
+            $q->manyCursosDivision($v);
         });
-        
+
+        $query->when(request('anio'), function ($q, $v) {
+            $q->manyCursosAnio($v);
+        });
+
         // Localiza el centro en cuestion
         $centro = $query->findOrFail($id);
 

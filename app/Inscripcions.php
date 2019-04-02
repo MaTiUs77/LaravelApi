@@ -39,7 +39,7 @@ class Inscripcions extends Model
     {
         return $this->belongsTo('App\CursosInscripcions', 'promocionado', 'id')->with(['curso']);
     }
-
+    
     function CursosInscripcions()
     {
         return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id')->with('curso');

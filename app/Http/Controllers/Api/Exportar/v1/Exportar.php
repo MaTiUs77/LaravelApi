@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api\Exportar\v1;
 
-use App\Http\Controllers\Api\Exportar\v1\Resources\ListaAlumnosResource;
 use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
+use App\Resources\ListaAlumnosResource;
 
 class Exportar extends Controller
 {
     public function ListaAlumnos() {
         $params = request()->all();
-        
+
         // Consumo API Inscripciones
         $api = new ApiConsume();
         $api->get("inscripcion/lista",$params);

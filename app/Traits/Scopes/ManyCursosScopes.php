@@ -2,11 +2,11 @@
 
 namespace App\Traits\Scopes;
 
-trait CursosScopes {
+trait ManyCursosScopes {
 
     private $modelName = 'cursos';
 
-    function scopeByCursosDivision($query,$division)
+    function scopeManyCursosDivision($query,$division)
     {
         return $query->whereHas('cursos', function ($cursos) use($division)
         {
@@ -30,7 +30,19 @@ trait CursosScopes {
                     $cursos->where('division',$division);
                 }
 
-                return $cursos->orderBy('id', 'desc');
+                return $cursos->orderBy('anio', 'asc');
+            }]);
+    }
+
+    function scopeManyCursosAnio($query,$anio)
+    {
+        return $query->whereHas('cursos', function ($cursos) use($anio)
+        {
+            $cursos->where('anio',$anio);
+            return $cursos;
+        })
+            ->with(['cursos' => function ($cursos) use($anio) {
+                return $cursos->where('anio',$anio);
             }]);
     }
 /*    function scopeFiltrarTurno($query,$turno)
