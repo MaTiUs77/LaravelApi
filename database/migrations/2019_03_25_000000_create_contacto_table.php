@@ -18,7 +18,8 @@ class CreateContactoTable extends Migration
 
             $table->increments('id');
             $table->integer('user_social_id');
-            $table->string('message')->unique();
+            $table->string('message');
+            $table->string('origin');
             $table->timestamps();
         });
     }
