@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
 
 class InscripcionList extends Controller
 {
@@ -63,8 +62,8 @@ class InscripcionList extends Controller
         $egresado = Input::get('egresado');
         $estado_inscripcion = Input::get('estado_inscripcion');
 
-        // Promocion
         $promocion = Input::get('promocion');
+        $repitencia = Input::get('repitencia');
 
         $por_pagina = Input::get('por_pagina');
 
@@ -101,6 +100,9 @@ class InscripcionList extends Controller
         }
         if($promocion) {
             $query->filtrarPromocion($promocion);
+        }
+        if($repitencia) {
+            $query->filtrarRepitencia($repitencia);
         }
 
         return $query->customPagination($por_pagina);
