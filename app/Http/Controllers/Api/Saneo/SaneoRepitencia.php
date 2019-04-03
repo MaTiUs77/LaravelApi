@@ -8,17 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class SaneoRepitencia extends Controller
 {
-    public function artisan() {
-        $artisan = Artisan::call('siep:saneo_rp', [
-            'ciclo' => 2019,
-            'por_pagina' => 50,
-            'page' => 1
-        ]);
-
-        $status = 'Artisan::call';
-
-        return compact('status','artisan');
-    }
     public function start($ciclo=2019,$page=1,$por_pagina=10)
     {
         Log::info("SaneoRepitencia::start($ciclo,$page,$por_pagina)");

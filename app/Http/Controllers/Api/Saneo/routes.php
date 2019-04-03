@@ -7,7 +7,6 @@ Route::prefix('saneo')->group(function () {
 Route::prefix('v1')->group(function () {
     Route::prefix('saneo')->group(function () {
         Route::get('repitencia', 'Api\Saneo\SaneoRepitencia@start');
-        Route::get('repitencia/artisan', 'Api\Saneo\SaneoRepitencia@artisan');
     });
 });
 
