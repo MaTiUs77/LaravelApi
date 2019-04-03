@@ -17,6 +17,7 @@ COPY . /var/www/html/
 
 RUN chmod 777 /var/www/html/storage -R
 RUN composer install --ignore-platform-reqs
+RUN php artisan migrate
 
 RUN wget https://api.github.com/repos/MaTiUs77/LaravelApi/commits/master && mv master /var/www/html/public/master.json
 RUN wget https://api.github.com/repos/MaTiUs77/LaravelApi/commits/developer && mv developer /var/www/html/public/developer.json
