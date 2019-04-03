@@ -5,6 +5,7 @@ namespace App\Resources;
 use App\Ciclos;
 use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Log;
 
 class RepitentesResource extends Resource
 {
@@ -47,11 +48,11 @@ class RepitentesResource extends Resource
         ) {
             if($cursoActual['anio'] == $cursoAnterior['anio']) {
                 // Repitencia detectada
-                $inscripcionRepitente = Inscripcions::findOrFail($response['actual']['inscripcion_id']);
-                $inscripcionRepitente->repitencia_id = $response['anterior']['inscripcion_id'];
+                $inscripcionRepitente = Inscripcions::findOrFail($response['anterior']['inscripcion_id']);
+                $inscripcionRepitente->repitencia_id = $response['actual']['inscripcion_id'];
                 $inscripcionRepitente->save();
 
-                $response['actual']['trazabilidad']['repitencia_id'] = $inscripcionRepitente->repitencia_id;
+                $response['anterior']['trazabilidad']['repitencia_id'] = $inscripcionRepitente->repitencia_id;
             } else {
                 // Promocion detectada
                 $inscripcionPromocionada = Inscripcions::findOrFail($response['anterior']['inscripcion_id']);
@@ -61,6 +62,28 @@ class RepitentesResource extends Resource
                 $response['anterior']['trazabilidad']['promocion_id'] = $inscripcionPromocionada->promocion_id;
             }
         }
+
+        $repitio = $response['anterior']['trazabilidad']['repitencia_id'];
+        $promociono = $response['anterior']['trazabilidad']['promocion_id'];
+
+        $inscripcion_id_actual = $response['actual']['inscripcion_id'];
+        $inscripcion_id_anterior = $response['anterior']['inscripcion_id'];
+
+        $msg[] = "ID: ".$inscripcion_id_actual;
+        $msg[] = $response['nombre_completo'];
+
+        if($repitio) {
+            $msg[] = "--> Repitio: $inscripcion_id_anterior desde $repitio";
+        }
+        if($promociono) {
+            $msg[] = "--> Promociono: $inscripcion_id_anterior hacia $promociono";
+        }
+
+        if(!$promociono && !$repitio) {
+            $msg[] = "--> Nueva";
+        }
+
+        Log::info(join(', ',$msg));
 
         return $response;
     }

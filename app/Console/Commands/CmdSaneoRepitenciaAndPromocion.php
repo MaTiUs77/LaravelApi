@@ -14,7 +14,7 @@ class CmdSaneoRepitenciaAndPromocion extends Command
      *
      * @var string
      */
-    protected $signature = 'siep:saneo_rp {page?}';
+    protected $signature = 'siep:saneo_rp {ciclo} {page} {por_pagina?}';
 
     /**
      * The console command description.
@@ -40,14 +40,16 @@ class CmdSaneoRepitenciaAndPromocion extends Command
      */
     public function handle()
     {
+        $ciclo = $this->argument('ciclo');
+        $por_pagina = $this->argument('por_pagina');
         $page = $this->argument('page');
-        if(!$page) { $page = 1; }
 
-        $this->info('JobSaneoRepitenciaAndPromocion: '.$page);
+        $this->info("JobSaneoRepitenciaAndPromocion: $ciclo, $page, $por_pagina");
 
         //- Procesamos el saneo de la primer pagina -
         $saneo = new SaneoRepitencia();
-        $saneo = $saneo->start($page);
+        $saneo = $saneo->start($ciclo,$page,$por_pagina);
+
         // Obtenemos ultima pagina
         $ultimaPagina = $saneo['meta']['last_page'];
         $nextPage = $page + 1;
@@ -56,8 +58,8 @@ class CmdSaneoRepitenciaAndPromocion extends Command
         $this->info("ARTISAN JobSaneoRepitenciaAndPromocion current:$page / while(nextPage:$nextPage <= last:$ultimaPagina) ");
 
         while($nextPage <= $ultimaPagina) {
-            $this->info("ARTISAN ($nextPage de $ultimaPagina) JobSaneoRepitenciaAndPromocion::dispatch($nextPage)");
-            JobSaneoRepitenciaAndPromocion::dispatch($nextPage)->delay(now()->addMinutes(10));
+            $this->info("ARTISAN ($nextPage de $ultimaPagina) JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)");
+            JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)->delay(now()->addSeconds(10));
             $nextPage++;
         }
     }

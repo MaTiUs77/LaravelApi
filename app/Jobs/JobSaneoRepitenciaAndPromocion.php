@@ -14,14 +14,18 @@ class JobSaneoRepitenciaAndPromocion implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $ciclo;
+    protected $por_pagina;
     protected $page;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($page=1)
+    public function __construct($ciclo=2019,$page=1,$por_pagina=10)
     {
+        $this->ciclo= $ciclo;
+        $this->por_pagina= $por_pagina;
         $this->page = $page;
     }
 
@@ -32,9 +36,9 @@ class JobSaneoRepitenciaAndPromocion implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("JobSaneoRepitenciaAndPromocion($this->page) -- START");
+        Log::info("JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- START");
         $domagic = new SaneoRepitencia();
-        $domagic->start($this->page);
-        Log::info("JobSaneoRepitenciaAndPromocion($this->page) -- COMPLETE");
+        $domagic->start($this->ciclo,$this->page,$this->por_pagina);
+        Log::info("JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- COMPLETE");
     }
 }

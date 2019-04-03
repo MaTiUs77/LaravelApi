@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Resources\ListaAlumnosResource;
 use App\Resources\ListaPromocionResource;
 use App\Resources\PromocionResource;
+use App\Resources\RepitentesResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
 
@@ -48,6 +49,9 @@ trait CustomPaginationScope {
                 break;
             case 'PromocionResource':
                 return PromocionResource::collection($result);
+                break;
+            case 'RepitentesResource':
+                return RepitentesResource::collection($result);
                 break;
             default:
                 return $result;
