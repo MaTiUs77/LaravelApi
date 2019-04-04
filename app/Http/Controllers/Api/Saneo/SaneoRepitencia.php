@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api\Saneo;
 
 use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class SaneoRepitencia extends Controller

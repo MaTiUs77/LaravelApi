@@ -2,9 +2,11 @@
 
 namespace App\Resources;
 
+use App\Ciclos;
+use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
 
-class PromocionResource extends Resource
+class RepitenciaResource extends Resource
 {
     public function toArray($request)
     {
@@ -17,18 +19,18 @@ class PromocionResource extends Resource
             'anio','division','turno','centro_id'
         ]);
 
-        // Obtener curso de promocion
-        $promocion = null;
-        if(isset($inscripcion['promocion'])){
-            $promocion  = collect($inscripcion['promocion']['curso']);
-            $promocion = $promocion->only([
+        // Obtener curso de repitencia
+        $repitencia = null;
+        if(isset($inscripcion['repitencia'])){
+            $repitencia= collect($inscripcion['repitencia']['curso']);
+            $repitencia = $repitencia->only([
                 'anio','division','turno','centro_id'
             ]);
         }
 
         $inscripcion = $inscripcion->only([
             "id", "legajo_nro", "estado_inscripcion", "ciclo_id", "centro_id",
-            "promocion_id"
+            "repitencia_id"
         ]);
 
         $inscripcion['alumno_id'] = $alumno->get('id');
@@ -36,6 +38,6 @@ class PromocionResource extends Resource
             "id","nombre_completo"
         ]);
 
-        return compact('inscripcion','curso','promocion');
+        return compact('inscripcion','curso','repitencia');
     }
 }

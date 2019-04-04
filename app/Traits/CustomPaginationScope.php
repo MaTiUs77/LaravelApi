@@ -3,8 +3,8 @@
 namespace App\Traits;
 
 use App\Resources\ListaAlumnosResource;
-use App\Resources\ListaPromocionResource;
 use App\Resources\PromocionResource;
+use App\Resources\RepitenciaResource;
 use App\Resources\RepitentesResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Input;
@@ -44,14 +44,14 @@ trait CustomPaginationScope {
             case 'ListaAlumnosResource':
                 return ListaAlumnosResource::collection($result);
                 break;
-            case 'ListaPromocionResource':
-                return ListaPromocionResource::collection($result);
-                break;
             case 'PromocionResource':
                 return PromocionResource::collection($result);
                 break;
             case 'RepitentesResource':
                 return RepitentesResource::collection($result);
+                break;
+            case 'RepitenciaResource':
+                return RepitenciaResource::collection($result);
                 break;
             default:
                 return $result;
