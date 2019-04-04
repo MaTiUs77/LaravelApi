@@ -7,7 +7,7 @@ Route::prefix('v1')->group(function () {
         Route::get('repitencia', function(){
             $artisan = Artisan::call('siep:saneo_rp', [
                 'ciclo' => 2019,
-                'por_pagina' => 50,
+                'por_pagina' => 20,
                 'page' => 1
             ]);
 

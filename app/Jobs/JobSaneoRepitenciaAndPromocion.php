@@ -36,9 +36,9 @@ class JobSaneoRepitenciaAndPromocion implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- START");
+        Log::info("HANDLE JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- START");
         $domagic = new SaneoRepitencia();
         $domagic->start($this->ciclo,$this->page,$this->por_pagina);
-        Log::info("JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- COMPLETE");
+        Log::info("HANDLE JobSaneoRepitenciaAndPromocion($this->ciclo,$this->page,$this->por_pagina) -- COMPLETE");
     }
 }

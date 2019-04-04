@@ -57,10 +57,12 @@ class CmdSaneoRepitenciaAndPromocion extends Command
 
         $this->info("ARTISAN JobSaneoRepitenciaAndPromocion current:$page / while(nextPage:$nextPage <= last:$ultimaPagina) ");
 
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Prepare Jobs");
         while($nextPage <= $ultimaPagina) {
             $this->info("ARTISAN ($nextPage de $ultimaPagina) JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)");
-            JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)->delay(now()->addSeconds(10));
+            JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)->delay(now()->addMinutes(1));
             $nextPage++;
         }
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Jobs Created");
     }
 }

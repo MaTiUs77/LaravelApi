@@ -10,6 +10,7 @@ class SaneoRepitencia extends Controller
 {
     public function start($ciclo=2019,$page=1,$por_pagina=10)
     {
+        Log::info("=============================================================================");
         Log::info("SaneoRepitencia::start($ciclo,$page,$por_pagina)");
 
         if(request('page')) {
@@ -37,8 +38,6 @@ class SaneoRepitencia extends Controller
         $response= $api->response();
 
         Log::info("SaneoRepitencia: ".$page." de ".$response['meta']['last_page']);
-        Log::info("=============================================================================");
-        Log::info("=============================================================================");
 
         /*        $data = collect($response['data']);
                 $response = ListaAlumnosResource::collection($data);*/
