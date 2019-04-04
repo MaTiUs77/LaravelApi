@@ -16,6 +16,7 @@ class AlumnosFamiliarsCrudStoreReq extends FormRequest
         return [
             'familiar_id' => 'required|integer',
             'alumno_id' => 'required|integer',
+            'pendent' => 'required|integer'
         ];
     }
 
@@ -24,6 +25,7 @@ class AlumnosFamiliarsCrudStoreReq extends FormRequest
         return [
             'familiar_id' => 'El campo Familiar_ID',
             'alumno_id' => 'El campo Alumno_ID',
+            'pendent' => 'El Campo Pendiente'
         ];
     }
 
@@ -32,6 +34,7 @@ class AlumnosFamiliarsCrudStoreReq extends FormRequest
         return [
             'familiar_id.required' => 'Familiar_ID es Requerido',
             'alumno_id.required' => 'El Alumno es Requerido',
+            'pendent.required' => 'El estado Pendiente es Requerido'
         ];
     }
 }

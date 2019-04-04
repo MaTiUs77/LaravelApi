@@ -36,4 +36,11 @@ class AlumnosCrud extends Controller
 
         return compact('alumno');
     }
+
+    // Busca un familiar por persona_id
+    public function getByPersonaId($persona_id)
+    {
+        $familiar = Alumnos::where('persona_id',$persona_id)->first();
+        return $familiar;
+    }
 }

@@ -16,14 +16,13 @@ class FamiliarCrud extends Controller
 {
     public function __construct(Request $req)
     {
-        $this->middleware('jwt.social',['except'=>['index','show']]);
+        $this->middleware('jwt.social',['except'=>['index','show','getByPersonaId']]);
     }
 
     // List
     public function index(FamiliarCrudIndexReq $req)
     {
-        
-        $familiar = new Familiar();
+        $familiar = Familiar::withOnDemand();
         $familiar->when(request('id'), function ($q, $v) {
             return $q->findOrFail($v);
         });
@@ -79,5 +78,12 @@ class FamiliarCrud extends Controller
         }
 
         return compact('familiar');
+    }
+
+    // Busca un familiar por persona_id
+    public function getByPersonaId($persona_id)
+    {
+        $familiar = Familiar::where('persona_id',$persona_id)->first();
+        return $familiar;
     }
 }
