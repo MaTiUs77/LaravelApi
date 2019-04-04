@@ -25,11 +25,12 @@ class AlumnosFamiliarsCrud extends Controller
     // Create
     public function store(AlumnosFamiliarsCrudStoreReq $req)
     {
+        // 
         // Verificar existencia del familiar, segun persona_id
         $alumnos_familiars = AlumnosFamiliar::where('alumno_id',request('alumno_id'))->first();
         // Si no existe el alumno... crea el alumno
         if(!$alumnos_familiars) {
-            // Se crea el alumno
+            // Se crea la relación
             $alumnos_familiars = AlumnosFamiliar::create($req->all());
         }
 

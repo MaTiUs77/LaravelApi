@@ -4,10 +4,11 @@ namespace App;
 
 use App\Traits\CustomPaginationScope;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\WithOnDemandTrait;
 
 class Familiar extends Model
 {
-    use CustomPaginationScope;
+    use CustomPaginationScope, WithOnDemandTrait;
     protected $table = 'familiars';
 
     const CREATED_AT = 'created';

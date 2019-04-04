@@ -14,18 +14,12 @@ class FamiliarCrudIndexReq extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'numeric',
-            'user_social_id' => 'numeric',
-            'message' => 'string',
         ];
     }
 
     public function attributes()
     {
         return [
-            'id' => 'ID del Mensaje',
-            'user_social_id' => 'ID del Usuario Social',
-            'familiar' => 'El Mensaje',
         ];
     }
 
