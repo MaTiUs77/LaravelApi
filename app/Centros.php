@@ -3,13 +3,15 @@
 namespace App;
 
 use App\Traits\CustomPaginationScope;
+use App\Traits\Scopes\CursosManyScopes;
 use App\Traits\Scopes\CursosScopes;
+use App\Traits\Scopes\ManyCursosScopes;
 use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Centros extends Model
 {
-    use CursosScopes, CustomPaginationScope, WithOnDemandTrait;
+    use ManyCursosScopes, CustomPaginationScope, WithOnDemandTrait;
 
     protected $table = 'centros';
 

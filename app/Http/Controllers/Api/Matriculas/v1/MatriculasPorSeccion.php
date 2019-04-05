@@ -107,9 +107,7 @@ class MatriculasPorSeccion extends Controller
             'cursos.plazas'
         ]);
 
-        $por_pagina = Input::get('por_pagina');
-
-        $result = $query->customPagination($por_pagina);
+        $result = $query->customPagination();
 
         foreach($result->items() as $item) {
             // Se carga la relacion con el modelo Titulacion
@@ -123,6 +121,10 @@ class MatriculasPorSeccion extends Controller
                     case 'Común - Inicial':
                     case 'Común - Primario':
                         $item->plazas = 24;
+                        // Harcodeada
+                        if($item->anio=='Sala de 3 años') {
+                            $item->plazas = 20;
+                        }
                         $item->vacantes= $item->plazas - $item->matriculas;
                         break;
                 }
@@ -248,15 +250,21 @@ class MatriculasPorSeccion extends Controller
         }
 
         return $query;
-    }
+    }   
 
     private function aplicarOrden($query) {
-        $orderBy = Input::get('order');
-        $orderDir = Input::get('order_dir');
-        if($orderBy)
-        {
-            $query = $query->orderBy($orderBy,$orderDir);
+        $orderBy = [
+            'centros.nombre' => 'asc',
+            'cursos.anio' => 'asc',
+            'cursos.division' => 'asc'
+        ];
+
+        if($orderBy) {
+            foreach ($orderBy as $order => $dir) {
+                $query = $query->orderBy($order,$dir);
+            }
         }
+
         return $query;
     }
 }

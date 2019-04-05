@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Personas\v1;
 use App\Ciudades;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudIndexReq;
 use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudStoreReq;
+use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudUpdateReq;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 use App\Personas;
+use App\Resources\PersonaTrayectoriaResource;
 use App\UserSocial;
 use Illuminate\Http\Request;
 
@@ -44,7 +46,15 @@ class PersonasCrud extends Controller
             $persona->where('familiar',request('familiar'));
         }
 
-        return $persona->customPagination();
+        $result = $persona->customPagination();
+
+        switch(request('render')) {
+            case 'trayectoria':
+                return new PersonaTrayectoriaResource($result);
+            break;
+        }
+
+        return $result;
     }
 
     // View
@@ -58,7 +68,17 @@ class PersonasCrud extends Controller
 
         // Continua si las validaciones son efectuadas
         $persona = Personas::withOnDemand(['ciudad']);
-        return $persona->findOrFail($id);
+        $result = $persona->findOrFail($id);
+
+        switch(request('render')) {
+            case 'trayectoria':
+                PersonaTrayectoriaResource::withoutWrapping();
+                return new PersonaTrayectoriaResource($result);
+                break;
+            default:
+                return $result;
+                break;
+        }
     }
 
     // Create
@@ -79,6 +99,40 @@ class PersonasCrud extends Controller
 
         if($persona != null && $persona->familiar && !$persona->alumno) {
             $this->updatePersonaIdFromUserSocial($persona->id);
+        }
+
+        return compact('persona');
+    }
+
+    // Update
+    public function update($id,PersonasCrudUpdateReq $req)
+    {
+        // Verificar existencia de la persona, segun DNI
+        $persona = Personas::findOrFail($id);
+
+        // Si existe la persona... se actualiza!
+        if($persona) {
+            // Obtenemos los datos del Usuario Social que consume el API
+            $jwt_user = (object) request('jwt_user');
+            if($jwt_user->id) {
+
+                if ($persona->id == $jwt_user->persona_id) {
+                    // Se agrega el campo ciudad_id al request
+                    $realReq = collect(request()->except('jwt_user'));
+
+                    if(request('ciudad'))  {
+                        $ciudad = Ciudades::where('nombre',request('ciudad'))->first();
+                        $realReq = $realReq->merge(["ciudad_id"=>$ciudad->id]);
+                    }
+
+                    // Se crea la persona
+                    $updated = $persona->update($realReq->toArray());
+
+                    return ['updated'=>$updated];
+                } else {
+                    return ['error'=>'La persona que intenta editar, no corresponde a su perfil'];
+                }
+            }
         }
 
         return compact('persona');
