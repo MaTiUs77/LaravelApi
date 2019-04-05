@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Personas\v1\Request\PersonasCrudUpdateReq;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
 use App\Personas;
+use App\Resources\PersonaTrayectoriaResource;
 use App\UserSocial;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,15 @@ class PersonasCrud extends Controller
             $persona->where('familiar',request('familiar'));
         }
 
-        return $persona->customPagination();
+        $result = $persona->customPagination();
+
+        switch(request('render')) {
+            case 'trayectoria':
+                return new PersonaTrayectoriaResource($result);
+            break;
+        }
+
+        return $result;
     }
 
     // View
@@ -59,7 +68,17 @@ class PersonasCrud extends Controller
 
         // Continua si las validaciones son efectuadas
         $persona = Personas::withOnDemand(['ciudad']);
-        return $persona->findOrFail($id);
+        $result = $persona->findOrFail($id);
+
+        switch(request('render')) {
+            case 'trayectoria':
+                PersonaTrayectoriaResource::withoutWrapping();
+                return new PersonaTrayectoriaResource($result);
+                break;
+            default:
+                return $result;
+                break;
+        }
     }
 
     // Create
