@@ -36,4 +36,11 @@ class AlumnosFamiliarsCrud extends Controller
 
         return compact('alumnos_familiars');
     }
+
+    // Busca los Alumnos para un familiar
+    public function getByFamiliar($familiar_id)
+    {
+        $alumnos = AlumnosFamiliar::withOnDemand(['alumno.persona'])->where('familiar_id',$familiar_id)->get();
+        return $alumnos;
+    }
 }
