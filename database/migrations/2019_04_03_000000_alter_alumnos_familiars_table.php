@@ -14,7 +14,9 @@ class AlterAlumnosFamiliarsTable extends Migration
     public function up()
     {
         Schema::table('alumnos_familiars', function (Blueprint $table) {
-            $table->boolean('pendent')->default(0);
+            $table->enum('status',['confirmada','pendiente','revisar'])->default('confirmada');
+            $table->text('observaciones')->nullable();
+
         });
     }
 
@@ -26,7 +28,7 @@ class AlterAlumnosFamiliarsTable extends Migration
     public function down()
     {
         Schema::table('alumnos_familiars', function (Blueprint $table) {
-            $table->dropColumn('pendent');
+            $table->dropColumn(['status','observaciones']);
         });
     }
 }
