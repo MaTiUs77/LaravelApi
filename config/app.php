@@ -175,7 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        League\StatsD\Laravel5\Provider\StatsdServiceProvider::class,
     ],
 
     /*
@@ -226,7 +226,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Statsd' => League\StatsD\Laravel5\Facade\StatsdFacade::class,
     ],
 
 ];
