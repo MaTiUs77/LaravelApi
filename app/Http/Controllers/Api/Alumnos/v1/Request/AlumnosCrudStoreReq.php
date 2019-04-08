@@ -16,7 +16,7 @@ class AlumnosCrudStoreReq extends FormRequest
         return [
             'persona_id' => 'required|integer',
             'centro_id' => 'required|integer',
-            'legajo_fisico_nro' => 'required|integer',
+            'legajo_fisico_nro' => 'integer',
             'pendiente' => 'integer'
         ];
     }
@@ -36,7 +36,6 @@ class AlumnosCrudStoreReq extends FormRequest
         return [
             'persona_id.required' => 'Persona_ID es Requerido',
             'centro_id.required' => 'El Centro es Requerido',
-            'legajo_fisico_nro.required' => 'El campo Legajo Físico es Requerido',
             'pendiente.required' => 'Pendiente es Requerido'
         ];
     }
