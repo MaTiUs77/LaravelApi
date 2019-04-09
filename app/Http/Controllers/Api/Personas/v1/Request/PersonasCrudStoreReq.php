@@ -23,7 +23,7 @@ class PersonasCrudStoreReq extends FormRequest
             'email' => 'required|email',
             'telefono_nro' => 'required|numeric',
             'calle_nombre' => 'required|string',
-            'calle_nro' => 'required|numeric',
+            'calle_nro' => 'numeric',
 
             'ciudad' => 'required|string|exists:ciudads,nombre',
 
