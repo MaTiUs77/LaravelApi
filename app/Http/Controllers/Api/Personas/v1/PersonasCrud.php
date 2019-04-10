@@ -68,6 +68,14 @@ class PersonasCrud extends Controller
 
         // Continua si las validaciones son efectuadas
         $persona = Personas::withOnDemand(['ciudad']);
+
+        // Obtiene todas las inscripciones filtradas por un ciclo_id especifico
+        $persona->when(request('ciclo_id'), function ($q, $param) {
+            $q->whereHas('alumnos.inscripciones',$filter = function($q) use($param) {
+                return $q->where('ciclo_id',$param);
+            })->with(['alumnos.inscripciones'=>$filter]);
+        });
+
         $result = $persona->findOrFail($id);
 
         switch(request('render')) {
