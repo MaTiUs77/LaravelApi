@@ -101,8 +101,9 @@ class PersonasCrud extends Controller
         if(!$persona) {
             // Se agrega el campo ciudad_id al request
             $req->merge(["ciudad_id"=>$ciudad->id]);
+            
             // Se crea la persona
-            $persona = Personas::create($req->all());
+            $persona = Personas::create($req->except("vinculo"));
         }
 
         if($persona != null && $persona->familiar && !$persona->alumno) {
@@ -126,7 +127,7 @@ class PersonasCrud extends Controller
 
                 if ($persona->id == $jwt_user->persona_id) {
                     // Se agrega el campo ciudad_id al request
-                    $realReq = collect(request()->except('jwt_user'));
+                    $realReq = collect(request()->except(['jwt_user','vinculo']));
 
                     if(request('ciudad'))  {
                         $ciudad = Ciudades::where('nombre',request('ciudad'))->first();

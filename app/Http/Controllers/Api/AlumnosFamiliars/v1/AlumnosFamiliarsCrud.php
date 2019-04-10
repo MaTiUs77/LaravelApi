@@ -27,7 +27,8 @@ class AlumnosFamiliarsCrud extends Controller
     {
         // 
         // Verificar existencia del familiar, segun persona_id
-        $alumnos_familiars = AlumnosFamiliar::where('alumno_id',request('alumno_id'))->first();
+        $alumnos_familiars = AlumnosFamiliar::where('alumno_id',request('alumno_id'))
+                                            ->where('familiar_id',request('familiar_id'))->first();
         // Si no existe el alumno... crea el alumno
         if(!$alumnos_familiars) {
             // Se crea la relación
