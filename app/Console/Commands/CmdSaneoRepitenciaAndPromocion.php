@@ -51,7 +51,7 @@ class CmdSaneoRepitenciaAndPromocion extends Command
         $saneo = $saneo->start($ciclo,$page,$por_pagina);
 
         // Obtenemos ultima pagina
-        $ultimaPagina = $saneo['meta']['last_page'];
+        $ultimaPagina = $saneo['last_page'];
         $nextPage = $page + 1;
         //-------------------------------------------
 
@@ -63,6 +63,6 @@ class CmdSaneoRepitenciaAndPromocion extends Command
             JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)->delay(now()->addMinutes(1));
             $nextPage++;
         }
-        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Jobs Created");
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Jobs Created (Total: $nextPage)");
     }
 }

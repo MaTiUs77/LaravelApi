@@ -3,24 +3,8 @@
 // V1
 Route::prefix('v1')->group(function () {
     Route::prefix('artisan')->group(function () {
-
-        Route::get('repitencia', function(){
-            $artisan = Artisan::call('siep:saneo_rp', [
-                'ciclo' => 2019,
-                'por_pagina' => 20,
-                'page' => 1
-            ]);
-
-            $status = 'Artisan::call';
-            return compact('status','artisan');
-        });
-
-        Route::get('migrate', function () {
-            $artisan = Artisan::call('migrate');
-
-            $status = 'Artisan::migrate';
-            return compact('status','artisan');
-        });
-
+        Route::get('repitencia', 'Api\Artisan\v1\ArtisanRouteCommand@repitencia');
+        Route::get('migrate', 'Api\Artisan\v1\ArtisanRouteCommand@migrate');
+        Route::get('log/{file}', 'Api\Artisan\v1\ArtisanRouteCommand@log');
     });
 });

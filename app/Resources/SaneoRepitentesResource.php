@@ -7,7 +7,7 @@ use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Log;
 
-class RepitentesResource extends Resource
+class SaneoRepitentesResource extends Resource
 {
     public function toArray($request)
     {
@@ -63,6 +63,13 @@ class RepitentesResource extends Resource
             }
         }
 
+        $this->logMsg($response);
+
+        return $response;
+    }
+
+    private function logMsg($response)
+    {
         $repitio = $response['anterior']['trazabilidad']['repitencia_id'];
         $promociono = $response['anterior']['trazabilidad']['promocion_id'];
 
@@ -84,8 +91,6 @@ class RepitentesResource extends Resource
         }
 
         Log::info(join(', ',$msg));
-
-        return $response;
     }
 
     private function verificarRepitencia($inscripcion,$alumno)
@@ -122,7 +127,6 @@ class RepitentesResource extends Resource
 
         return $response;
     }
-
 
     private function transformDireccion($persona) {
         $direccion = [];
