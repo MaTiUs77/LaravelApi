@@ -13,20 +13,47 @@ class CursosCrud extends Controller
         // Se validan los parametros
         $input = request()->all();
         $rules = [
-            'sector' => 'string',
-            'centro_id' => 'numeric'
+            'tipo' => 'string',
+            'anio' => 'string',
+            'division' => 'string',
+            'turno' => 'string',
+            'centro_id' => 'numeric',
+            'ciudad' => 'string',
         ];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
         
         $query = Cursos::withOnDemand();
 
-        $query->when(request('sector'), function ($q, $v) {
-            return $q->where('sector', $v);
+        // Por defecto se muestran los cursos con el flag
+        // status = 1
+        $query->where('status',1);
+
+        $query->when(request('tipo'), function ($q, $v) {
+            return $q->where('tipo', $v);
         });
 
+        $query->when(request('anio'), function ($q, $v) {
+            return $q->where('anio', $v);
+        });
+
+        $query->when(request('division'), function ($q, $v) {
+            return $q->where('division', $v);
+        });
+
+        $query->when(request('turno'), function ($q, $v) {
+            return $q->where('turno', $v);
+        });
+
+        // Filtros de centros
         $query->when(request('centro_id'), function ($q, $v) {
             return $q->whereHas('centro', function($subq) use($v) {
                 $subq->where('id',$v);
+            });
+        });
+
+        $query->when(request('ciudad'), function ($q, $v) {
+            return $q->whereHas('centro.ciudad', function($subq) use($v) {
+                $subq->where('nombre',$v);
             });
         });
 
