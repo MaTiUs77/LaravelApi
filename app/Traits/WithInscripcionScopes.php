@@ -5,31 +5,69 @@ namespace App\Traits;
 trait WithInscripcionScopes {
 
     // Filtros de INSCRIPCION
-    function scopeFiltrarConHermano($query) {
-        $query->whereHas('Inscripcion', function ($inscripciones) {
-            return $inscripciones->where('hermano_id', '<>',null);
+    function scopeFiltrarHermano($query,$param) {
+        $query->whereHas('Inscripcion', $filter = function ($inscripciones) use($param) {
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $inscripciones->whereNotNull('hermano_id');
+                    break;
+                case 'no':
+                case 'sin':
+                    return $inscripciones->whereNull('hermano_id');
+                    break;
+            }
         });
     }
-    function scopeFiltrarSinHermano($query) {
-        $query->whereHas('Inscripcion', function ($inscripciones) {
-            return $inscripciones->where('hermano_id',null);
+    function scopeFiltrarEgreso($query,$param) {
+        $query->whereHas('Inscripcion', function ($inscripciones) use($param){
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $inscripciones->whereNotNull('fecha_egreso');
+                    break;
+                case 'no':
+                case 'sin':
+                    return $inscripciones->whereNull('fecha_egreso');
+                    break;
+            }
         });
     }
-    function scopeFiltrarSinEgreso($query) {
-        $query->whereHas('Inscripcion', function ($inscripciones) {
-            return $inscripciones->where('fecha_egreso',null);
+    function scopeFiltrarPromocion($query,$param) {
+        $query->whereHas('Inscripcion', function ($q) use($param){
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $q->whereNotNull('promocion_id');
+                    break;
+                case 'no':
+                case 'sin':
+                    return $q->whereNull('promocion_id');
+                    break;
+            }
         });
     }
-    function scopeFiltrarConEgreso($query) {
-        $query->whereHas('Inscripcion', function ($inscripciones) {
-            return $inscripciones->where('fecha_egreso','<>',null);
+    function scopeFiltrarRepitencia($query,$param) {
+        $query->whereHas('Inscripcion', function ($q) use($param){
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $q->whereNotNull('repitencia_id');
+                    break;
+                case 'no':
+                case 'sin':
+                    return $q->whereNull('repitencia_id');
+                    break;
+            }
         });
     }
-    function scopeFiltrarEstadoInscripcion($query,$estado) {
-        $query->whereHas('Inscripcion', function ($inscripciones) use($estado) {
-            return $inscripciones->where('estado_inscripcion', $estado);
+    //--- Permite Array ---
+    function scopeFiltrarEstadoInscripcion($query,$param) {
+        $query->whereHas('Inscripcion', function ($q) use($param) {
+            return $q->whereArr('estado_inscripcion',$param);
         });
     }
+    //--- End Array ---
     function scopeFiltrarLegajo($query,$filtro) {
         $query->whereHas('Inscripcion', function ($q) use($filtro) {
             return $q->where('legajo_nro', $filtro);
@@ -54,18 +92,19 @@ trait WithInscripcionScopes {
             return $centros->where('id', $centro_id);
         });
     }
+    //--- Permite Array ---
     function scopeFiltrarSector($query,$sector)
     {
         $query->whereHas('Inscripcion.Centro', function ($centro) use($sector) {
-            return $centro->where('sector', $sector);
+            return $centro->whereArr('sector', $sector);
         });
     }
-    function scopeFiltrarNivelServicio($query,$servicio)
-    {
-        $query->whereHas('Inscripcion.Centro', function ($centros) use($servicio) {
-            return $centros->where('nivel_servicio', $servicio);
+    function scopeFiltrarNivelServicio($query,$param) {
+        $query->whereHas('Inscripcion.Centro', function ($q) use($param) {
+            return $q->whereArr('nivel_servicio',$param);
         });
     }
+    //--- End Array ---
     function scopeFiltrarComunPrimario($query)
     {
         $query->filtrarNivelServicio('Común - Primario');

@@ -12,6 +12,13 @@ class Alumnos extends Model
 
     protected $table = 'alumnos';
 
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'modified';
+
+    protected $fillable = [
+        'persona_id','centro_id','legajo_fisico_nro','pendiente'
+    ];
+
     function Familiares()
     {
         return $this->hasManyThrough(
@@ -37,5 +44,10 @@ class Alumnos extends Model
     function Inscripciones()
     {
         return $this->hasMany('App\Inscripcions', 'alumno_id','id');
+    }
+
+    function UltimaInscripcion()
+    {
+        return $this->hasOne('App\Inscripcions', 'alumno_id','id')->orderBy('ciclo_id','desc');
     }
 }
