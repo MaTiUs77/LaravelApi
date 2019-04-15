@@ -3,4 +3,6 @@
 Route::resource('/centros', 'Api\Centros\v1\CentrosCrud');
 
 // v1
-Route::resource('/v1/centros', 'Api\Centros\v1\CentrosCrud');
+Route::prefix('v1')->group(function () {
+    Route::resource('/centros', 'Api\Centros\v1\CentrosCrud');
+});
