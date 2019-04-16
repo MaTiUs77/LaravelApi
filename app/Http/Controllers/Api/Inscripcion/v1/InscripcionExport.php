@@ -29,7 +29,10 @@ class InscripcionExport extends Controller
             // Por defecto la lista se ordena por APELLIDOS y NOMBRES
             $collection = collect($json->data);
             $sorted = $collection->sortBy(function ($item, $key) {
-                return trim($item->inscripcion->alumno->persona->apellidos).",".$item->inscripcion->alumno->persona->nombres;
+                // Requiere un saneo en la DB (alumnos sin personas)
+                if(isset($item->inscripcion->alumno->persona)) {
+                    return trim($item->inscripcion->alumno->persona->apellidos).",".$item->inscripcion->alumno->persona->nombres;
+                }
             })->values();
 
             $content = [];
@@ -38,16 +41,24 @@ class InscripcionExport extends Controller
 
             // Contenido
             foreach($sorted as $index => $item) {
-                $content[] = [
+                 $line = [
                     $item->inscripcion->ciclo->nombre,
                     $item->inscripcion->centro->nombre,
                     $item->curso->anio,
                     $item->curso->division,
-                    $item->curso->turno,
-                    $item->inscripcion->alumno->persona->documento_nro,
-                    trim($item->inscripcion->alumno->persona->apellidos).",".title_case($item->inscripcion->alumno->persona->nombres),
-                    $item->inscripcion->estado_inscripcion
+                    $item->curso->turno
                 ];
+
+                if(isset($item->inscripcion->alumno->persona)){
+                    $line[] = $item->inscripcion->alumno->persona->documento_nro;
+                    $line[] = trim($item->inscripcion->alumno->persona->apellidos).",".title_case($item->inscripcion->alumno->persona->nombres);
+                } else {
+                    $line[] = '-';
+                    $line[] = '-';
+                }
+
+                $line[] = $item->inscripcion->estado_inscripcion;
+                $content[] = $line;
             }
 
             Log::debug("Exportar excel Total: $json->total",Input::all());
