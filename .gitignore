@@ -14,3 +14,4 @@ supervisord\.log
 supervisord\.pid
 
 public/vendor/telescope/
+nginx-php-fpm/*.log
