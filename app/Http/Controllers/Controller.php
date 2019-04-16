@@ -12,6 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+/*
     public function callAction($method, $parameters)
     {
         // Remove App\Http\Controller
@@ -25,4 +26,5 @@ class Controller extends BaseController
 
         return $response;
     }
+*/
 }
