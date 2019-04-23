@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Contacto;
 use App\UserSocial;
 use Illuminate\Http\Request;
+use App\Mail\Email;
+use Illuminate\Support\Facades\Mail;
 
 class ContactoCrud extends Controller
 {
@@ -60,6 +62,10 @@ class ContactoCrud extends Controller
                 "user_social_id" => $req["jwt_user"]["id"]
             ];
             $contacto = Contacto::create($data);
+            if($contacto){
+                Mail::to('sinide.tdf@gmail.com','Receptor de Prueba')
+                    ->send(new Email($data));
+            }
         }
         return compact('contacto');
     }
