@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\WithOnDemandTrait;
 
 class AlumnosFamiliar extends Model
 {
-    use WithOnDemandTrait;
+    use WithOnDemandTrait, CustomPaginationScope;
     
     protected $table = 'alumnos_familiars';
 

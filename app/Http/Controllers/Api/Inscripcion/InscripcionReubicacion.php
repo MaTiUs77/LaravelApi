@@ -36,8 +36,8 @@ class InscripcionReubicacion extends Controller
         $cicloActual = Ciclos::where('nombre',Carbon::now()->year)->first();
 
         // Solo se permite reubicar cursos del mismo año
-        if($cursoFrom->anio == $cursoTo->anio)
-        {
+        //if($cursoFrom->anio == $cursoTo->anio)
+        //{
             foreach($cursoInscripcion as $curins)
             {
                 // Se edita el curso anterior por el nuevo
@@ -55,6 +55,7 @@ class InscripcionReubicacion extends Controller
             ];
 
             Log::info("Reubicacion ({$user->id}) {$user->username} | {$cursoFrom->id} => {$cursoTo->id}",$output);
+        /*
         } else {
             $output = [
                 'error'=>"Los años son diferentes, no se puede realizar la reubicacion"
@@ -62,7 +63,7 @@ class InscripcionReubicacion extends Controller
 
             Log::warning("Reubicacion ({$user->id}) {$user->username} | {$cursoFrom->id} => {$cursoTo->id}",$output);
         }
-
+        */
         return $output;
     }
 

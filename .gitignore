@@ -12,6 +12,7 @@ composer\.lock
 supervisord\.log
 
 supervisord\.pid
+/public/vendor/telescope
 
 public/vendor/telescope/
 nginx-php-fpm/*.log
