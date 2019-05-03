@@ -106,7 +106,7 @@ class PersonasCrud extends Controller
             $persona = Personas::create($req->except("vinculo"));
         }
 
-        if($persona != null && $persona->familiar && !$persona->alumno) {
+        if($persona != null && $persona->familiar) {
             $this->updatePersonaIdFromUserSocial($persona->id);
         }
 
