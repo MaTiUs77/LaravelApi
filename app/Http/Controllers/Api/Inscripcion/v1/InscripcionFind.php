@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -50,13 +49,12 @@ class InscripcionFind extends Controller
         $rules = ['inscripcion_id' => 'numeric'];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $with = WithOnDemand::set([
-            'Curso',
-            'Inscripcion.Ciclo',
-            'Inscripcion.Centro.Ciudad',
-            'Inscripcion.Alumno.Persona.Ciudad',
-        ],request('with'));
-        $cursoInscripcions = CursosInscripcions::with($with)
+        $cursoInscripcions = CursosInscripcions::withOnDemand([
+            'curso',
+            'inscripcion.ciclo',
+            'inscripcion.centro.ciudad',
+            'inscripcion.alumno.persona.ciudad',
+        ])
             ->where('inscripcion_id',$inscripcion_id)
             ->first();
 
@@ -98,14 +96,12 @@ class InscripcionFind extends Controller
         ];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        $with = WithOnDemand::set([
+        $query= CursosInscripcions::withOnDemand([
             'curso',
             'inscripcion.ciclo',
             'inscripcion.centro.ciudad',
             'inscripcion.alumno.persona.ciudad',
-        ],request('with'));
-
-        $query= CursosInscripcions::with($with);
+        ]);
 
         $cursoInscripcions = $query->filtrarPersona($persona_id)->get();
 

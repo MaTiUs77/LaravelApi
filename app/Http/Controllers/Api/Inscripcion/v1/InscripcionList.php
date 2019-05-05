@@ -3,11 +3,9 @@ namespace App\Http\Controllers\Api\Inscripcion\v1;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
 
 class InscripcionList extends Controller
 {
@@ -32,6 +30,13 @@ class InscripcionList extends Controller
     public function lista(Request $request)
     {
         $input = request()->all();
+
+        // Permitir array en los siguientes atributos
+        $this->validationRules['estado_inscripcion'] = is_array(request('estado_inscripcion')) ? 'array' : 'string';
+        $this->validationRules['nivel_servicio'] = is_array(request('nivel_servicio')) ? 'array' : 'string';
+        $this->validationRules['anio'] = is_array(request('anio')) ? 'array' : 'string';
+        $this->validationRules['division'] = is_array(request('division')) ? 'array' : 'string';
+
         if($fail = DefaultValidator::make($input,$this->validationRules)) return $fail;
 
         // Minimo requerido
@@ -57,16 +62,17 @@ class InscripcionList extends Controller
         $egresado = Input::get('egresado');
         $estado_inscripcion = Input::get('estado_inscripcion');
 
+        $promocion = Input::get('promocion');
+        $repitencia = Input::get('repitencia');
+
         $por_pagina = Input::get('por_pagina');
 
-        $with = WithOnDemand::set([
-            'Curso',
-            'Inscripcion.Ciclo',
-            'Inscripcion.Centro.Ciudad',
-            'Inscripcion.Alumno.Persona.Ciudad',
-        ],request('with'));
-
-        $query = CursosInscripcions::with($with);
+        $query = CursosInscripcions::withOnDemand([
+            'curso',
+            'inscripcion.ciclo',
+            'inscripcion.centro.ciudad',
+            'inscripcion.alumno.persona.ciudad'
+        ]);
 
         if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
         if($ciclo) { $query->filtrarCicloNombre($ciclo); }
@@ -85,25 +91,18 @@ class InscripcionList extends Controller
         if($anio) { $query->filtrarAnio($anio); }
         if($division) { $query->filtrarDivision($division); }
         if($estado_inscripcion) { $query->filtrarEstadoInscripcion($estado_inscripcion);}
+
         if($hermano) {
-            switch($hermano){
-                case "si":
-                    $query->filtrarConHermano();
-                    break;
-                case "no":
-                    $query->filtrarSinHermano();
-                    break;
-            }
+            $query->filtrarHermano($hermano);
         }
         if($egresado) {
-            switch($egresado){
-                case "si":
-                    $query->filtrarConEgreso();
-                    break;
-                case "no":
-                    $query->filtrarSinEgreso();
-                    break;
-            }
+            $query->filtrarEgreso($egresado);
+        }
+        if($promocion) {
+            $query->filtrarPromocion($promocion);
+        }
+        if($repitencia) {
+            $query->filtrarRepitencia($repitencia);
         }
 
         return $query->customPagination($por_pagina);

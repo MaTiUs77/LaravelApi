@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class InscripcionEgreso extends Controller
@@ -29,6 +28,7 @@ class InscripcionEgreso extends Controller
 
         $error = [];
         $success = [];
+
         foreach($cursoInscripcion as $curins)
         {
             $inscripcion = $curins->inscripcion;
@@ -48,12 +48,12 @@ class InscripcionEgreso extends Controller
             }
         }
 
-        $output = [
-            'success'=>$success,
-            'error'=>$error
-        ];
+        $output['success'] = $success;
 
-        Log::info("Egreso:",$output);
+        if(count($error)>0)
+        {
+            $output['error'] = $error;
+        }
 
         return $output;
     }

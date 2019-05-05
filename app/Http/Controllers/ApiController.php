@@ -19,34 +19,42 @@ class ApiController extends Controller
 
     public function home()
     {
-	try {
-		$git = json_decode(file_get_contents('http://localhost/master.json'));
+/*        $tag = shell_exec('git describe --always --tags');
+        $path = shell_exec('git remote -v');
+        $path = explode(' ',preg_replace('/origin|\t/','',$path))[0];*/
 
-		$github = [
-			'commit' => substr($git->sha,0,7),
-			'sha' => $git->sha,
-			'message' => $git->commit->message
-		];
+        try {
+            $master = json_decode(file_get_contents('http://localhost/master.json'));
+            $dev = json_decode(file_get_contents('http://localhost/developer.json'));
 
-	} catch(\Exception $ex) 
-	{
-		$github = ['error'=>'Error al descargar master.json'];
-	}
+            $github = [
+                'master' => [
+                    'commit' => substr($master->sha,0,7),
+                    'sha' => $master->sha,
+                    'message' => $master->commit->message
+                ],
+                'developer' => [
+                    'commit' => substr($dev->sha,0,7),
+                    'sha' => $dev->sha,
+                    'message' => $dev->commit->message
+                ]
+            ];
+
+        } catch(\Exception $ex)
+        {
+            $github = ['error'=>'Error al cargar informacion'];
+        }
 
         $service= 'laravelapi';
-        $status= 'online';
 
         $motor= "Laravel ".app()->version();
         $api_gateway = env('API_GATEWAY');
         $server_time = Carbon::now();
 
-        $tag = shell_exec('git describe --always --tags');
-        $path = shell_exec('git remote -v');
-        $path = explode(' ',preg_replace('/origin|\t/','',$path))[0];
-
-        return compact('service','status','motor','api_gateway','github','server_time');
+        return compact('service','status','motor','api_gateway','server_time','github');
     }
 
+    /*
     public function login(Request $request) {
         $credentials = $request->only('username', 'password');
         $token = null;
@@ -135,5 +143,5 @@ class ApiController extends Controller
         $user = JWTAuth::toUser($request->token);
         return response()->json(['result' => $user]);
     }
-
+    */
 }

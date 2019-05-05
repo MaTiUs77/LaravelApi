@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Traits\CustomPaginationScope;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Personas extends Model
 {
-    use CustomPaginationScope;
+    use CustomPaginationScope, WithOnDemandTrait;
     
     protected $table = 'personas';
 
@@ -18,7 +19,7 @@ class Personas extends Model
         'apellidos','nombres','sexo','documento_tipo','documento_nro',
         'fecha_nac','email','ciudad_id','telefono_nro','calle_nombre','calle_nro',
         'depto_casa','tira_edificio','observaciones','familiar','alumno',
-
+        'vinculo',
         'pcia_nac','nacionalidad'
     ];
 

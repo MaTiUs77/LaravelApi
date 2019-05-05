@@ -2,10 +2,17 @@
 
 namespace App;
 
+use App\Traits\CustomPaginationScope;
+use App\Traits\Scopes\CursosManyScopes;
+use App\Traits\Scopes\CursosScopes;
+use App\Traits\Scopes\ManyCursosScopes;
+use App\Traits\WithOnDemandTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Centros extends Model
 {
+    use ManyCursosScopes, CustomPaginationScope, WithOnDemandTrait;
+
     protected $table = 'centros';
 
     protected $casts = [
@@ -41,34 +48,6 @@ class Centros extends Model
     function NivelServicio()
     {
         return $this->hasOne('App\NivelServicio', 'nombre', 'nivel_servicio');
-    }
-
-    public function scopefiltrarCursos($query, $division)
-    {
-        return $query->whereHas('cursos', function ($cursos) use($division)
-        {
-            if($division=='vacia' || $division=='sin' || $division == 'null') {
-                $cursos->where('division','');
-            } else if($division=='con'){
-                $cursos->where('division','<>','');
-            } else {
-                $cursos->where('division',$division);
-            }
-
-            return $cursos;
-        })
-            ->with(['cursos' => function ($cursos)  use($division) {
-
-                if($division=='vacia' || $division=='sin' || $division == 'null') {
-                    $cursos->where('division','');
-                } else if($division=='con'){
-                    $cursos->where('division','<>','');
-                } else {
-                    $cursos->where('division',$division);
-                }
-
-                return $cursos->orderBy('id', 'desc');
-            }]);
     }
 }
 

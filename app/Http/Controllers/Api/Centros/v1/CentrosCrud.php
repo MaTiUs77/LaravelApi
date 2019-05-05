@@ -5,20 +5,10 @@ namespace App\Http\Controllers\Api\Centros\v1;
 use App\Centros;
 use App\Ciudades;
 use App\Http\Controllers\Api\Utilities\DefaultValidator;
-use App\Http\Controllers\Api\Utilities\WithOnDemand;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
 
 class CentrosCrud extends Controller
 {
-    public function __construct(Request $req)
-    {
-    }
-
     public function index()
     {
         // Se validan los parametros
@@ -31,10 +21,8 @@ class CentrosCrud extends Controller
             'nombre' => 'string'
         ];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
-
-        // Adjunta relaciones a demanda con el parametro "with"
-        $with = WithOnDemand::set(['Ciudad'], request('with'));
-        $query = Centros::with($with);
+        
+        $query = Centros::withOnDemand(['ciudad']);
 
         $query->when(request('ciudad_id'), function ($q, $v) {
             return $q->where('ciudad_id', $v);
@@ -53,12 +41,20 @@ class CentrosCrud extends Controller
             return $q->where('nivel_servicio', $v);
         });
 
+        $query->when(request('ambito'), function ($q, $v) {
+            return $q->where('ambito', $v);
+        });
+
         $query->when(request('nombre'), function ($q, $v) {
             return $q->where('nombre','like',"%$v%");
         });
 
        $query->when(request('division'), function ($q, $v) {
-           $q->filtrarCursos($v);
+           $q->manyCursosDivision($v);
+        });
+
+       $query->when(request('anio'), function ($q, $v) {
+           $q->manyCursosAnio($v);
         });
 
         $centro = $query->get();
@@ -77,14 +73,16 @@ class CentrosCrud extends Controller
         $rules = ['id'=>'required|numeric'];
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
-        // Adjunta relaciones a demanda con el parametro "with"
-        $with = WithOnDemand::set(['Ciudad'], request('with'));
-        $query = Centros::with($with);
+        $query = Centros::withOnDemand(['ciudad']);
 
         $query->when(request('division'), function ($q, $v) {
-            $q->filtrarCursos($v);
+            $q->manyCursosDivision($v);
         });
-        
+
+        $query->when(request('anio'), function ($q, $v) {
+            $q->manyCursosAnio($v);
+        });
+
         // Localiza el centro en cuestion
         $centro = $query->findOrFail($id);
 

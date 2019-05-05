@@ -16,29 +16,39 @@ trait WithCursoScopes {
             return $cursos->where('turno', $turno);
         });
     }
-    function scopeFiltrarAnio($query,$anio)
-    {
-        $query->whereHas('Curso', function ($cursos) use($anio) {
-            return $cursos->where('anio', $anio);
-        });
-    }
-    function scopeFiltrarDivision($query,$division)
-    {
-        $query->whereHas('Curso', function ($cursos) use($division) {
 
-            if($division=='vacia' || $division=='sin' || $division == 'null') {
-                return $cursos->where('division','');
-            } else if($division=='con'){
-                return $cursos->where('division','<>','');
-            } else {
-                return $cursos->where('division',$division);
-            }
-        });
-    }
     function scopeFiltrarConDivision($query)
     {
         $query->whereHas('Curso', function ($cursos)  {
             return $cursos->where('division','<>', '');
         });
     }
+    function scopeFiltrarCursoStatus($query, $status)
+    {
+        $query->whereHas('Curso', function ($cursos) use($status) {
+            return $cursos->where('status', $status);
+        });
+    }
+
+    //--- Permite Array ---
+    function scopeFiltrarAnio($query,$param)
+    {
+        $query->whereHas('Curso', function ($q) use($param) {
+            return $q->whereArr('anio', $param);
+        });
+    }
+    function scopeFiltrarDivision($query,$param)
+    {
+        $query->whereHas('Curso', function ($q) use($param) {
+
+            if($param=='vacia' || $param=='sin' || $param== 'null') {
+                return $q->where('division','');
+            } else if($param=='con'){
+                return $q->where('division','<>','');
+            } else {
+                return $q->whereArr('division',$param);
+            }
+        });
+    }
+    //--- End Array ---
 }
