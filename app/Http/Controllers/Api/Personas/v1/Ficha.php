@@ -30,7 +30,7 @@ class Ficha extends Controller
         $inscripciones = new ApiConsume();
         $inscripciones->get("inscripcion/find",[
             "persona_id" => $persona_id,
-            "with" => "inscripcion.alumno.familiares.persona"
+            "with" => "inscripcion.alumno.familiares.familiar.persona"
         ]);
 
         if($inscripciones->hasError()) { return $inscripciones->getError(); }

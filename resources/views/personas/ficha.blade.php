@@ -86,12 +86,12 @@
             </tr>
             @foreach($familiares as $item)
                 <tr>
-                    <td>{{ $item['vinculo'] }}</td>
-                    <td>{{ $item['persona']['nombre_completo'] }}</td>
-                    <td>{{ $item['persona']['calle_nombre'] }} {{ $item['persona']['calle_nro'] }}</td>
+                    <td>{{ $item['familiar']['vinculo'] }}</td>
+                    <td>{{ $item['familiar']['persona']['nombre_completo'] }}</td>
+                    <td>{{ $item['familiar']['persona']['calle_nombre'] }} {{ $item['familiar']['persona']['calle_nro'] }}</td>
                     <td>{{ $persona['barrio']['nombre'] }}</td>
-                    <td>{{ $item['persona']['telefono_nro'] }}</td>
-                    <td>{{ $item['persona']['email'] }}</td>
+                    <td>{{ $item['familiar']['persona']['telefono_nro'] }}</td>
+                    <td>{{ $item['familiar']['persona']['email'] }}</td>
                 </tr>
             @endforeach
         </table>
