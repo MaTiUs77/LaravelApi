@@ -57,6 +57,8 @@ class MatriculasPorSeccion extends Controller
             cursos.division,
             cursos.turno,
             cursos.tipo,
+            cursos.pareja_pedagogica,
+            cursos.maestra_apoyo_inclusion,
 
             cursos.plazas,
             COUNT(inscripcions.id) as matriculas,
