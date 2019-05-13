@@ -39,9 +39,10 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
     public function handle()
     {
         $nextPage = $this->page + 1;
-        Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Prepare Jobs");
+        Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Prepare Jobs $nextPage/{$this->ultima_pagina}");
         while($nextPage < $this->ultima_pagina) {
-            JobSaneoRepitenciaAndPromocion::dispatch($this->ciclo,$nextPage,$this->por_pagina)->delay(now()->addMinutes(1));
+            Log::info("ARTISAN JobSaneoRepitenciaAndPromocion::dispatch: $nextPage");
+            JobSaneoRepitenciaAndPromocion::dispatch($this->ciclo,$nextPage,$this->por_pagina)->delay(now()->addMinutes(10));
             $nextPage++;
         }
         Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Jobs Created (Total: $nextPage / {$this->ultima_pagina})");
