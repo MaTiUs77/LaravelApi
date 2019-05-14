@@ -12,5 +12,6 @@ composer\.lock
 supervisord\.log
 
 supervisord\.pid
+/public/vendor/telescope
 
 \.env

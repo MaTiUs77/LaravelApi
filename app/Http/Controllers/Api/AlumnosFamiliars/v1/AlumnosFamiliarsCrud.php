@@ -14,7 +14,15 @@ class AlumnosFamiliarsCrud extends Controller
 {
     public function index()
     {
-        return AlumnosFamiliar::withOnDemand()->customPagination();
+        $query = AlumnosFamiliar::withOnDemand();
+
+        $query->when(request('status'), function ($q, $v) {
+            return $q->where('status', $v);
+        });
+
+        $result = $query->customPagination();
+
+        return $result;
     }
 
     public function show($id)
@@ -36,6 +44,27 @@ class AlumnosFamiliarsCrud extends Controller
         }
 
         return compact('alumnos_familiars');
+    }
+
+    // Update
+    public function update($id, AlumnosFamiliarsCrudUpdateReq $req)
+    {
+        $relacion = AlumnosFamiliar::findOrFail($id);
+        switch(request('mode')) {
+            case 'confirmar':
+                $relacion->status = 'confirmada';
+                break;
+            case 'cancelar':
+                $relacion->status = 'revisar';
+                break;
+            case 'pendiente':
+                $relacion->status = 'pendiente';
+                break;
+        };
+
+        $relacion->save();
+
+        return $relacion;
     }
 
     // Busca los Alumnos para un familiar

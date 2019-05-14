@@ -15,9 +15,16 @@ class Cursos extends Model
 
     public $timestamps = false;
 
+    protected $appends = ['nombre_completo'];
+
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->anio} {$this->division} {$this->turno} {$this->tipo}";
+    }
+
     function Centro()
     {
-        return $this->belongsToMany('App\Centros', 'id', 'centro_id');
+        return $this->hasMany('App\Centros', 'id', 'centro_id');
     }
 
     function Titulacion()

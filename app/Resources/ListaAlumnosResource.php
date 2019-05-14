@@ -11,18 +11,33 @@ class ListaAlumnosResource extends Resource
         $inscripcion = $this['inscripcion'];
         $alumno= $inscripcion['alumno'];
         $persona=  collect($alumno['persona']);
+        $familiares =  collect($alumno['familiares']);
 
         $response = [
             'nombre_completo' => $persona['nombre_completo'],
             'documento_tipo' => $persona['documento_tipo'],
             'documento_nro' => $persona['documento_nro'],
             'telefono_nro' => $persona['telefono_nro'],
-            'direccion' => $this->transformDireccion($persona)
+            'direccion' => $this->transformDireccion($persona),
+            'familiares' => $this->padresConfirmados($familiares)
         ];
 
         return $response;
     }
 
+    private function padresConfirmados($familiares)
+    {
+        // Se filtran los padres/tutores confirmados
+        $padresConfirmados = $familiares->filter(function ($value) {
+            return ($value['status'] == 'confirmada');
+        });
+
+        // Se obtiene el nombre y el vinculo
+        return $padresConfirmados->map(function($value){
+            $familiar = "{$value['familiar']['persona']['nombre_completo']} ({$value['familiar']['vinculo']})";
+            return $familiar;
+        });
+    }
 
     private function transformDireccion($persona) {
         $direccion = [];

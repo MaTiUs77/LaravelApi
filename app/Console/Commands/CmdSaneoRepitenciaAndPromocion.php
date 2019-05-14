@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\Saneo\SaneoRepitencia;
 use App\Jobs\JobSaneoRepitenciaAndPromocion;
+use App\Jobs\WhileJobSaneoRepitenciaAndPromocion;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -52,17 +53,11 @@ class CmdSaneoRepitenciaAndPromocion extends Command
 
         // Obtenemos ultima pagina
         $ultimaPagina = $saneo['last_page'];
-        $nextPage = $page + 1;
         //-------------------------------------------
 
-        $this->info("ARTISAN JobSaneoRepitenciaAndPromocion current:$page / while(nextPage:$nextPage <= last:$ultimaPagina) ");
+        WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$page,$por_pagina,$ultimaPagina);
 
-        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Prepare Jobs");
-        while($nextPage <= $ultimaPagina) {
-            $this->info("ARTISAN ($nextPage de $ultimaPagina) JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)");
-            JobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina)->delay(now()->addMinutes(1));
-            $nextPage++;
-        }
-        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion: Jobs Created (Total: $nextPage)");
+        $this->info("ARTISAN CmdSaneoRepitenciaAndPromocion ciclo: $ciclo / current:$page / por_pagina: $por_pagina / while(page:$page <= last:$ultimaPagina) ");
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion ciclo: $ciclo / current:$page / por_pagina: $por_pagina / while(page:$page <= last:$ultimaPagina) ");
     }
 }

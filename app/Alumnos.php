@@ -21,6 +21,11 @@ class Alumnos extends Model
 
     function Familiares()
     {
+        return $this->hasMany('App\AlumnosFamiliar', 'alumno_id', 'id');
+    }
+
+/*    function Familiares()
+    {
         return $this->hasManyThrough(
             'App\Familiar',
             'App\AlumnosFamiliar',
@@ -29,7 +34,8 @@ class Alumnos extends Model
             'id', // Local key on countries table...
             'familiar_id' // Local key on users table...
         );
-    }
+            //->where('status','pendiente');
+    }*/
 
     function Persona()
     {
