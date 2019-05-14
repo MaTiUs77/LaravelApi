@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\Saneo\SaneoRepitencia;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,6 +28,7 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
         $this->page = $page;
         $this->por_pagina= $por_pagina;
         $this->ultima_pagina= $ultima_pagina;
+        set_time_limit(0);
     }
 
     /**

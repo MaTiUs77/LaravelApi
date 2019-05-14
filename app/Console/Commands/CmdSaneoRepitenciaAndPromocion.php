@@ -31,6 +31,7 @@ class CmdSaneoRepitenciaAndPromocion extends Command
      */
     public function __construct()
     {
+        set_time_limit(0);
         parent::__construct();
     }
 
