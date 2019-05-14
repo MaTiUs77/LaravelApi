@@ -5,11 +5,12 @@
 <body>
 
 
-	<h3>el usuario  con user_social_id <strong>{{$data["user_social_id"]}}</strong> tiene la siguiente consulta para hacerle:</h3>
+	<h3>el usuario <strong>{{$data["username"]}}(user_social_id {{$data["user_social_id"]}})</strong> tiene la siguiente consulta para hacerle:</h3>
 
-	<p>{{$data["message"]}}</p>
+	<p><strong>Mensaje:</strong> "{{$data["message"]}}"</p>
 
-	<p>El mensaje es proveniente de: {{$data["origin"]}}.</p>
+	<p><strong>Correo del Usuario:</strong> {{$data["email"]}} 
+	<p><strong>Origen:</strong> {{$data["origin"]}}.</p>
 
 </body>
 

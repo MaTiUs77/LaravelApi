@@ -30,6 +30,7 @@ class Email extends Mailable
     {
         if($this->data["origin"] == "siep_pwa")
         {
+            $this->data["origin"] = "Siep Familiares";
             return self::pwaContactForm();
         }
     }
@@ -37,7 +38,7 @@ class Email extends Mailable
     private function pwaContactForm(){
         return $this->from('siep.pwa@siep.com','Siep Pwa')
             ->view('emails.contact_request')
-            ->subject("PWA | Petición de Contacto")
+            ->subject("SIEP Familiares | Contacto")
             ->with(["data"=>$this->data]);
     }
 }
