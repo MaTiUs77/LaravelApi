@@ -50,8 +50,9 @@ class ApiController extends Controller
         $motor= "Laravel ".app()->version();
         $api_gateway = env('API_GATEWAY');
         $server_time = Carbon::now();
+        $max_time = ini_get('max_execution_time');
 
-        return compact('service','status','motor','api_gateway','server_time','github');
+        return compact('service','status','motor','api_gateway','server_time','max_time','github');
     }
 
     /*
