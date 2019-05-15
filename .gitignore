@@ -14,3 +14,6 @@ supervisord\.log
 supervisord\.pid
 /public/vendor/telescope
 
+\.env
+
+nginx-php-fpm/laravel-post-install\.log
