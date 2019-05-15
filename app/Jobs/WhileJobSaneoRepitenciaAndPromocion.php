@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Jobs;
+ini_set('max_execution_time', '3');
 
-use App\Http\Controllers\Api\Saneo\SaneoRepitencia;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -18,6 +18,8 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
     protected $por_pagina;
     protected $page;
     protected $ultima_pagina;
+
+    protected $build;
     /**
      * Create a new job instance.
      *
@@ -25,6 +27,8 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
      */
     public function __construct($ciclo=2019,$page=1,$por_pagina=10,$ultima_pagina=null)
     {
+        $this->build = 2;
+
         $this->ciclo= $ciclo;
         $this->page = $page;
         $this->por_pagina= $por_pagina;
@@ -39,9 +43,11 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
     public function handle()
     {
         $nextPage = $this->page + 1;
-        Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Prepare Jobs");
+        Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Build {$this->build}");
+        Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Prepare Jobs $nextPage/{$this->ultima_pagina}");
         while($nextPage < $this->ultima_pagina) {
-            JobSaneoRepitenciaAndPromocion::dispatch($this->ciclo,$nextPage,$this->por_pagina)->delay(now()->addMinutes(1));
+            Log::info("ARTISAN JobSaneoRepitenciaAndPromocion::dispatch: $nextPage");
+            JobSaneoRepitenciaAndPromocion::dispatch($this->ciclo,$nextPage,$this->por_pagina)->delay(now()->addMinutes(10));
             $nextPage++;
         }
         Log::info("ARTISAN WhileJobSaneoRepitenciaAndPromocion: Jobs Created (Total: $nextPage / {$this->ultima_pagina})");
