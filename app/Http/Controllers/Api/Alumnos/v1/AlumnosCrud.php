@@ -26,7 +26,7 @@ class AlumnosCrud extends Controller
     public function store(AlumnosCrudStoreReq $req)
     {
         // Verificar existencia del familiar, segun persona_id
-        $alumno = Alumnos::where('persona_id',request('persona_id'))->first();
+        $alumno = Alumnos::where('persona_id',request('persona_id'))->orderBy('id','desc')->first();
 
         // Si no existe el alumno... crea el alumno
         if(!$alumno) {
@@ -40,7 +40,7 @@ class AlumnosCrud extends Controller
     // Busca un familiar por persona_id
     public function getByPersonaId($persona_id)
     {
-        $familiar = Alumnos::where('persona_id',$persona_id)->first();
+        $familiar = Alumnos::where('persona_id',$persona_id)->orderBy('id','desc')->first();
         return $familiar;
     }
 }
