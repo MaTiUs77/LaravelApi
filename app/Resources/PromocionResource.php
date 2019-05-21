@@ -21,7 +21,8 @@ class PromocionResource extends Resource
         $promocion = null;
         if(isset($inscripcion['promocion'])){
             $promocion  = collect($inscripcion['promocion']['curso']);
-            $promocion = $promocion->only([
+            $promocion = $promocion->first();
+            $promocion = collect($promocion)->only([
                 'anio','division','turno','centro_id'
             ]);
         }
