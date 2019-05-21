@@ -23,7 +23,8 @@ class RepitenciaResource extends Resource
         $repitencia = null;
         if(isset($inscripcion['repitencia'])){
             $repitencia= collect($inscripcion['repitencia']['curso']);
-            $repitencia = $repitencia->only([
+            $repitencia = $repitencia->first();
+            $repitencia = collect($repitencia)->only([
                 'anio','division','turno','centro_id'
             ]);
         }
