@@ -60,7 +60,7 @@ class SaneoRepitencia extends Controller
         Log::info("SaneoRepitencia:doSaneo()");
         $this->doSaneo($response);
         $response['data'] = RepitenciaResource::collection(collect($response['data']));
-        Log::info("SaneoRepitencia:Finalizado ".$page." de ".$response['last_page']);
+        Log::info("SaneoRepitencia:Finalizado page: ".$page." last_page: ".$response['last_page']);
         return $response;
     }
 
