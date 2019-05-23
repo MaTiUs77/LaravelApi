@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\Saneo\SaneoRepitencia;
 use App\Jobs\JobSaneoRepitenciaAndPromocion;
+use App\Jobs\TestFpmJob;
 use App\Jobs\WhileJobSaneoRepitenciaAndPromocion;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -44,8 +45,14 @@ class CmdSaneoRepitenciaAndPromocion extends Command
         $ciclo = $this->argument('ciclo');
         $por_pagina = $this->argument('por_pagina');
         $page = $this->argument('page');
-
-        $this->info("JobSaneoRepitenciaAndPromocion: $ciclo, $page, $por_pagina");
+/*
+        TEST REQUEST TIMEOUT
+        Log::info("ARTISAN TestFpmJob: dispatch");
+        TestFpmJob::dispatch();
+        Log::info("ARTISAN TestFpmJob: dispatch done");
+*/
+        //$this->info("JobSaneoRepitenciaAndPromocion: $ciclo, $page, $por_pagina");
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion HANDLE ciclo: $ciclo / page:$page / por_pagina: $por_pagina");
 
         //- Procesamos el saneo de la primer pagina -
         $saneo = new SaneoRepitencia();
@@ -55,9 +62,26 @@ class CmdSaneoRepitenciaAndPromocion extends Command
         $ultimaPagina = $saneo['last_page'];
         //-------------------------------------------
 
-        WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$page,$por_pagina,$ultimaPagina);
+        // Paginar Jobs debido al problema que surge con el max_execution_time entre nginx php-fpm
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion ciclo: $ciclo / page:$page / por_pagina: $por_pagina / ultimaPagina:$ultimaPagina ");
 
-        $this->info("ARTISAN CmdSaneoRepitenciaAndPromocion ciclo: $ciclo / current:$page / por_pagina: $por_pagina / while(page:$page <= last:$ultimaPagina) ");
-        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion ciclo: $ciclo / current:$page / por_pagina: $por_pagina / while(page:$page <= last:$ultimaPagina) ");
+        $delay = 1;
+        $nextPage = $page;
+        for($i=1;$i<=$ultimaPagina;$i++) {
+            if( ($i%300) == 0)
+            {
+                Log::info("WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina,$i);");
+                WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina,$i)->delay(now()->addMinutes($delay));
+                $nextPage = $i;
+            }
+        }
+
+        if($nextPage<$ultimaPagina)
+        {
+            Log::info("WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina,$ultimaPagina);");
+            WhileJobSaneoRepitenciaAndPromocion::dispatch($ciclo,$nextPage,$por_pagina,$ultimaPagina)->delay(now()->addMinutes($delay));
+        }
+
+        Log::info("ARTISAN CmdSaneoRepitenciaAndPromocion DISPATCHED");
     }
 }
