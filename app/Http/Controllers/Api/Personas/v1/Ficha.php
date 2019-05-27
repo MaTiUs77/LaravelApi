@@ -35,7 +35,7 @@ class Ficha extends Controller
 
         if($inscripciones->hasError()) { return $inscripciones->getError(); }
 
-        $trayectoria = collect($inscripciones->response())->sortBy('inscripcion.legajo_nro');
+        $trayectoria = collect($inscripciones->response())->sortBy('inscripcion.fecha_alta');
 
         $soloFamiliares= $trayectoria->map(function($v){
             return $v['inscripcion']['alumno']['familiares'];

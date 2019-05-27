@@ -27,7 +27,7 @@
     }
 </style>
 </head><body>
-    <div style="font-size: 14px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <div style="font-size: 12px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
         <p style="text-align:right">
             SIEP | {{ $trayectoria->last()['inscripcion']['centro']['nombre']  }}
         </p>
@@ -99,25 +99,27 @@
         <h3>ALUMNO | TRAYECTORIA ESCOLAR [ 2017 - {{ $fechaActual->format('Y') }} ]</h3>
         <table class="tabla">
             <tr>
-                <th>Ciclo</th>
+                <th>Legajo</th>
                 <th>Año</th>
                 <th>Division</th>
                 <th>Turno</th>
                 <th>Centro</th>
                 <th>Nivel de servicio</th>
                 <th>Estado inscripcion</th>
-                <th>Legajo</th>
+                <th>Alta</th>
+                <th>Baja</th>
             </tr>
             @foreach($trayectoria as $item)
             <tr>
-                <td>{{ $item['inscripcion']['ciclo']['nombre'] }}</td>
+                <td>{{ $item['inscripcion']['legajo_nro'] }}</td>
                 <td>{{ $item['curso']['anio'] }}</td>
                 <td>{{ $item['curso']['division'] }}</td>
                 <td>{{ $item['curso']['turno'] }}</td>
                 <td>{{ $item['inscripcion']['centro']['nombre'] }}</td>
                 <td>{{ $item['inscripcion']['centro']['nivel_servicio'] }}</td>
                 <td>{{ $item['inscripcion']['estado_inscripcion'] }}</td>
-                <td>{{ $item['inscripcion']['legajo_nro'] }}</td>
+                <td>{{ $item['inscripcion']['fecha_alta'] }}</td>
+                <td>{{ $item['inscripcion']['fecha_baja'] }}</td>
             </tr>
             @endforeach
         </table>
