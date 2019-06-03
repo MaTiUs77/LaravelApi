@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\Api\Repitencia\v1;
 
 use App\Http\Controllers\Api\Utilities\ApiConsume;
-use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
-
-use App\Resources\PromocionResource;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
 
 class RepitenciaCrud extends Controller
 {
@@ -16,14 +11,9 @@ class RepitenciaCrud extends Controller
     {
         $params = request()->all();
         $default['transform'] = 'RepitenciaResource';
+        $default['with'] = 'inscripcion.repitencia.curso,inscripcion.repitencia.centro';
         $default['repitencia'] = 'con';
-        $default['with'] = 'inscripcion.repitencia';
-/*
-        $default['estado_inscripcion'] = 'CONFIRMADA';
-        $default['nivel_servicio'] = [
-            'Comun - Primario',
-            'Comun - Secundario',
-        ];*/
+
         $params = array_merge($params,$default);
 
         // Consumo API Personas

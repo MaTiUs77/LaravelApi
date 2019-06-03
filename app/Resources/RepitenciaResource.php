@@ -15,18 +15,26 @@ class RepitenciaResource extends Resource
         $alumno= collect($inscripcion['alumno']);
         $persona=  collect($alumno['persona']);
 
-        $curso = $curso->only([
-            'anio','division','turno','centro_id'
+        $desde= $curso->only([
+            'anio','division','turno'
+        ]);
+
+        $desde['centro'] = collect($inscripcion['centro'])->only([
+            'id','cue','nombre','sigla','nivel_servicio','sector'
         ]);
 
         // Obtener curso de repitencia
-        $repitencia = null;
+        $hacia = null;
         if(isset($inscripcion['repitencia'])){
-            $repitencia= collect($inscripcion['repitencia']['curso']);
-            $repitencia = $repitencia->first();
-            $repitencia = collect($repitencia)->only([
+            $hacia= collect($inscripcion['repitencia']['curso']);
+            $hacia= $hacia->first();
+            $hacia= collect($hacia)->only([
                 'anio','division','turno','centro_id'
             ]);
+            $hacia['centro'] = collect($inscripcion['repitencia']['centro'])->only([
+                'id','cue','nombre','sigla','nivel_servicio','sector'
+            ]);
+
         }
 
         $inscripcion = $inscripcion->only([
@@ -39,6 +47,6 @@ class RepitenciaResource extends Resource
             "id","nombre_completo"
         ]);
 
-        return compact('inscripcion','curso','repitencia');
+        return compact('inscripcion','desde','hacia');
     }
 }

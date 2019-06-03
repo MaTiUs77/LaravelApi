@@ -37,14 +37,12 @@ class Inscripcions extends Model
 
     function Promocion()
     {
-        return $this->belongsTo('App\Inscripcions', 'promocion_id', 'id')->with(['curso']);
-        //return $this->belongsTo('App\CursosInscripcions', 'promocion_id', 'inscripcion_id')->with(['curso']);
+        return $this->belongsTo('App\Inscripcions', 'promocion_id', 'id')->with(['curso','centro']);
     }
 
     function Repitencia()
     {
-        return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id')->with(['curso']);
-        //return $this->belongsTo('App\CursosInscripcions', 'repitencia_id', 'inscripcion_id')->with(['curso']);
+        return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id');
     }
 
     function CursosInscripcions()
@@ -54,6 +52,7 @@ class Inscripcions extends Model
 
     function Curso()
     {
+        // USAR hasManyThrough con Laravel 5.8
         return $this->hasManyThrough(
             'App\Cursos',
             'App\CursosInscripcions',
