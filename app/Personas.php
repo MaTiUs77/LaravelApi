@@ -4,7 +4,9 @@ namespace App;
 
 use App\Traits\CustomPaginationScope;
 use App\Traits\WithOnDemandTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Personas extends Model
 {
@@ -29,6 +31,15 @@ class Personas extends Model
 
     public function getNombreCompletoAttribute()
     {
+        // Actualizar edad (de ser necesario), al solicitar el nombre de la persona
+        $realAge = Carbon::parse($this->fecha_nac)->age;
+        if($this->edad<$realAge)
+        {
+            Log::info("Persona: Edad actualizada ({$this->fecha_nac}) {$this->edad} ->$realAge / id:{$this->id}");
+            $this->edad = $realAge;
+            $this->save();
+        }
+
         return "{$this->apellidos}, {$this->nombres}";
     }
 
