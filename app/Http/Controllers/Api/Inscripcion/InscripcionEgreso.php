@@ -70,35 +70,30 @@ class InscripcionEgreso extends Controller
             CON PERMISOS DE EGRESO PARA CADA COLEGIO..
 
             $anio->can('egresar')
-
-            Todos los 6to egresan PRIMARIOS y SECUNDARIOS
-            Menos estos 3 CUEs que son de colegios Tecnicos con 7mo
         */
-        if($anio=='6to') {
-            if (
-                ($cue == '940007700') ||
-                ($cue == '940008300')
-                //($cue == '940015900') ||
-                //($cue == '940015700')
-            ) {
+        /*  Habilitación de EGRESO a los años: */
+        switch ($anio) {
+            case 'Sala de 5 años':
+                    $egresar = true;
+            case '3ro': // 3ros de los C.E.N.S.; I.P.E.S. y C.E.N.T.
+                if ($nivelServicio == 'Adultos - Secundario' || $nivelServicio == 'Común - Superior') {
+                    $egresar = true;
+                }
+            case '6to': // Colegios Primarios y Secundarios excepto los Técnicos.
+                if ($nivelServicio == 'Común - Primario' || $nivelServicio == 'Común - Secundario' && ($cue != '940007700' || $cue != '940008300' || $cue != '940020500')) {
+                    $egresar = true;
+                }
+                break;
+            case '7mo': // Colegios Secundarios Técnicos.
+                if ($nivelServicio == 'Común - Secundario' && ($cue == '940007700' || $cue == '940008300' || $cue == '940020500')) {
+                    $egresar = true;
+                }
+                break;    
+            
+            default: // El resto no habilita EGRESO.
                 $egresar = false;
-            } else {
-                $egresar = true;
-            }
-        } else {
-
-            // El resto de los años, es verificado por el nivel de servicio
-            switch ($nivelServicio)
-            {
-                case 'Común - Inicial':
-                    if($anio=='Sala de 5 años') { $egresar = true; }
-                    break;
-                case 'Común - Secundario':
-                    if($anio=='7mo') { $egresar = true; }
-                    break;
-            }
+                break;
         }
-
         return $egresar;
     }
 }
