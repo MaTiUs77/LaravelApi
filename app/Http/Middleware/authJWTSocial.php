@@ -37,6 +37,7 @@ class authJWTSocial
             )->getBody()->getContents();
 
             $jwt_user = json_decode($authResponse, true);
+            $jwt_user['auth'] = 'jwt.social';
             // Enviar userModel al controlador
             $request->merge(compact('jwt_user'));
 
