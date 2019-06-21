@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Inscripcion\v1;
 
+use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
@@ -11,23 +12,20 @@ class InscripcionExport extends Controller
 {
     public function excel()
     {
-        $guzzle = new Client();
+        $params = request()->all();
 
-        $data = $guzzle->get(env('SIEP_LARAVEL_API')."/api/v1/inscripcion/lista",[
-            'query' => Input::all()
-        ]);
+        // Consumo API Inscripciones
+        Log::debug("Iniciando exportacion excel",$params);
 
-        $json = json_decode($data->getBody());
+        $api = new ApiConsume();
+        $api->get("inscripcion/lista",$params);
+        if($api->hasError()) { return $api->getError(); }
+        $response= $api->response();
 
-        if(isset($json->error))
-        {
-            return response()->json($json);
-        } 
-
-        if($json!=null)
+        if($response!=null)
         {
             // Por defecto la lista se ordena por APELLIDOS y NOMBRES
-            $collection = collect($json->data);
+            $collection = collect($response->data);
             $sorted = $collection->sortBy(function ($item, $key) {
                 // Requiere un saneo en la DB (alumnos sin personas)
                 if(isset($item->inscripcion->alumno->persona)) {
@@ -60,8 +58,6 @@ class InscripcionExport extends Controller
                 $line[] = $item->inscripcion->estado_inscripcion;
                 $content[] = $line;
             }
-
-            Log::debug("Exportar excel Total: $json->total",Input::all());
 
             Export::toExcel('Inscripciones','Lista',$content);
         } else {
