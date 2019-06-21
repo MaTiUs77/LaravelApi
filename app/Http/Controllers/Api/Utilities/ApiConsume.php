@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Utilities;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApiConsume extends Controller
@@ -17,6 +18,7 @@ class ApiConsume extends Controller
 
     private $error;
     private $response;
+    private $headers = [];
 
     public function __construct($host=null,$version=null)
     {
@@ -24,10 +26,12 @@ class ApiConsume extends Controller
             $this->host = env('SIEP_LARAVEL_API');
         }
         $this->version = $version='api/v1';
+        $this->cakeHeader();
     }
 
     public function hasError() {
         if($this->error!=null) {
+            Log::error([$this->consume_route,$this->error]);
             return true;
         } else {
             return false;
@@ -36,8 +40,19 @@ class ApiConsume extends Controller
     public function getError() {
         return $this->error;
     }
+    public function getResponse() {
+        return $this->response;
+    }
     public function response() {
         return $this->response;
+    }
+
+    public function cakeHeader() {
+        $this->headers = [
+            'headers' => [
+                env('XHOSTCAKE') => 'do'
+            ]
+        ];
     }
 
     private function generateUri($route) {
@@ -55,7 +70,7 @@ class ApiConsume extends Controller
 
         // Consume API lista de inscripciones
         try {
-            $guzzle = new Client();
+            $guzzle = new Client($this->headers);
             $consumeApi = $guzzle->get($this->consume_route,['query' => $params]);
 
             // Obtiene el contenido de la respuesta, la transforma a json
