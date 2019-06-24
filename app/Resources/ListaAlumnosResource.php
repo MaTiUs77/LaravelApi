@@ -14,9 +14,10 @@ class ListaAlumnosResource extends Resource
         $familiares =  collect($alumno['familiares']);
 
         $response = [
-            'nombre_completo' => $persona['nombre_completo'],
             'documento_tipo' => $persona['documento_tipo'],
             'documento_nro' => $persona['documento_nro'],
+            'nombre_completo' => $persona['nombre_completo'],
+            'fecha_nac' => $persona['fecha_nac'],
             'telefono_nro' => $persona['telefono_nro'],
             'direccion' => $this->transformDireccion($persona),
             'familiares' => $this->padresConfirmados($familiares)
