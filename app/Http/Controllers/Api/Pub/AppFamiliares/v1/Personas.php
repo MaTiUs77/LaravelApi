@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api\Pub\AppFamiliares\v1;
 use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Controller;
 use App\Resources\PersonaPublicResource;
+use Illuminate\Support\Facades\Input;
 
 class Personas extends Controller
 {
     public function index() {
-        $params = [];
+        $params = Input::all();
         $api = new ApiConsume();
         $api->get("personas",$params);
         if($api->hasError()) { return $api->getError(); }
@@ -20,7 +21,7 @@ class Personas extends Controller
     }
 
     public function show($id) {
-        $params = [];
+        $params = Input::all();
         $api = new ApiConsume();
         $api->get("personas/{$id}",$params);
         if($api->hasError()) { return $api->getError(); }
