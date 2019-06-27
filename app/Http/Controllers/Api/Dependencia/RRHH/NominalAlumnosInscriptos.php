@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Api\Utilities\ApiConsume;
 
 class NominalAlumnosInscriptos extends Controller
 {
@@ -15,17 +16,17 @@ class NominalAlumnosInscriptos extends Controller
 
     public function start()
     {
-        // Por defecto API Consume ejecuta la ruta /api/v1/{path}
+        // Consume API lista de inscripciones
         $params = Input::all();
-        $api = new ApiConsume();
+        $api = new ApiConsume(null,'/api/public/');
         $api->get("inscripcion/lista",$params);
+
         if($api->hasError()) { return $api->getError(); }
-        $response= $api->response();
+        $lista = $api->response();
 
         // Transforma los datos a collection para realizar un mapeo
-        $data = collect($response['data']);
+        $data = collect($lista['data']);
 
-        // Optimizar:: Usar Resource en vez de un mapeo por array
         $formatted = $data->map(function($item){
             $inscripcion = $item['inscripcion'];
             $curso = $item['curso'];
@@ -62,12 +63,12 @@ class NominalAlumnosInscriptos extends Controller
             ];
         });
 
-        $response['data'] = $formatted;
+        $lista['data'] = $formatted;
 
         // Exportacion a Excel si es solicitado
         $this->exportar($formatted);
 
-        return $response;
+        return $lista;
     }
 
     private function exportar($lista) {
