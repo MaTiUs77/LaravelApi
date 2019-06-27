@@ -82,9 +82,14 @@ class RouteServiceProvider extends ServiceProvider
             ->in(app_path('Http/Controllers/Api'))
             ->name('routes.php');
 
+        $midd = ['api','cake'];
+        if(env('BYPASSMID')) {
+            $midd = ['api'];
+        }
+
         foreach($files as $file) {
             Route::prefix('api')
-                ->middleware(['api','cake'])
+                ->middleware($midd)
                 ->namespace($this->namespace)
                 ->group($file->getRealPath());
         }
