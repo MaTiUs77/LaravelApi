@@ -10,7 +10,7 @@ class PersonaPublicResource extends Resource
     {
         $persona = $this;
         $response = [
-            'documento_tipo' => $persona['documento_tipo'],
+            'id' => $persona['id'],
             'documento_nro' => $persona['documento_nro'],
         ];
 

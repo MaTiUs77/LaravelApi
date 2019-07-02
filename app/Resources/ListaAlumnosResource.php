@@ -2,6 +2,7 @@
 
 namespace App\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
 class ListaAlumnosResource extends Resource
@@ -14,10 +15,9 @@ class ListaAlumnosResource extends Resource
         $familiares =  collect($alumno['familiares']);
 
         $response = [
-            'documento_tipo' => $persona['documento_tipo'],
             'documento_nro' => $persona['documento_nro'],
             'nombre_completo' => $persona['nombre_completo'],
-            'fecha_nac' => $persona['fecha_nac'],
+            'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
             'telefono_nro' => $persona['telefono_nro'],
             'direccion' => $this->transformDireccion($persona),
             'familiares' => $this->padresConfirmados($familiares)
