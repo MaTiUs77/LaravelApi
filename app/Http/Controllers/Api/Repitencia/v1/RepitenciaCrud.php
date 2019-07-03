@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\Api\Repitencia\v1;
 
 use App\Http\Controllers\Api\Utilities\ApiConsume;
-use App\Http\Controllers\Api\Utilities\DefaultValidator;
 use App\Http\Controllers\Controller;
-
-use App\Resources\PromocionResource;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
 
 class RepitenciaCrud extends Controller
 {
