@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Api\Utilities\ApiConsume;
 
 class NominalAlumnosInscriptos extends Controller
 {
@@ -18,6 +17,8 @@ class NominalAlumnosInscriptos extends Controller
     {
         // Consume API lista de inscripciones
         $params = Input::all();
+        if(!isset($params["division"]))
+        { $params["division"] = "con"; }
         $api = new ApiConsume(null,'/api/public/');
         $api->get("inscripcion/lista",$params);
 
