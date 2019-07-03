@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Api\Dependencia\RRHH;
 
+use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Api\Utilities\ApiConsume;
 

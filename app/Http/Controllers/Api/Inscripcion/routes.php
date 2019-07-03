@@ -31,6 +31,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('lista', 'Api\Inscripcion\v1\InscripcionList@lista');
         Route::get('lista/excel', 'Api\Inscripcion\v1\InscripcionExport@excel');
+
+        Route::get('{ciclo}/{centro_id}/{curso_id}', 'Api\Inscripcion\v1\InscripcionPorSeccion@index');
     });
 });
 
