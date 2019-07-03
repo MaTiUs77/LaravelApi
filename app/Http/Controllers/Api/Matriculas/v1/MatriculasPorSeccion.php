@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class MatriculasPorSeccion extends Controller
 {
@@ -246,10 +247,6 @@ class MatriculasPorSeccion extends Controller
         if(isset($anio)) {
             $query = $query->where('cursos.anio',$anio);
         }
-
-        // Seteo la division para que por defecto traiga los cursos que contengan division
-        if($division == '')
-        { $division = 'con'; }
         
         if(isset($division)) {
             if($division=='vacia' || $division=='sin' || $division == null) {
