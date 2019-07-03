@@ -241,6 +241,11 @@ class MatriculasPorSeccion extends Controller
         if(isset($anio)) {
             $query = $query->where('cursos.anio',$anio);
         }
+
+        // Seteo la division para que por defecto traiga los cursos que contengan division
+        if($division == '')
+        { $division = 'con'; }
+        
         if(isset($division)) {
             if($division=='vacia' || $division=='sin' || $division == null) {
                 $query = $query->where('cursos.division','');
