@@ -27,7 +27,10 @@ class RepitenciaResource extends Resource
         ]);
 
         // Obtener curso de repitencia
-        $repitencia = null;
+        $repitencia = [
+            'centro' =>null,
+            'curso' =>null
+        ];
         if(isset($inscripcion['repitencia'])){
             $cursoAnterior = collect($inscripcion['repitencia']['curso']);
             $cursoAnterior = $cursoAnterior->first();
@@ -38,6 +41,11 @@ class RepitenciaResource extends Resource
             $centroAnterior = $centroAnterior->only([
                 'id','cue','nombre','sigla','sector','nivel_servicio'
             ]);
+
+            $repitencia = [
+                'centro' => $centroAnterior,
+                'curso' => $cursoAnterior,
+            ];
         }
 
         $inscripcion = $inscripcion->only([
@@ -51,10 +59,7 @@ class RepitenciaResource extends Resource
         ]);
 
         $actual = compact('centro','curso');
-        $anterior = [
-            'centro' => $centroAnterior,
-            'curso' => $cursoAnterior,
-        ];
+        $anterior = $repitencia;
 
         return compact('inscripcion','actual','anterior');
     }
