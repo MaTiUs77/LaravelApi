@@ -32,12 +32,12 @@ class PersonasPublicCrud extends Controller
         $data = collect($response['data']);
 
         if(isset($params["documento_nro"]))
-        { 
+        {
             return PersonaPublicResource_02::collection($data);
         }
-        else{
-            return PersonaPublicResource_01::collection($data);
-        }
+        // else{
+        //     return PersonaPublicResource_01::collection($data);
+        // }
     }
 
     public function show($id) {
