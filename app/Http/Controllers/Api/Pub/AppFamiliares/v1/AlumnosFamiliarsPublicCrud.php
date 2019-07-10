@@ -9,6 +9,7 @@ use App\AlumnosFamiliar;
 use App\Http\Controllers\Api\AlumnosFamiliars\v1\Request\AlumnosFamiliarsCrudStoreReq;
 use App\Resources\AlumnoFamiliarPublicResource_02;
 use App\Resources\AlumnoFamiliarPublicResource_01;
+use App\Resources\AlumnoFamiliarPublicResource_03;
 use App\Http\Controllers\Api\AlumnosFamiliars\v1\Request\AlumnosFamiliarsCrudUpdateReq;
 
 class AlumnosFamiliarsPublicCrud extends Controller
@@ -90,6 +91,6 @@ class AlumnosFamiliarsPublicCrud extends Controller
     public function getByFamiliar($familiar_id)
     {
         $alumnos = AlumnosFamiliar::withOnDemand(['alumno.persona'])->where('familiar_id',$familiar_id)->get();
-        return $alumnos;
+        return AlumnoFamiliarPublicResource_03::collection($alumnos);
     }
 }
