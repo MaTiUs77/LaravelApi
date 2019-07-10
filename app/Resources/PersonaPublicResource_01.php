@@ -4,7 +4,7 @@ namespace App\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class PersonaPublicResource extends Resource
+class PersonaPublicResource_01 extends Resource
 {
     public function toArray($request)
     {

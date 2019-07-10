@@ -11,12 +11,16 @@ api/v1/alumnos_familiars
 Route::prefix('app_familiares/v1')->group(function () {
     Route::resource('centros', 'Api\Centros\v1\CentrosCrud');
     Route::resource('barrios', 'Api\Barrios\v1\BarriosCrud');
+    Route::resource('ciudades', 'Api\Ciudades\v1\CiudadesCrud');
 
-    Route::resource('personas', 'Api\Pub\AppFamiliares\v1\Personas');
+    Route::resource('personas', 'Api\Pub\AppFamiliares\v1\PersonasPublicCrud');
+    Route::get('familiares/persona/{id}', 'Api\Pub\AppFamiliares\v1\FamiliarPublicCrud@getByPersonaId');
+    Route::resource('familiares', 'Api\Pub\AppFamiliares\v1\FamiliarPublicCrud');
+    Route::resource('alumnos', 'Api\Pub\AppFamiliares\v1\AlumnoPublicCrud');
+    Route::get('alumnos_familiars/alumnos/{id}', 'Api\Pub\AppFamiliares\v1\AlumnosFamiliarsPublicCrud@getByFamiliar');
+    Route::resource('alumnos_familiars', 'Api\Pub\AppFamiliares\v1\AlumnosFamiliarsPublicCrud');
 
     Route::prefix('forms')->group(function () {
-        Route::get('ciudades', 'Api\Forms\Forms@ciudades');
-        Route::get('centros', 'Api\Forms\Forms@centros');
         Route::get('sectores', 'Api\Forms\Forms@sectores');
         Route::get('niveles', 'Api\Forms\Forms@niveles');
         Route::get('ciclos', 'Api\Forms\Forms@ciclos');
