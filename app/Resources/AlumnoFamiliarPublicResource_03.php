@@ -15,7 +15,8 @@ class AlumnoFamiliarPublicResource_03 extends Resource
             'familiar_id' => $alumnos_familiars['familiar_id'],
             'documento_nro' => $alumnos_familiars['alumno']['persona']['documento_nro'],
             'nombres' => $alumnos_familiars['alumno']['persona']['nombres'],
-            'apellidos' => $alumnos_familiars['alumno']['persona']['apellidos']
+            'apellidos' => $alumnos_familiars['alumno']['persona']['apellidos'],
+            'status' => $alumnos_familiars['status']
 
         ];
 
