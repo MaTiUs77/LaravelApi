@@ -21,6 +21,10 @@ class BarriosCrud extends Controller
             $ciudad = Ciudades::where('nombre',$v)->firstOrFail();
             return $q->where('ciudad_id', $ciudad->id);
         });
+
+        $query->when(request('nombre'), function ($q, $v) {
+            return $q->where('nombre','like', '%'.$v.'%');
+        });
         $response = $query->get();
         return $response;
     }
