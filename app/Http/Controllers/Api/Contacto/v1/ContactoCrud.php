@@ -30,9 +30,9 @@ class ContactoCrud extends Controller
             return $q->findOrFail($v);
         });
 
-        // $contacto->when(request('user_social_id'), function ($q, $v) {
-        //     return $q->where('user_social_id',$v);
-        // });
+        $contacto->when(request('user_social_id'), function ($q, $v) {
+            return $q->where('user_social_id',$v);
+        });
 
         return $contacto->customPagination();
     }
@@ -81,7 +81,7 @@ class ContactoCrud extends Controller
         // Si existe la contacto... se actualiza!
         if($contacto) {
             // Se actualiza el mensaje
-            $updated = $contacto->update($realReq->toArray());
+            $updated = $contacto->update($req->toArray());
 
             return ['updated'=>$updated];
         }

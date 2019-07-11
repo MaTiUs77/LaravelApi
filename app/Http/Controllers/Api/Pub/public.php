@@ -20,6 +20,8 @@ Route::prefix('app_familiares/v1')->group(function () {
     Route::get('alumnos_familiars/alumnos/{id}', 'Api\Pub\AppFamiliares\v1\AlumnosFamiliarsPublicCrud@getByFamiliar');
     Route::resource('alumnos_familiars', 'Api\Pub\AppFamiliares\v1\AlumnosFamiliarsPublicCrud');
 
+    Route::resource('contacto','Api\Pub\AppFamiliares\v1\ContactoPublicCrud');
+
     Route::prefix('forms')->group(function () {
         Route::get('sectores', 'Api\Forms\Forms@sectores');
         Route::get('niveles', 'Api\Forms\Forms@niveles');

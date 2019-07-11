@@ -65,13 +65,13 @@ class ApiConsume extends Controller
         ]);
     }
 
-    public function get($route,$params=[]) {
+    public function request($method,$route,$params=[]) {
         $this->generateUri($route);
 
         // Consume API lista de inscripciones
         try {
             $guzzle = new Client($this->headers);
-            $consumeApi = $guzzle->get($this->consume_route,['query' => $params]);
+            $consumeApi = $guzzle->request($method,$this->consume_route,['query' => $params]);
 
             // Obtiene el contenido de la respuesta, la transforma a json
             $content = $consumeApi->getBody()->getContents();
@@ -94,5 +94,20 @@ class ApiConsume extends Controller
         }
 
         return $this;
+    }
+
+    public function get($uri,$params)
+    {
+        return $this->request('GET',$uri,$params);
+    }
+
+    public function post($uri,$params)
+    {
+        return $this->request('POST',$uri,$params);
+    }
+
+    public function delete($uri,$params)
+    {
+        return $this->request('DELETE',$uri,$params);
     }
 }
