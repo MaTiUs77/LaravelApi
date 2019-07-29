@@ -2,8 +2,6 @@
 
 namespace App\Resources;
 
-use App\Ciclos;
-use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
 
 class RepitenciaResource extends Resource
