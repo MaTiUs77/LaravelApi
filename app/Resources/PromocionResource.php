@@ -8,8 +8,15 @@ class PromocionResource extends Resource
 {
     public function toArray($request)
     {
-        $curso=  collect($this['curso']);
+        // Cursada actual
         $inscripcion = collect($this['inscripcion']);
+        $curso=  collect($this['curso']);
+        $centro=  collect($inscripcion['centro']);
+        $centro = $centro->only([
+            'id','cue','nombre','sigla','sector','nivel_servicio'
+        ]);
+
+        // Datos de alumno y persona de la inscripcion
         $alumno= collect($inscripcion['alumno']);
         $persona=  collect($alumno['persona']);
 
@@ -17,14 +24,27 @@ class PromocionResource extends Resource
             'anio','division','turno','centro_id'
         ]);
 
-        // Obtener curso de promocion
-        $promocion = null;
+        // Obtener curso de repitencia
+        $promocion = [
+            'centro' =>null,
+            'curso' =>null
+        ];
+
         if(isset($inscripcion['promocion'])){
-            $promocion  = collect($inscripcion['promocion']['curso']);
-            $promocion = $promocion->first();
-            $promocion = collect($promocion)->only([
+            $cursoSiguiente = collect($inscripcion['promocion']['curso']);
+            $cursoSiguiente = $cursoSiguiente->first();
+            $cursoSiguiente= collect($cursoSiguiente)->only([
                 'anio','division','turno','centro_id'
             ]);
+            $centroSiguiente =  collect($inscripcion['promocion']['centro']);
+            $centroSiguiente = $centroSiguiente->only([
+                'id','cue','nombre','sigla','sector','nivel_servicio'
+            ]);
+
+            $promocion = [
+                'centro' => $centroSiguiente,
+                'curso' => $cursoSiguiente,
+            ];
         }
 
         $inscripcion = $inscripcion->only([
@@ -37,6 +57,9 @@ class PromocionResource extends Resource
             "id","nombre_completo"
         ]);
 
-        return compact('inscripcion','curso','promocion');
+        $actual = compact('centro','curso');
+        $anterior = $promocion;
+
+        return compact('inscripcion','actual','anterior');
     }
 }
