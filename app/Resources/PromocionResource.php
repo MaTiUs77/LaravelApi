@@ -21,7 +21,7 @@ class PromocionResource extends Resource
         $persona=  collect($alumno['persona']);
 
         $curso = $curso->only([
-            'anio','division','turno','centro_id'
+            'id','anio','division','turno','centro_id'
         ]);
 
         // Obtener curso de repitencia
@@ -34,7 +34,7 @@ class PromocionResource extends Resource
             $cursoSiguiente = collect($inscripcion['promocion']['curso']);
             $cursoSiguiente = $cursoSiguiente->first();
             $cursoSiguiente= collect($cursoSiguiente)->only([
-                'anio','division','turno','centro_id'
+                'id','anio','division','turno','centro_id'
             ]);
             $centroSiguiente =  collect($inscripcion['promocion']['centro']);
             $centroSiguiente = $centroSiguiente->only([
