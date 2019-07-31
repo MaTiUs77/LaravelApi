@@ -96,7 +96,7 @@ class PersonasPublicCrud extends Controller
             else{
                 return "No posee jwt";
             }
-            // $this->updatePersonaIdFromUserSocial($persona->id);
+            $this->updatePersonaIdFromUserSocial($persona->id);
             // self::updatePersonaIdFromUserSocial($persona->id);
         }
 
