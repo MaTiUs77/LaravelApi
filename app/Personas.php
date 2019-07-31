@@ -17,7 +17,7 @@ class Personas extends Model
 
     protected $fillable = [
         'apellidos','nombres','sexo','documento_tipo','documento_nro',
-        'fecha_nac','email','ciudad_id','telefono_nro','calle_nombre','calle_nro',
+        'fecha_nac','email','ciudad_id','telefono_nro','telefono_nro_alt','calle_nombre','calle_nro',
         'depto_casa','tira_edificio','observaciones','familiar','alumno',
         'vinculo',
         'pcia_nac','nacionalidad'
