@@ -80,16 +80,21 @@ class ApiConsume extends Controller
             $content = $ex->getResponse();
             $jsonBody = json_decode($content->getBody(), true);
 
-            $jsonBody['api_request'] = 'complete';
             $this->error =  $jsonBody;
 
             return $this;
         }
 
+        $req['api_consume'] = [
+            'version'=>$this->version,
+            'route'=>$this->route
+        ];
+
         if(isset($req['error'])) {
-            $req['api_consume'] = 'complete';
+            $req['api_consume']['request'] = 'error';
             $this->error = $req;
         } else {
+            $req['api_consume']['request'] = 'done';
             $this->response = $req;
         }
 

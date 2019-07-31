@@ -8,15 +8,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-class InscripcionPorSeccion extends Controller
+class InscripcionRouteFilter extends Controller
 {
-    public function index($ciclo, $centro_id, $curso_id)
+    public function index($ciclo, $centro_id=null, $curso_id=null)
     {
-        $params = Input::all();
-        $params['ciclo'] = $ciclo;
-        $params['centro_id'] = $centro_id;
-        $params['curso_id'] = $curso_id;
-        
+        $params = request()->all();
+        $default['ciclo'] = $ciclo;
+        $default['centro_id'] = $centro_id;
+        $default['curso_id'] = $curso_id;
+
+        $params = array_merge($params,$default);
+
         // Consumo API Inscripciones
         $apiPersona= new ApiConsume();
         $apiPersona->get("inscripcion/lista",$params);
