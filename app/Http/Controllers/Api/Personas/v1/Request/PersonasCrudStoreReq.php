@@ -21,7 +21,7 @@ class PersonasCrudStoreReq extends FormRequest
             'documento_nro' => 'required|numeric',
             'fecha_nac' => 'required|date',
             'email' => 'required|email',
-            'telefono_nro' => 'required|string',
+            'telefono_nro' => 'required',
             'calle_nombre' => 'string',
             'calle_nro' => 'numeric',
 

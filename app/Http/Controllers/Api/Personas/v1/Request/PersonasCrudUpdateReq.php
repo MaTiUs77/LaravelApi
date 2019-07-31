@@ -22,6 +22,7 @@ class PersonasCrudUpdateReq extends FormRequest
             'fecha_nac' => 'required|date',
             'email' => 'email',
             'telefono_nro' => 'required|string',
+            'telefono_nro_alt' => 'string',
             'calle_nombre' => 'string',
             'calle_nro' => 'numeric',
 
