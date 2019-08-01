@@ -76,7 +76,7 @@ class PersonasPublicCrud extends Controller
         $persona = collect($persona["data"]);
         // Si no existe la persona... se crea!
         if($persona->isEmpty()) {
-            // Se agrega el campo ciudad_id al request
+            // Se agrega el campo ciudad_id y barrio_id al request
             $req->merge(["ciudad_id"=>$ciudad[0]["id"],"barrio_id"=>$barrio[0]["id"]]);
             // Se crea la persona
             $persona = Personas::create($req->except("vinculo"));
@@ -141,7 +141,6 @@ class PersonasPublicCrud extends Controller
 
                         $realReq = $realReq->merge(["ciudad_id"=>$ciudad["id"],"barrio_id"=>$barrio["id"]]);
                     }
-
                     // Se actualiza la persona
                     $personas = Personas::findOrFail($id);
                     $updated = $personas->update($realReq->toArray());
