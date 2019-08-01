@@ -63,4 +63,9 @@ class Inscripcions extends Model
             'curso_id' // KEY CursosInscripcions
         );
     }
+
+    function Pase()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
+    }
 }
