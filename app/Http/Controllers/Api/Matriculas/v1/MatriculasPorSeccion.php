@@ -110,9 +110,15 @@ class MatriculasPorSeccion extends Controller
             'cursos.plazas'
         ]);
 
-        $result = $query->customPagination();
+        if(request('por_pagina')=='all') {
+            $result = $query->get();
+            $items = $result;
+        } else {
+            $result = $query->customPagination();
+            $items = $result->items();
+        }
 
-        foreach($result->items() as $item) {
+        foreach($items as $item) {
             // Se carga la relacion con el modelo Titulacion
             $item->titulacion = Titulacion::select('nombre','nombre_abreviado')->find($item->titulacion_id);
 
@@ -133,7 +139,6 @@ class MatriculasPorSeccion extends Controller
                 }
             }*/
         }
-
 
         $this->exportar($result);
 
