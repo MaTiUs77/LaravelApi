@@ -11,10 +11,10 @@ class InscripcionList extends Controller
 {
 
     public $validationRules = [
-        'ciclo_id' => 'required_without_all:ciclo,alumno_id,documento_nro|numeric',
-        'ciclo' => 'required_without_all:ciclo_id,alumno_id,documento_nro|numeric',
-        'alumno_id' => 'required_without_all:ciclo,ciclo_id,documento_nro|numeric',
-        'documento_nro' => 'required_without_all:ciclo,ciclo_id,alumno_id|numeric',
+        'ciclo_id' => 'required_without_all:ciclo,alumno_id,documento_nro,id|numeric',
+        'ciclo' => 'required_without_all:ciclo_id,alumno_id,documento_nro,id|numeric',
+        'alumno_id' => 'required_without_all:ciclo,ciclo_id,documento_nro,id|numeric',
+        'documento_nro' => 'required_without_all:ciclo,ciclo_id,alumno_id,id|numeric',
         'persona' => 'string',
         'centro_id' => 'numeric',
         'ciudad' => 'string',
@@ -62,6 +62,8 @@ class InscripcionList extends Controller
         $egresado = Input::get('egresado');
         $estado_inscripcion = Input::get('estado_inscripcion');
 
+        $id= Input::get('id');
+
         $promocion = Input::get('promocion');
         $repitencia = Input::get('repitencia');
 
@@ -79,6 +81,7 @@ class InscripcionList extends Controller
         if($alumno_id) { $query->filtrarAlumnoId($alumno_id); }
         if($documento_nro) { $query->filtrarPersonaDocumentoNro($documento_nro); }
 
+        if($id) { $query->filtrarInscripcion($id); }
         if($persona) { $query->filtrarPersonaFullname($persona); }
 
         if($sector) { $query->filtrarSector($sector); }
