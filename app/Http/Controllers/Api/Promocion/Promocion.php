@@ -8,7 +8,6 @@ use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\User;
-use App\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +34,9 @@ class Promocion extends Controller
 
     public function start(Request $request)
     {
+        $cicloActual = Carbon::now()->format('Y');
+        $cicloSiguiente = $cicloActual+1;
+
         // Se validan los parametros
         $validator = Validator::make($request->all(), $this->validationRules);
         if ($validator->fails()) {
@@ -54,8 +56,8 @@ class Promocion extends Controller
         $inscripciones =  Inscripcions::whereIn('id',$ids)->get();
 
         // Ciclo hard-codeado
-        $this->cicloFrom = Ciclos::where('nombre',2018)->first();
-        $this->cicloTo = Ciclos::where('nombre',2019)->first();
+        $this->cicloFrom = Ciclos::where('nombre',$cicloActual)->first();
+        $this->cicloTo = Ciclos::where('nombre',$cicloSiguiente)->first();
 
         $this->user =  User::where('id',$user_id)->first();
         $this->centro =  Centros::where('id',$centro_id)->first();
@@ -63,6 +65,7 @@ class Promocion extends Controller
         $this->cursoTo =  Cursos::where('id',$curso_id_promocion)->first();
 
         // Genero nuevas inscripciones modificando solo algunos datos de la inscripcion anterior
+        Log::debug("Verificando promociones total: {$inscripciones->count()}");
         foreach($inscripciones as $inscripcion)
         {
             // Copia de el registro de inscripcion
@@ -76,12 +79,16 @@ class Promocion extends Controller
 
                 // No agrega la promocion, si el legajo ya existe
                 $findLegajo =  Inscripcions::where('legajo_nro',$nuevoLegajo)->first();
+                Log::debug("Localizando existencia del nuevo legajo: $nuevoLegajo");
                 if($findLegajo==null)
                 {
+                    Log::debug("No localizando creando nuevo legajo: $nuevoLegajo");
+
                     $promocion->legajo_nro = $nuevoLegajo;
                     $promocion->ciclo_id = $this->cicloTo->id;
                     $promocion->usuario_id = $this->user->id;
-                    $promocion->promocionado = 0;
+                    $promocion->promocionado = null; // Deprecar
+                    $promocion->promocion_id = null;
                     $today = Carbon::now();
                     $promocion->created = $today;
                     $promocion->modified = $today;
@@ -95,61 +102,49 @@ class Promocion extends Controller
 
                     // Para guardar el id de la nueva promocion es necesario
                     // cambiar la columna promocionado de TINYINT a INT 11 para guardar $cursoInscripcion->id;
-                    $inscripcion->promocionado = $cursoInscripcion->id;
+                    $inscripcion->promocionado = $cursoInscripcion->id; // Deprecar
+                    $inscripcion->promocion_id = $promocion->id;
                     $inscripcion->save();
 
                     $this->cuantificarInscripcion($cursoInscripcion);
 
-                    $this->infoLog .= "
+                    Log::debug("
                     Inscripcion_id: {$inscripcion->id} => {$promocion->id}
                     Ciclo_id: {$inscripcion->ciclo_id} => {$promocion->ciclo_id}
                     Legajo: {$inscripcion->legajo_nro} => {$promocion->legajo_nro}
                     CursoInscripcion: {$cursoInscripcion->id}
-                    ";
+                    ");
                 } else {
-                    $message = "
+                    Log::debug("Legajo localizado: $nuevoLegajo, no se realiza la promocion.");
+
+                    Log::debug("
                     Inscripcion_id: {$inscripcion->id}
                     Ciclo_id: {$inscripcion->ciclo_id} => {$this->cicloTo->id}
                     Legajo: {$inscripcion->legajo_nro} => {$findLegajo->legajo_nro}
                     NO SE PROMOCIONA, EL LEGAJO YA EXISTE EN EL CICLO SIGUIENTE
-                    ";
-
-                    $this->logWarning($message);
+                    ");
                 }
             } else {
-                $message = "
+                Log::debug("
                 Inscripcion_id: {$inscripcion->id}
-                Ciclo_id: {$inscripcion->ciclo_id} => {$this->cicloFrom->id}
+                Ciclo_id: {$inscripcion->ciclo_id} != {$this->cicloFrom->id}
                 Legajo: {$inscripcion->legajo_nro}
-                NO SE PROMOCIONA, YA ESTA INSCRIPTO, DEBERIA EDITARSE
-                ";
-
-                $this->logWarning($message);
+                NO SE PROMOCIONA, EL CICLO DE LA PROMOCION NO ES IGUAL AL CICLO ACTUAL
+                ");
             }
         }
-
-        $this->logInfo();
 
         return [
             'done' => true
         ];
     }
 
-    private function logWarning($message) {
-        $this->infoLog .= $message;
-
-        Log::warning("({$this->user->id}) {$this->user->username} :: PROMOCION :: ({$this->centro->id}){$this->centro->nombre}
+    private function logDebug($message) {
+        Log::debug("({$this->user->id}) {$this->user->username} :: PROMOCION :: ({$this->centro->id}){$this->centro->nombre}
             Division: {$this->cursoFrom->anio} {$this->cursoFrom->division} {$this->cursoFrom->turno} => {$this->cursoTo->anio} {$this->cursoTo->division} {$this->cursoTo->turno}
             {$message}
         ");
 
-    }
-
-    private function logInfo() {
-        Log::info("({$this->user->id}) {$this->user->username} :: PROMOCION :: ({$this->centro->id}){$this->centro->nombre}
-            Division: {$this->cursoFrom->anio} {$this->cursoFrom->division} {$this->cursoFrom->turno} => {$this->cursoTo->anio} {$this->cursoTo->division} {$this->cursoTo->turno}
-            {$this->infoLog}
-        ");
     }
 
     // Genera el legajo en base al legajo anterior + ultimos 2 digitos del ciclo siguiente
