@@ -17,6 +17,7 @@ class Promocion extends Controller
 {
     public $validationRules = [
         'id' => 'required|array',
+        'ciclo' => 'required|numeric',
         'centro_id' => 'required|numeric',
         'curso_id' => 'required|numeric',
         'curso_id_promocion' => 'required|numeric',
@@ -30,34 +31,27 @@ class Promocion extends Controller
     private $cicloFrom;
     private $cicloTo;
 
-    private $infoLog;
-
     public function start(Request $request)
     {
-        $cicloActual = Carbon::now()->format('Y');
-        $cicloSiguiente = $cicloActual+1;
-
         // Se validan los parametros
         $validator = Validator::make($request->all(), $this->validationRules);
         if ($validator->fails()) {
             return ['error' => $validator->errors()];
         }
 
-        // Se transforman los parametros a json
-        $data = $request->json();
-
-        $ids = $data->get('id');
-        $centro_id = $data->get('centro_id');
-        $curso_id = $data->get('curso_id');
-        $curso_id_promocion = $data->get('curso_id_promocion');
-        $user_id = $data->get('user_id');
+        $ciclo = request('ciclo');
+        $ids = request('id');
+        $centro_id = request('centro_id');
+        $curso_id = request('curso_id');
+        $curso_id_promocion = request('curso_id_promocion');
+        $user_id = request('user_id');
 
         // Obtengo datos de las inscripciones a promocionar
         $inscripciones =  Inscripcions::whereIn('id',$ids)->get();
 
-        // Ciclo hard-codeado
-        $this->cicloFrom = Ciclos::where('nombre',$cicloActual)->first();
-        $this->cicloTo = Ciclos::where('nombre',$cicloSiguiente)->first();
+        $this->cicloFrom = Ciclos::where('nombre',$ciclo)->first();
+        $nombreCicloSiguiente = $this->cicloFrom->nombre + 1;
+        $this->cicloTo = Ciclos::where('nombre',$nombreCicloSiguiente)->first();
 
         $this->user =  User::where('id',$user_id)->first();
         $this->centro =  Centros::where('id',$centro_id)->first();
@@ -65,7 +59,9 @@ class Promocion extends Controller
         $this->cursoTo =  Cursos::where('id',$curso_id_promocion)->first();
 
         // Genero nuevas inscripciones modificando solo algunos datos de la inscripcion anterior
-        Log::debug("Verificando promociones total: {$inscripciones->count()}");
+        Log::debug("Verificando promociones total: {$inscripciones->count()}, desde: {$this->cicloFrom->nombre} hacia: {$this->cicloTo->nombre}");
+
+        $response = [];
         foreach($inscripciones as $inscripcion)
         {
             // Copia de el registro de inscripcion
@@ -114,6 +110,14 @@ class Promocion extends Controller
                     Legajo: {$inscripcion->legajo_nro} => {$promocion->legajo_nro}
                     CursoInscripcion: {$cursoInscripcion->id}
                     ");
+
+                    $response[$inscripcion->id] = [
+                        'done' => 'true',
+                        'promocion_id' => $promocion->id,
+                        'legajo_nro' => $inscripcion->legajo_nro,
+                        'legajo_nro_nuevo' => $promocion->legajo_nro
+                    ];
+
                 } else {
                     Log::debug("Legajo localizado: $nuevoLegajo, no se realiza la promocion.");
 
@@ -123,6 +127,11 @@ class Promocion extends Controller
                     Legajo: {$inscripcion->legajo_nro} => {$findLegajo->legajo_nro}
                     NO SE PROMOCIONA, EL LEGAJO YA EXISTE EN EL CICLO SIGUIENTE
                     ");
+
+                    $response[$inscripcion->id] = [
+                        'error' => 'No promociona, el legajo ya existe en el ciclo a promocionar',
+                        'legajo_nro' => $inscripcion->legajo_nro
+                    ];
                 }
             } else {
                 Log::debug("
@@ -131,20 +140,15 @@ class Promocion extends Controller
                 Legajo: {$inscripcion->legajo_nro}
                 NO SE PROMOCIONA, EL CICLO DE LA PROMOCION NO ES IGUAL AL CICLO ACTUAL
                 ");
+
+                $response[$inscripcion->id] = [
+                    'error' => 'No promociona, el ciclo de la inscripcion no es valido para promocionar',
+                    'legajo_nro' => $inscripcion->legajo_nro
+                ];
             }
         }
 
-        return [
-            'done' => true
-        ];
-    }
-
-    private function logDebug($message) {
-        Log::debug("({$this->user->id}) {$this->user->username} :: PROMOCION :: ({$this->centro->id}){$this->centro->nombre}
-            Division: {$this->cursoFrom->anio} {$this->cursoFrom->division} {$this->cursoFrom->turno} => {$this->cursoTo->anio} {$this->cursoTo->division} {$this->cursoTo->turno}
-            {$message}
-        ");
-
+        return compact('response');
     }
 
     // Genera el legajo en base al legajo anterior + ultimos 2 digitos del ciclo siguiente
