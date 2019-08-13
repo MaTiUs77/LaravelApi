@@ -18,7 +18,8 @@ class PersonaPublicResource_02 extends Resource
             'alumno' => $persona['alumno'],
             'familiar' => $persona['familiar'],
             'ciudad' => $persona['ciudad'],
-            'barrio' => $persona['barrio']
+            'barrio' => $persona['barrio'],
+            'familiares' => $persona['familiar']
         ];
 
         return $response;
