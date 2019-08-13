@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Pub\AppFamiliares\v1;
 
+use App\Familiar;
 use App\Http\Controllers\Api\Utilities\ApiConsume;
 
 use App\Http\Controllers\Controller;
@@ -28,6 +29,8 @@ class PersonasPublicCrud extends Controller
         $api->get("personas",$params);
         if($api->hasError()) { return $api->getError(); }
         $response= $api->response();
+
+        return $response;
         
         $data = collect($response['data']);
 
@@ -61,6 +64,7 @@ class PersonasPublicCrud extends Controller
         $api->get("ciudades",["nombre"=>$req["ciudad"]]);
         if($api->hasError()) { return $api->getError(); }
         $ciudad = $api->response();
+        $vinculo = $req['vinculo'];
         // $ciudad = $ciudad["data"];
         
         $api->get("barrios",["nombre"=>$req["barrio"]]);
@@ -96,6 +100,20 @@ class PersonasPublicCrud extends Controller
             else{
                 return "No posee jwt";
             }
+
+            $familiar = Familiar::where('persona_id',$persona->id)->first();
+            if(!$familiar){
+                $familiarReq = [
+                    "persona_id" => $persona->id,
+                    "vinculo"=> $vinculo,
+                    "conviviente"=> 1,
+                    "autorizado_retirar"=>0,
+                    "observaciones"=>""
+                ];
+                $familiar = Familiar::create($familiarReq);
+            }else{
+                
+            }
             $this->updatePersonaIdFromUserSocial($persona->id);
             // self::updatePersonaIdFromUserSocial($persona->id);
         }
@@ -119,6 +137,7 @@ class PersonasPublicCrud extends Controller
             $persona = (object) $persona[0];
             // Obtenemos los datos del Usuario Social que consume el API
             $jwt_user = (object) request('jwt_user');
+            $vinculo = request('vinculo');
             if($jwt_user->id) {
 
                 if ($persona->id == $jwt_user->persona_id) {
@@ -143,6 +162,13 @@ class PersonasPublicCrud extends Controller
                     }
                     // Se actualiza la persona
                     $personas = Personas::findOrFail($id);
+                    // Busco familiar y lo actualizo
+                    $familiar = Familiar::where('persona_id',$jwt_user->persona_id)->first();
+                    if($familiar){
+                        $familiar->update(["vinculo"=>$vinculo]);
+                    }else{
+                        
+                    }
                     $updated = $personas->update($realReq->toArray());
 
                     return ['updated'=>$updated];

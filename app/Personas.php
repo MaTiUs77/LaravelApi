@@ -46,4 +46,9 @@ class Personas extends Model
     {
         return $this->hasOne('App\Barrios', 'id', 'barrio_id');
     }
+
+    function Familiar()
+    {
+        return $this->hasOne('App\Familiar','persona_id','id');
+    }
 }
