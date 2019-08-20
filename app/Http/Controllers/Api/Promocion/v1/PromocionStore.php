@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Promocion;
+namespace App\Http\Controllers\Api\Promocion\v1;
 
 use App\Centros;
 use App\Ciclos;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class Promocion extends Controller
+class PromocionStore extends Controller
 {
     public $validationRules = [
         'id' => 'required|array',
@@ -64,28 +64,49 @@ class Promocion extends Controller
         $response = [];
         foreach($inscripciones as $inscripcion)
         {
-            // Copia de el registro de inscripcion
-            $promocion = $inscripcion->replicate();
-
-            // Si el ciclo de la inscripcion a promocionar corresponde al ciclo_from.. continuo
-            if($promocion->ciclo_id == $this->cicloFrom->id)
+            // Si el ciclo de la inscripcion a promocionar corresponde al ciclo_from.. continuo (CICLO DE INSCRIPCION == CICLO ACTUAL)
+            if($inscripcion->ciclo_id == $this->cicloFrom->id)
             {
-                // Modifico algunos campos antes de crear la inscripcion nueva para el ciclo siguiente
-                $nuevoLegajo = $this->nuevoLegajo($promocion);
+                // Formato de nuevo legajo
+                $nuevoLegajo = $this->nuevoLegajo($inscripcion);
 
                 // No agrega la promocion, si el legajo ya existe
                 $findLegajo =  Inscripcions::where('legajo_nro',$nuevoLegajo)->first();
                 Log::debug("Localizando existencia del nuevo legajo: $nuevoLegajo");
+
                 if($findLegajo==null)
                 {
                     Log::debug("No localizando creando nuevo legajo: $nuevoLegajo");
 
+                    $today = Carbon::now();
+                    $promocion = new Inscripcions();
+                    $promocion->tipo_inscripcion= 'Común';
                     $promocion->legajo_nro = $nuevoLegajo;
+                    $promocion->tipo_alta= 'Regular';
+                    $promocion->fecha_alta = $today;
+
+
+                    // Copia de Documentacion
+                    $promocion->fotocopia_dni = $inscripcion->fotocopia_dni;
+                    $promocion->certificado_septimo = $inscripcion->certificado_septimo;
+                    $promocion->analitico= $inscripcion->analitico;
+                    $promocion->partida_nacimiento_alumno= $inscripcion->partida_nacimiento_alumno;
+                    $promocion->partida_nacimiento_tutor= $inscripcion->partida_nacimiento_tutor;
+                    $promocion->certificado_vacunas= $inscripcion->certificado_vacunas;
+                    $promocion->estado_documentacion = $inscripcion->estado_documentacion;
+
+                    $promocion->estado_inscripcion = 'CONFIRMADA';
+
+                    $promocion->alumno_id = $inscripcion->alumno_id;
+                    $promocion->centro_id = $inscripcion->centro_id;
+
                     $promocion->ciclo_id = $this->cicloTo->id;
                     $promocion->usuario_id = $this->user->id;
+
                     $promocion->promocionado = null; // Deprecar
                     $promocion->promocion_id = null;
-                    $today = Carbon::now();
+                    $promocion->repitencia_id = null;
+
                     $promocion->created = $today;
                     $promocion->modified = $today;
                     $promocion->save();
@@ -98,7 +119,6 @@ class Promocion extends Controller
 
                     // Para guardar el id de la nueva promocion es necesario
                     // cambiar la columna promocionado de TINYINT a INT 11 para guardar $cursoInscripcion->id;
-                    $inscripcion->promocionado = $cursoInscripcion->id; // Deprecar
                     $inscripcion->promocion_id = $promocion->id;
                     $inscripcion->save();
 

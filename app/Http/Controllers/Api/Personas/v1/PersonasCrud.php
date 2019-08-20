@@ -24,7 +24,15 @@ class PersonasCrud extends Controller
     // List
     public function index(PersonasCrudIndexReq $req)
     {
-        $persona = Personas::withOnDemand(['ciudad','barrio']);
+        if(request('withFamiliar') !== null)
+        {
+            $persona = Personas::withOnDemand(['ciudad','barrio','familiar']);
+        }
+        else
+        {
+            $persona = Personas::withOnDemand(['ciudad','barrio']);
+        }
+        
 
         $persona->when(request('id'), function ($q, $v) {
             return $q->findOrFail($v);

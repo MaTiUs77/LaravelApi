@@ -1,0 +1,16 @@
+# Centros CRUD
+GET http://localhost:7777/api/public/inscripcion/lista
+Content-Type: application/json
+
+{
+    "ciclo_id":6,
+    "estado_inscripcion":"CONFIRMADA"
+}
+###
+# Barrios CRUD
+
+###
+# Personas Crud
+
+###
+# Inscripciones Nominales
