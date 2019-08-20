@@ -15,6 +15,9 @@ class ConHermanoResource extends Resource
         $persona=  collect($alumno['persona']);
         $familiares =  collect($alumno['familiares']);
 
+        $centro = collect($inscripcion['centro']);
+        $ciudad = collect($centro['ciudad']);
+
         // Hermano
         $hermano= $inscripcion['hermano'];
         $hermano_persona=  collect($hermano['persona']);
@@ -22,6 +25,8 @@ class ConHermanoResource extends Resource
 
         $response = [
             'inscripcion' => [
+                'ciudad' => $ciudad['nombre'],
+                'centro' => $centro['nombre'],
                 'documento_nro' => $persona['documento_nro'],
                 'nombre_completo' => $persona['nombre_completo'],
                 'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
