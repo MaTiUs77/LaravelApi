@@ -68,6 +68,8 @@ class InscripcionConHermano extends Controller
         $resultados = collect($data);
 
         $excelSheet = [
+            'Alumno.ciudad',
+            'Alumno.centro',
             'Alumno.documento_nro',
             'Alumno.nombre',
             'Alumno.fecha_nacimiento',
@@ -88,6 +90,8 @@ class InscripcionConHermano extends Controller
             $hermano = $v['hermano'];
 
             return [
+                $inscripcion['ciudad'],
+                $inscripcion['centro'],
                 $inscripcion['documento_nro'],
                 $inscripcion['nombre_completo'],
                 $inscripcion['fecha_nac'],
@@ -106,7 +110,6 @@ class InscripcionConHermano extends Controller
         })->toArray();
 
         array_unshift($excelData,$excelSheet);
-
         return $excelData;
     }
 }
