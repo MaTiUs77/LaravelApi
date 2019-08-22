@@ -12,6 +12,7 @@ use App\Personas;
 use App\Resources\PersonaTrayectoriaResource;
 use App\UserSocial;
 use Illuminate\Http\Request;
+use App\Barrios;
 
 class PersonasCrud extends Controller
 {
@@ -23,7 +24,15 @@ class PersonasCrud extends Controller
     // List
     public function index(PersonasCrudIndexReq $req)
     {
-        $persona = Personas::withOnDemand(['ciudad']);
+        if(request('withFamiliar') !== null)
+        {
+            $persona = Personas::withOnDemand(['ciudad','barrio','familiar']);
+        }
+        else
+        {
+            $persona = Personas::withOnDemand(['ciudad','barrio']);
+        }
+        
 
         $persona->when(request('id'), function ($q, $v) {
             return $q->findOrFail($v);
@@ -93,6 +102,7 @@ class PersonasCrud extends Controller
     public function store(PersonasCrudStoreReq $req)
     {
         $ciudad = Ciudades::where('nombre',request('ciudad'))->first();
+        $barrio = Barrios::where('nombre','like','%'.request('barrio').'%')->first();
 
         // Verificar existencia de la persona, segun DNI
         $persona = Personas::where('documento_nro',request('documento_nro'))->first();
@@ -100,7 +110,7 @@ class PersonasCrud extends Controller
         // Si no existe la persona... se crea!
         if(!$persona) {
             // Se agrega el campo ciudad_id al request
-            $req->merge(["ciudad_id"=>$ciudad->id]);
+            $req->merge(["ciudad_id"=>$ciudad->id,"barrio_id"=>$barrio->id]);
             
             // Se crea la persona
             $persona = Personas::create($req->except("vinculo"));
@@ -131,7 +141,8 @@ class PersonasCrud extends Controller
 
                     if(request('ciudad'))  {
                         $ciudad = Ciudades::where('nombre',request('ciudad'))->first();
-                        $realReq = $realReq->merge(["ciudad_id"=>$ciudad->id]);
+                        $barrio = Barrios::where('nombre','like','%'.request('barrio').'%')->first();
+                        $realReq = $realReq->merge(["ciudad_id"=>$ciudad->id,"barrio_id"=>$barrio->id]);
                     }
 
                     // Se crea la persona

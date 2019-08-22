@@ -20,8 +20,24 @@
                 <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                 <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                 <div style="font-style: italic">Ministerio de Educación</div>
-                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
-                    <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->sector == 'ESTATAL')
+                    @switch($cursoInscripcions->inscripcion->centro->nivel_servicio)
+                        @case('Común - Inicial')
+                        @case('Común - Primario')
+                        @case('Común - Especial')
+                            <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                            @break
+                        @case('Adultos - Primario')
+                        @case('Adultos - Secundario')
+                            <div style="font-weight: bold;">Dirección de Modalidades Educativas</div>
+                            @break
+                        @case('Común - Superior')
+                            <div style="font-weight: bold;">Dirección de Superior</div>
+                            @break
+                        @default
+                    @endswitch
+                @else
+                    <div style="font-weight: bold;">Dirección de Privadas</div>
                 @endif
             </td>
             <td>
@@ -33,7 +49,7 @@
     <br>
     <h3>CONSTANCIA DE INSCRIPCIÓN | Estado: {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
     <p>
-        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
+        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Inicial' && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Primario')
             La Supervisión Técnica de Supervisión Escolar,
         @else
             Se
@@ -76,8 +92,24 @@
                 <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                 <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                 <div style="font-style: italic">Ministerio de Educación</div>
-                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
-                    <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->sector == 'ESTATAL')
+                    @switch($cursoInscripcions->inscripcion->centro->nivel_servicio)
+                        @case('Común - Inicial')
+                        @case('Común - Primario')
+                        @case('Común - Especial')
+                            <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                            @break
+                        @case('Adultos - Primario')
+                        @case('Adultos - Secundario')
+                            <div style="font-weight: bold;">Dirección de Modalidades Educativas</div>
+                            @break
+                        @case('Común - Superior')
+                            <div style="font-weight: bold;">Dirección de Superior</div>
+                            @break
+                        @default
+                    @endswitch
+                @else
+                    <div style="font-weight: bold;">Dirección de Privadas</div>
                 @endif
             </td>
             <td>
@@ -89,7 +121,7 @@
     <br>
     <h3>CONSTANCIA DE INSCRIPCIÓN | Estado: {{ $cursoInscripcions->inscripcion->estado_inscripcion }}</h3>
     <p>
-        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
+        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Inicial' && $cursoInscripcions->inscripcion->centro->nivel_servicio=='Común - Primario')
             La Supervisión Técnica de Supervisión Escolar,
         @else
             Se

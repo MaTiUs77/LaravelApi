@@ -26,7 +26,7 @@ class WhileJobSaneoRepitenciaAndPromocion implements ShouldQueue
      */
     public function __construct($ciclo=2019,$page=1,$por_pagina=10,$ultima_pagina=null)
     {
-        $this->build = 3;
+        $this->build = 4;
 
         $this->ciclo= $ciclo;
         $this->page = $page;

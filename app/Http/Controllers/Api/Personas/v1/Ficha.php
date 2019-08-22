@@ -35,22 +35,26 @@ class Ficha extends Controller
 
         if($inscripciones->hasError()) { return $inscripciones->getError(); }
 
-        $trayectoria = collect($inscripciones->response())->sortBy('inscripcion.legajo_nro');
+        $trayectoria = collect($inscripciones->response())->except('api_consume')->sortBy('inscripcion.fecha_alta');
 
         $soloFamiliares= $trayectoria->map(function($v){
-            return $v['inscripcion']['alumno']['familiares'];
+            if(isset($v['inscripcion'])) {
+                return $v['inscripcion']['alumno']['familiares'];
+            }
         });
 
         $familiares = $soloFamiliares->flatten(1)->unique('id');
         $fechaActual = Carbon::now();
-        
-        // Renderizacion de PDF
-        $pdf = PDF::loadView('personas.ficha',[
+
+        $pdfParams = [
             'persona' => $persona->response(),
             'trayectoria' => $trayectoria,
             'familiares' => $familiares,
             'fechaActual' => $fechaActual,
-        ]);
+        ];
+
+        // Renderizacion de PDF
+        $pdf = PDF::loadView('personas.ficha',$pdfParams);
 
         return $pdf->stream("persona_ficha_$persona_id.pdf");
     }

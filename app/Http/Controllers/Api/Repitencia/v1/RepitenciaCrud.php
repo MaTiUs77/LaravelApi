@@ -24,4 +24,9 @@ class RepitenciaCrud extends Controller
 
         return $api->response();
     }
+
+    public function store() {
+        $repitencia = new RepitenciaStore();
+        return $repitencia->start(request());
+    }
 }

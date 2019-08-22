@@ -36,11 +36,11 @@ class PersonaTrayectoriaResource extends Resource
         $persona = $item->only('id','nombre_completo','alumno','familiar');
         $ciudad = null;
         $alumnos = null;
-        if($item->ciudad) {
+        if(isset($item->ciudad)) {
             $ciudad = $item->ciudad->only('id','nombre');
         }
 
-        if($item->alumnos->count()) {
+        if(isset($item->alumnos) && $item->alumnos->count()) {
             $alumnos = collect($item->alumnos)->map(function($arr){
                 $alumno = $arr->only('id','centro_id');
 
@@ -49,6 +49,7 @@ class PersonaTrayectoriaResource extends Resource
                     $result = $inscripcion->only(
                         'id',
                         'tipo_inscripcion',
+                        'fecha_alta',
                         'legajo_nro',
                         'estado_inscripcion',
                         'ciclo_id',
@@ -59,10 +60,12 @@ class PersonaTrayectoriaResource extends Resource
                     );
 
                     $centro = $inscripcion->centro;
-                    $curso = $inscripcion->curso->first();
+                    $curso = $inscripcion->curso;
 
                     $result['centro'] = $centro->only('id','nombre','sector','nivel_servicio','status');
-                    $result['curso'] = $curso->only('id','tipo','anio','division','turno','centro_id','status');
+                    $result['curso'] = $curso->map(function($v){
+                      return $v->only('id','tipo','anio','division','turno','centro_id','status');
+                    });
 
                     return $result;
                 });

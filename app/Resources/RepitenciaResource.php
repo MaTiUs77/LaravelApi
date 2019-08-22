@@ -2,16 +2,21 @@
 
 namespace App\Resources;
 
-use App\Ciclos;
-use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
 
 class RepitenciaResource extends Resource
 {
     public function toArray($request)
     {
-        $curso=  collect($this['curso']);
+        // Cursada actual
         $inscripcion = collect($this['inscripcion']);
+        $curso=  collect($this['curso']);
+        $centro=  collect($inscripcion['centro']);
+        $centro = $centro->only([
+            'id','cue','nombre','sigla','sector','nivel_servicio'
+        ]);
+
+        // Datos de alumno y persona de la inscripcion
         $alumno= collect($inscripcion['alumno']);
         $persona=  collect($alumno['persona']);
 
@@ -24,17 +29,25 @@ class RepitenciaResource extends Resource
         ]);
 
         // Obtener curso de repitencia
-        $hacia = null;
+        $repitencia = [
+            'centro' =>null,
+            'curso' =>null
+        ];
         if(isset($inscripcion['repitencia'])){
-            $hacia= collect($inscripcion['repitencia']['curso']);
-            $hacia= $hacia->first();
-            $hacia= collect($hacia)->only([
+            $cursoAnterior = collect($inscripcion['repitencia']['curso']);
+            $cursoAnterior = $cursoAnterior->first();
+            $cursoAnterior = collect($cursoAnterior)->only([
                 'anio','division','turno','centro_id'
             ]);
-            $hacia['centro'] = collect($inscripcion['repitencia']['centro'])->only([
-                'id','cue','nombre','sigla','nivel_servicio','sector'
+            $centroAnterior =  collect($inscripcion['repitencia']['centro']);
+            $centroAnterior = $centroAnterior->only([
+                'id','cue','nombre','sigla','sector','nivel_servicio'
             ]);
 
+            $repitencia = [
+                'centro' => $centroAnterior,
+                'curso' => $cursoAnterior,
+            ];
         }
 
         $inscripcion = $inscripcion->only([
@@ -47,6 +60,9 @@ class RepitenciaResource extends Resource
             "id","nombre_completo"
         ]);
 
-        return compact('inscripcion','desde','hacia');
+        $actual = compact('centro','curso');
+        $anterior = $repitencia;
+
+        return compact('inscripcion','actual','anterior');
     }
 }

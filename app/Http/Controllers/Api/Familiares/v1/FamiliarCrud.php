@@ -27,6 +27,10 @@ class FamiliarCrud extends Controller
             return $q->findOrFail($v);
         });
 
+        $familiar->when(request('persona_id'), function ($q, $v) {
+            return $q->where('persona_id',$v);
+        });
+
         // $familiar->when(request('user_social_id'), function ($q, $v) {
         //     return $q->where('user_social_id',$v);
         // });
@@ -44,8 +48,8 @@ class FamiliarCrud extends Controller
         if($fail = DefaultValidator::make($input,$rules)) return $fail;
 
         // Continua si las validaciones son efectuadas
-        $contacto = new Contacto();
-        return $contacto->findOrFail($id);
+        $familiar = Familiar::withOnDemand();
+        return $familiar->findOrFail($id);
     }
 
     // Create
