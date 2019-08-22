@@ -44,7 +44,9 @@ class MatriculasPorAnio extends Controller
             ->join('ciudads','centros.ciudad_id','ciudads.id')
             ->join('cursos','cursos_inscripcions.curso_id','cursos.id')
 
-            ->where('inscripcions.estado_inscripcion','CONFIRMADA');
+            ->where('inscripcions.estado_inscripcion','CONFIRMADA')
+            ->where('inscripcions.promocion_id','==',NULL);
+
 
         $query = $this->aplicarFiltros($query);
 
