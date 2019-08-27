@@ -66,24 +66,11 @@ class MatriculasPorSeccion extends Controller
             (
               cursos.plazas - COUNT(inscripcions.id)
             ) as vacantes,
-            COUNT(personas.sexo) as varones
+            COUNT(personas.sexo) as varones,
+            COUNT(inscripcions.hermano_id) as por_hermano
+
             ')
         ])
-            /*
-             * REQUIERE OPTIMIZAR
-             *
-            (
-                select count(ins.id) as hermanos
-                from  cursos_inscripcions as curi
-                left join inscripcions as ins on ins.id = curi.inscripcion_id
-                where
-                   ins.tipo_inscripcion = "Hermano de alumno regular"
-                and ins.centro_id = centros.id
-                and curi.curso_id = cursos.id
-            ) as por_hermano
-
-             */
-
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
@@ -151,7 +138,7 @@ class MatriculasPorSeccion extends Controller
         // Exportacion a Excel
         if(Input::get('export')) {
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes','Varones'];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermanos'];
             // Contenido
 
             foreach($paginationResult as $item) {
@@ -165,7 +152,8 @@ class MatriculasPorSeccion extends Controller
                     $item->plazas,
                     $item->matriculas,
                     $item->vacantes,
-                    $item->varones
+                    $item->varones,
+                    $item->por_hermano
                 ];
             }
 
@@ -185,6 +173,7 @@ class MatriculasPorSeccion extends Controller
         $sector= Input::get('sector');
         $estado_inscripcion= Input::get('estado_inscripcion');
         $status= Input::get('status');
+        $hermano= Input::get('hermano');
 
         // Por defecto Curso.status = 1
         if(isset($status)) {
@@ -223,6 +212,9 @@ class MatriculasPorSeccion extends Controller
         }
         if(isset($centro_id)) {
             $query = $query->where('inscripcions.centro_id',$centro_id);
+        }
+        if(isset($hermano)) {
+            $query = $query->where('inscripcions.hermano_id','<>',null);
         }
         if(isset($curso_id)) {
             $query = $query->where('cursos.id',$curso_id);
