@@ -23,26 +23,29 @@ class ConHermanoResource extends Resource
         $hermano_persona=  collect($hermano['persona']);
         $hermano_familiares =  collect($hermano['familiares']);
 
-        $response = [
-            'inscripcion' => [
-                'ciudad' => $ciudad['nombre'],
-                'centro' => $centro['nombre'],
-                'documento_nro' => $persona['documento_nro'],
-                'nombre_completo' => $persona['nombre_completo'],
-                'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
-                'telefono_nro' => $persona['telefono_nro'],
-                'direccion' => $this->transformDireccion($persona),
-                'familiares' => $this->padresConfirmados($familiares)
-            ],
-            'hermano' => [
+        $response = [];
+        $response['inscripcion'] = [
+            'ciudad' => $ciudad['nombre'],
+            'centro' => $centro['nombre'],
+            'documento_nro' => $persona['documento_nro'],
+            'nombre_completo' => $persona['nombre_completo'],
+            'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
+            'telefono_nro' => $persona['telefono_nro'],
+            'direccion' => $this->transformDireccion($persona),
+            'familiares' => $this->padresConfirmados($familiares)
+        ];
+
+        $response['hermano'] = null;
+        if(isset($hermano_persona['id'])) {
+            $response['hermano'] = [
                 'documento_nro' => $hermano_persona['documento_nro'],
                 'nombre_completo' => $hermano_persona['nombre_completo'],
                 'fecha_nac' => Carbon::parse($hermano_persona['fecha_nac'])->format('d/m/Y'),
                 'telefono_nro' => $hermano_persona['telefono_nro'],
                 'direccion' => $this->transformDireccion($hermano_persona),
                 'familiares' => $this->padresConfirmados($hermano_familiares)
-            ]
-        ];
+            ];
+        }
 
         return $response;
     }
