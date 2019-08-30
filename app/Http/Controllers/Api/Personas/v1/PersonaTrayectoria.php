@@ -11,11 +11,12 @@ class PersonaTrayectoria extends Controller
 {
     public function index(Personas $persona)
     {
+        $params = [
+            'render' => 'trayectoria'
+        ];
         // Consumo API Inscripciones
         $apiPersona= new ApiConsume();
-        $apiPersona->get("personas/{$persona->id}",[
-            'render' => 'trayectoria'
-        ]);
+        $apiPersona->get("personas/{$persona->id}",$params);
 
         if($apiPersona->hasError()) { return $apiPersona->getError(); }
 
