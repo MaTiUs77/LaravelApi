@@ -60,10 +60,12 @@ class PersonaTrayectoriaResource extends Resource
                     );
 
                     $centro = $inscripcion->centro;
-                    $curso = $inscripcion->curso->first();
+                    $curso = $inscripcion->curso;
 
                     $result['centro'] = $centro->only('id','nombre','sector','nivel_servicio','status');
-                    $result['curso'] = $curso->only('id','tipo','anio','division','turno','centro_id','status');
+                    $result['curso'] = $curso->map(function($v){
+                      return $v->only('id','tipo','anio','division','turno','centro_id','status');
+                    });
 
                     return $result;
                 });
