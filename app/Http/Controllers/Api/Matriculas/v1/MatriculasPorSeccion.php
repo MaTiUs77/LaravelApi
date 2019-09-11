@@ -70,7 +70,7 @@ class MatriculasPorSeccion extends Controller
               cursos.plazas - COUNT(inscripcions.id)
             ) as vacantes,
             COUNT(personas.sexo) as varones,
-            COUNT(inscripcions.hermano_id) as por_hermano
+            COUNT(inscripcions.hermano_id) as por_hermano,
             cursos.observaciones
             ')
         ])
@@ -142,7 +142,7 @@ class MatriculasPorSeccion extends Controller
         if(Input::get('export')) {
 
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Observaciones'];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
             // Contenido
             foreach($paginationResult as $item) {
                 try{
@@ -162,6 +162,7 @@ class MatriculasPorSeccion extends Controller
                         $item->matriculas,
                         $item->vacantes,
                         $item->varones,
+                        $item->por_hermano,
                         $item->observaciones
                     ];
                 }catch(Exception $ex){
