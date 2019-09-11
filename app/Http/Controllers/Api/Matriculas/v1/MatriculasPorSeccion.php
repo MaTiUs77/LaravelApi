@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Matriculas\v1;
 
+use App\Cursos;
+use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
@@ -43,6 +45,7 @@ class MatriculasPorSeccion extends Controller
         $query = Inscripcions::select([
             DB::raw('
             
+            inscripcions.ciclo_id as ciclo_id,
             inscripcions.centro_id,
             cursos.id as curso_id,
             cursos.titulacion_id,
@@ -71,7 +74,8 @@ class MatriculasPorSeccion extends Controller
             ) as vacantes,
             COUNT(personas.sexo) as varones,
             COUNT(inscripcions.hermano_id) as por_hermano,
-            cursos.observaciones
+            cursos.observaciones,
+            CAST(SUM(if(inscripcions.estado_inscripcion  = "CONFIRMADA", 1, 0)) AS UNSIGNED) AS confirmadas
             ')
         ])
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
@@ -91,6 +95,7 @@ class MatriculasPorSeccion extends Controller
 
         // Agrupamiento y ejecucion de query
         $query = $query->groupBy([
+            'inscripcions.ciclo_id',
             'inscripcions.centro_id',
             'cursos.id',
             'cursos.anio',
@@ -111,6 +116,12 @@ class MatriculasPorSeccion extends Controller
         foreach($items as $item) {
             // Se carga la relacion con el modelo Titulacion
             $item->titulacion = Titulacion::select('nombre','nombre_abreviado','orientacion','norma_aprob_jur_nro as reso_titulacion_nro','norma_aprob_jur_anio as reso_titulacion_anio')->find($item->titulacion_id);
+/*            $item->confirmadas = CursosInscripcions::filtrarCiclo($item->ciclo_id)
+                ->filtrarCurso($item->curso_id)
+                ->filtrarEstadoInscripcion('CONFIRMADA')
+                ->count();*/
+
+            $item->confirmadas_excede_plaza = ($item->confirmadas > $item->plazas);
 
             /*// Modifica las plazas y vacantes del ciclo 2019
             if(Input::get('ciclo')==2019)

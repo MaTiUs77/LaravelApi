@@ -15,6 +15,11 @@ class Inscripcions extends Model
         'estado_inscripcion', 'legajo_nro'
     ];
 
+    function User()
+    {
+        return $this->hasOne('App\User', 'id', 'usuario_id');
+    }
+
     function Alumno()
     {
         return $this->hasOne('App\Alumnos', 'id', 'alumno_id');
