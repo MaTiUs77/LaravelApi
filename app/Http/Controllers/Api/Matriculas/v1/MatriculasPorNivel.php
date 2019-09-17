@@ -82,6 +82,7 @@ class MatriculasPorNivel extends Controller
         $ciudad_id = Input::get('ciudad_id');
         $centro_id = Input::get('centro_id');
         $nivel_servicio = Input::get('nivel_servicio');
+        $estado_inscripcion = Input::get('estado_inscripcion');
 
         // Aplicacion de filtros
         if(isset($ciclo)) {
@@ -98,6 +99,9 @@ class MatriculasPorNivel extends Controller
         }
         if(isset($nivel_servicio)) {
             $query = $query->where('centros.nivel_servicio',$nivel_servicio);
+        }
+        if(isset($estado_inscripcion)) {
+            $query = $query->where('inscripcions.estado_inscripcion',$estado_inscripcion);
         }
 
         return $query;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Saneo;
+namespace App\Http\Controllers\Api\Saneo\v1;
 
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
@@ -12,17 +12,19 @@ class SaneoSorteo extends Controller
         //$this->middleware('jwt');
     }
 
-    public function start($nivel_servicio='Inicial')
+    public function start($ciclo,$nivel_servicio)
     {
         // Consume API lista de inscripciones
+        $params = [
+            'por_pagina' => 'all',
+            'ciclo' => $ciclo,
+            'estado_inscripcion' => 'NO CONFIRMADA',
+            'nivel_servicio' => "Común - $nivel_servicio",
+        ];
+
         $guzzle = new Client();
         $consumeApi = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
-            'query' => [
-                'por_pagina' => 'all',
-                'ciclo' => 2019,
-                'estado_inscripcion' => 'NO CONFIRMADA',
-                'nivel_servicio' => "Común - $nivel_servicio",
-            ]
+            'query' => $params
         ]);
 
         // Obtiene el contenido de la respuesta, la transforma a json
@@ -46,7 +48,7 @@ class SaneoSorteo extends Controller
 
                 $new = [
                     'estado_inscripcion' => 'BAJA',
-                    'legajo_nro' => $inscripcion['legajo_nro'].'-SINVACANTE_2',
+                    'legajo_nro' => $inscripcion['legajo_nro'].'-SINVACANTE_1',
                 ];
 
                 $fix = Inscripcions::find($inscripcion_id);
