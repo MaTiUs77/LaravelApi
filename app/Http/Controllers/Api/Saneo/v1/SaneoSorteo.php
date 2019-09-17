@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Saneo\v1;
 
+use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use GuzzleHttp\Client;
@@ -22,14 +23,10 @@ class SaneoSorteo extends Controller
             'nivel_servicio' => "Común - $nivel_servicio",
         ];
 
-        $guzzle = new Client();
-        $consumeApi = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
-            'query' => $params
-        ]);
-
-        // Obtiene el contenido de la respuesta, la transforma a json
-        $content = $consumeApi->getBody()->getContents();
-        $lista = json_decode($content,true);
+        $api = new ApiConsume();
+        $api->get("inscripcion/lista",$params);
+        if($api->hasError()) { return $api->getError(); }
+        return $api->response();
 
         // Si no esta definido el error, procedemos a formatear los datos
         if(!isset($lista['error']))
