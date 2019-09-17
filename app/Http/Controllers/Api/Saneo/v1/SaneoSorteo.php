@@ -26,13 +26,13 @@ class SaneoSorteo extends Controller
         $api = new ApiConsume();
         $api->get("inscripcion/lista",$params);
         if($api->hasError()) { return $api->getError(); }
-        return $api->response();
+        $response = $api->response();
 
         // Si no esta definido el error, procedemos a formatear los datos
-        if(!isset($lista['error']))
+        if(!isset($response['error']))
         {
             // Transforma los datos a collection para realizar un mapeo
-            $data = collect($lista['data']);
+            $data = collect($response['data']);
 
             $formatted = $data->map(function($item){
                 $inscripcion = $item['inscripcion'];
@@ -54,11 +54,11 @@ class SaneoSorteo extends Controller
                 return compact('inscripcion_id','old','new','update');
             });
 
-            $lista['data'] = $formatted;
+            $response['data'] = $formatted;
 
-            return $lista;
+            return $response;
         }
 
-        return $lista;
+        return $response;
     }
 }
