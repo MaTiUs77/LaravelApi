@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Saneo;
+namespace App\Http\Controllers\Api\Saneo\v1;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\JobSaneoEdad;
