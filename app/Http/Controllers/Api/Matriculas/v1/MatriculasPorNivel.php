@@ -19,7 +19,8 @@ class MatriculasPorNivel extends Controller
             'ciudad' => 'string',
             'ciudad_id' => 'numeric',
             'centro_id' => 'numeric',
-            'nivel_servicio' => 'string'
+            'nivel_servicio' => 'string',
+            'estado_inscripcion' => 'string',
         ];
 
         // Se validan los parametros
@@ -37,9 +38,9 @@ class MatriculasPorNivel extends Controller
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
-            ->join('ciudads','centros.ciudad_id','ciudads.id')
+            ->join('ciudads','centros.ciudad_id','ciudads.id');
 
-            ->where('inscripcions.estado_inscripcion','CONFIRMADA');
+            //->where('inscripcions.estado_inscripcion','CONFIRMADA');
 
         $query = $this->aplicarFiltros($query);
 
@@ -102,6 +103,8 @@ class MatriculasPorNivel extends Controller
         }
         if(isset($estado_inscripcion)) {
             $query = $query->where('inscripcions.estado_inscripcion',$estado_inscripcion);
+        } else {
+            $query = $query->where('inscripcions.estado_inscripcion','CONFIRMADA');
         }
 
         return $query;
