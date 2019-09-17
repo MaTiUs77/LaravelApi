@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Titulacion;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -60,6 +61,8 @@ class MatriculasPorSeccion extends Controller
             cursos.anio,
             cursos.division,
             cursos.turno,
+            cursos.hs_catedras,
+            cursos.reso_presupuestaria,
             cursos.tipo,
             cursos.pareja_pedagogica,
             cursos.maestra_apoyo_inclusion,
@@ -71,7 +74,7 @@ class MatriculasPorSeccion extends Controller
             ) as vacantes,
             COUNT(personas.sexo) as varones,
             COUNT(inscripcions.hermano_id) as por_hermano,
-            
+            cursos.observaciones,
             CAST(SUM(if(inscripcions.estado_inscripcion  = "CONFIRMADA", 1, 0)) AS UNSIGNED) AS confirmadas
             ')
         ])
@@ -112,7 +115,7 @@ class MatriculasPorSeccion extends Controller
 
         foreach($items as $item) {
             // Se carga la relacion con el modelo Titulacion
-            $item->titulacion = Titulacion::select('nombre','nombre_abreviado')->find($item->titulacion_id);
+            $item->titulacion = Titulacion::select('nombre','nombre_abreviado','orientacion','norma_aprob_jur_nro as reso_titulacion_nro','norma_aprob_jur_anio as reso_titulacion_anio')->find($item->titulacion_id);
 /*            $item->confirmadas = CursosInscripcions::filtrarCiclo($item->ciclo_id)
                 ->filtrarCurso($item->curso_id)
                 ->filtrarEstadoInscripcion('CONFIRMADA')
@@ -137,35 +140,47 @@ class MatriculasPorSeccion extends Controller
                 }
             }*/
         }
-
         $this->exportar($result);
 
         return $result;
     }
 
     private function exportar($paginationResult) {
+
         $ciclo = Input::get('ciclo');
 
         // Exportacion a Excel
         if(Input::get('export')) {
-            $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermanos'];
-            // Contenido
 
+            $content = [];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
+            // Contenido
             foreach($paginationResult as $item) {
-                $content[] = [
-                    $item->ciudad,
-                    $item->nombre,
-                    $item->nivel_servicio,
-                    $item->anio,
-                    $item->division,
-                    $item->turno,
-                    $item->plazas,
-                    $item->matriculas,
-                    $item->vacantes,
-                    $item->varones,
-                    $item->por_hermano
-                ];
+                try{
+                    $content[] = [
+                        $item->ciudad,
+                        $item->nombre,
+                        $item->nivel_servicio,
+                        $item->anio,
+                        $item->division,
+                        $item->turno,
+                        isset($item->titulacion->nombre_abreviado) ? $item->titulacion->nombre_abreviado : null,
+                        isset($item->titulacion->orientacion) ? $item->titulacion->orientacion : null,
+                        $item->hs_catedras,
+                        isset($item->titulacion->reso_titulacion_nro) ? $item->titulacion->reso_titulacion_nro."/".$item->titulacion->reso_titulacion_anio : null,
+                        $item->reso_presupuestaria,
+                        $item->plazas,
+                        $item->matriculas,
+                        $item->vacantes,
+                        $item->varones,
+                        $item->por_hermano,
+                        $item->observaciones
+                    ];
+                }catch(Exception $ex){
+                    $content[] = [
+                        "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
+                    ];
+                }
             }
 
             Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
