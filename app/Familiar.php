@@ -15,7 +15,7 @@ class Familiar extends Model
     const UPDATED_AT = 'modified';
 
     protected $fillable = [
-        'persona_id','vinculo','conviviente','autorizado_retirar','observaciones'
+        'id','persona_id','vinculo','conviviente','autorizado_retirar','observaciones'
     ];
 
 

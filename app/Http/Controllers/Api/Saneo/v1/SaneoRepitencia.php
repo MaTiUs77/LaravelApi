@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Saneo;
+namespace App\Http\Controllers\Api\Saneo\v1;
 
 use App\Ciclos;
 use App\CursosInscripcions;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class SaneoRepitencia extends Controller
 {
-    private $version = '2.3';
+    private $version = '4';
 
     private $cicloActual = null;
     private $cicloAnterior= null;
@@ -48,7 +48,6 @@ class SaneoRepitencia extends Controller
         Log::info("=============================================================================");
         Log::info("SaneoRepitencia: Version ".$this->version);
         Log::info("SaneoRepitencia::start($ciclo,$page,$por_pagina)");
-//        Log::info($params);
         Log::info("SaneoRepitencia::consume->/api/v1/inscripcion/lista");
 
         // Consumo API Inscripciones

@@ -16,7 +16,7 @@ class Alumnos extends Model
     const UPDATED_AT = 'modified';
 
     protected $fillable = [
-        'persona_id','centro_id','legajo_fisico_nro','pendiente'
+        'id','persona_id','centro_id','legajo_fisico_nro','pendiente'
     ];
 
     function Familiares()

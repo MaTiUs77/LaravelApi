@@ -20,6 +20,14 @@ class AlumnosFamiliarsCrud extends Controller
             return $q->where('status', $v);
         });
 
+        $query->when(request('alumno_id'), function ($q, $v) {
+            return $q->where('alumno_id',$v);
+        });
+
+        $query->when(request('familiar_id'), function ($q, $v) {
+            return $q->where('familiar_id',$v);
+        });
+
         $result = $query->customPagination();
 
         return $result;

@@ -2,16 +2,21 @@
 
 namespace App\Resources;
 
-use App\Ciclos;
-use App\Inscripcions;
 use Illuminate\Http\Resources\Json\Resource;
 
 class RepitenciaResource extends Resource
 {
     public function toArray($request)
     {
-        $curso=  collect($this['curso']);
+        // Cursada actual
         $inscripcion = collect($this['inscripcion']);
+        $curso=  collect($this['curso']);
+        $centro=  collect($inscripcion['centro']);
+        $centro = $centro->only([
+            'id','cue','nombre','sigla','sector','nivel_servicio'
+        ]);
+
+        // Datos de alumno y persona de la inscripcion
         $alumno= collect($inscripcion['alumno']);
         $persona=  collect($alumno['persona']);
 
@@ -20,13 +25,25 @@ class RepitenciaResource extends Resource
         ]);
 
         // Obtener curso de repitencia
-        $repitencia = null;
+        $repitencia = [
+            'centro' =>null,
+            'curso' =>null
+        ];
         if(isset($inscripcion['repitencia'])){
-            $repitencia= collect($inscripcion['repitencia']['curso']);
-            $repitencia = $repitencia->first();
-            $repitencia = collect($repitencia)->only([
+            $cursoAnterior = collect($inscripcion['repitencia']['curso']);
+            $cursoAnterior = $cursoAnterior->first();
+            $cursoAnterior = collect($cursoAnterior)->only([
                 'anio','division','turno','centro_id'
             ]);
+            $centroAnterior =  collect($inscripcion['repitencia']['centro']);
+            $centroAnterior = $centroAnterior->only([
+                'id','cue','nombre','sigla','sector','nivel_servicio'
+            ]);
+
+            $repitencia = [
+                'centro' => $centroAnterior,
+                'curso' => $cursoAnterior,
+            ];
         }
 
         $inscripcion = $inscripcion->only([
@@ -39,6 +56,9 @@ class RepitenciaResource extends Resource
             "id","nombre_completo"
         ]);
 
-        return compact('inscripcion','curso','repitencia');
+        $actual = compact('centro','curso');
+        $anterior = $repitencia;
+
+        return compact('inscripcion','actual','anterior');
     }
 }

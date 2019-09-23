@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Api\Dependencia\RRHH;
 
+use App\Http\Controllers\Api\Utilities\ApiConsume;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Input;
 
 class NominalAlumnosInscriptos extends Controller
@@ -16,64 +16,56 @@ class NominalAlumnosInscriptos extends Controller
     public function start()
     {
         // Consume API lista de inscripciones
-        $guzzle = new Client();
-        $consumeApi = $guzzle->get(env('SIEP_LARAVEL_API')."/api/inscripcion/lista",[
-            'query' => Input::all()
-        ]);
+        $params = Input::all();
+        $api = new ApiConsume(null,'/api/public/');
+        $api->get("inscripcion/lista",$params);
 
-        // Obtiene el contenido de la respuesta, la transforma a json
-        $content = $consumeApi->getBody()->getContents();
-        $lista = json_decode($content,true);
+        if($api->hasError()) { return $api->getError(); }
+        $lista = $api->response();
 
-        // Si no esta definido el error, procedemos a formatear los datos
-        if(!isset($lista['error']))
-        {
-            // Transforma los datos a collection para realizar un mapeo
-            $data = collect($lista['data']);
+        // Transforma los datos a collection para realizar un mapeo
+        $data = collect($lista['data']);
 
-            $formatted = $data->map(function($item){
-                $inscripcion = $item['inscripcion'];
-                $curso = $item['curso'];
+        $formatted = $data->map(function($item){
+            $inscripcion = $item['inscripcion'];
+            $curso = $item['curso'];
 
-                $ciclo = $inscripcion['ciclo'];
-                $centro = $inscripcion['centro'];
-                $persona = $inscripcion['alumno']['persona'];
+            $ciclo = $inscripcion['ciclo'];
+            $centro = $inscripcion['centro'];
+            $persona = $inscripcion['alumno']['persona'];
 
-                return [
-                    'documento_tipo' => $persona['documento_tipo'],
-                    'inscripcion_id' => $inscripcion['id'],
-                    'dni' => $persona['documento_nro'],
-                    'nombres' => $persona['nombres'],
-                    'apellidos' => $persona['apellidos'],
-                    'nombre_completo' => $persona['nombre_completo'],
-                    'sexo' => $persona['sexo'],
-                    'edad' => $persona['edad'],
-                    'ciclo' => $ciclo['nombre'],
-                    'centro' => $centro['nombre'],
-                    'nivel_servicio' => $centro['nivel_servicio'],
-                    'año' => $curso['anio'],
-                    'division' => $curso['division'],
-                    'turno' => $curso['turno'],
-                    'fecha_alta' => $inscripcion['fecha_alta'],
-                    'fecha_baja' => $inscripcion['fecha_baja'],
-                    'fecha_egreso' => $inscripcion['fecha_egreso'],
-                    'calle_nombre' =>$persona['calle_nombre'],
-                    'calle_nro' =>$persona['calle_nro'],
-                    'pcia_nac' =>$persona['pcia_nac'],
-                    'email' =>$persona['email'],
-                    'telefono_nro' =>$persona['telefono_nro'],
-                    'observaciones' =>$persona['observaciones'],
-                    'fecha_nac' => $persona['fecha_nac']
-                ];
-            });
+            return [
+                'documento_tipo' => $persona['documento_tipo'],
+                'inscripcion_id' => $inscripcion['id'],
+                'dni' => $persona['documento_nro'],
+                'nombres' => $persona['nombres'],
+                'apellidos' => $persona['apellidos'],
+                'nombre_completo' => $persona['nombre_completo'],
+                'sexo' => $persona['sexo'],
+                'edad' => $persona['edad'],
+                'ciclo' => $ciclo['nombre'],
+                'centro' => $centro['nombre'],
+                'nivel_servicio' => $centro['nivel_servicio'],
+                'año' => $curso['anio'],
+                'division' => $curso['division'],
+                'turno' => $curso['turno'],
+                'fecha_alta' => $inscripcion['fecha_alta'],
+                'fecha_baja' => $inscripcion['fecha_baja'],
+                'fecha_egreso' => $inscripcion['fecha_egreso'],
+                'calle_nombre' =>$persona['calle_nombre'],
+                'calle_nro' =>$persona['calle_nro'],
+                'pcia_nac' =>$persona['pcia_nac'],
+                'email' =>$persona['email'],
+                'telefono_nro' =>$persona['telefono_nro'],
+                'observaciones' =>$persona['observaciones'],
+                'fecha_nac' => $persona['fecha_nac']
+            ];
+        });
 
-            $lista['data'] = $formatted;
+        $lista['data'] = $formatted;
 
-            // Exportacion a Excel si es solicitado
-            $this->exportar($formatted);
-
-            return $lista;
-        }
+        // Exportacion a Excel si es solicitado
+        $this->exportar($formatted);
 
         return $lista;
     }

@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
+        $this->mapApiPublicRoutes();
         $this->mapWebRoutes();
         //$this->customWebRoutes();
     }
@@ -55,6 +56,19 @@ class RouteServiceProvider extends ServiceProvider
              ->group(base_path('routes/web.php'));
     }
 
+    protected function mapApiPublicRoutes()
+    {
+        $files = Finder::create()
+            ->in(app_path('Http/Controllers/Api'))
+            ->name('public.php');
+
+        foreach($files as $file) {
+            Route::prefix('api/public')
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group($file->getRealPath());
+        }
+    }
     /**
      * Define the "api" routes for the application.
      *
@@ -68,9 +82,14 @@ class RouteServiceProvider extends ServiceProvider
             ->in(app_path('Http/Controllers/Api'))
             ->name('routes.php');
 
+        $midd = ['api','cake'];
+        if(env('BYPASSMID')) {
+            $midd = ['api'];
+        }
+
         foreach($files as $file) {
             Route::prefix('api')
-                ->middleware('api')
+                ->middleware($midd)
                 ->namespace($this->namespace)
                 ->group($file->getRealPath());
         }

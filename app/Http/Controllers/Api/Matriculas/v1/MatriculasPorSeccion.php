@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Api\Matriculas\v1;
 
+use App\Cursos;
+use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Titulacion;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class MatriculasPorSeccion extends Controller
 {
@@ -41,6 +45,7 @@ class MatriculasPorSeccion extends Controller
         $query = Inscripcions::select([
             DB::raw('
             
+            inscripcions.ciclo_id as ciclo_id,
             inscripcions.centro_id,
             cursos.id as curso_id,
             cursos.titulacion_id,
@@ -56,6 +61,8 @@ class MatriculasPorSeccion extends Controller
             cursos.anio,
             cursos.division,
             cursos.turno,
+            cursos.hs_catedras,
+            cursos.reso_presupuestaria,
             cursos.tipo,
             cursos.pareja_pedagogica,
             cursos.maestra_apoyo_inclusion,
@@ -65,24 +72,12 @@ class MatriculasPorSeccion extends Controller
             (
               cursos.plazas - COUNT(inscripcions.id)
             ) as vacantes,
-            COUNT(personas.sexo) as varones
+            COUNT(personas.sexo) as varones,
+            COUNT(inscripcions.hermano_id) as por_hermano,
+            cursos.observaciones,
+            CAST(SUM(if(inscripcions.estado_inscripcion  = "CONFIRMADA", 1, 0)) AS UNSIGNED) AS confirmadas
             ')
         ])
-            /*
-             * REQUIERE OPTIMIZAR
-             *
-            (
-                select count(ins.id) as hermanos
-                from  cursos_inscripcions as curi
-                left join inscripcions as ins on ins.id = curi.inscripcion_id
-                where
-                   ins.tipo_inscripcion = "Hermano de alumno regular"
-                and ins.centro_id = centros.id
-                and curi.curso_id = cursos.id
-            ) as por_hermano
-
-             */
-
             ->join('cursos_inscripcions','cursos_inscripcions.inscripcion_id','inscripcions.id')
             ->join('ciclos','inscripcions.ciclo_id','ciclos.id')
             ->join('centros','inscripcions.centro_id','centros.id')
@@ -100,6 +95,7 @@ class MatriculasPorSeccion extends Controller
 
         // Agrupamiento y ejecucion de query
         $query = $query->groupBy([
+            'inscripcions.ciclo_id',
             'inscripcions.centro_id',
             'cursos.id',
             'cursos.anio',
@@ -109,11 +105,23 @@ class MatriculasPorSeccion extends Controller
             'cursos.plazas'
         ]);
 
-        $result = $query->customPagination();
+        if(request('por_pagina')=='all') {
+            $result = $query->get();
+            $items = $result;
+        } else {
+            $result = $query->customPagination();
+            $items = $result->items();
+        }
 
-        foreach($result->items() as $item) {
+        foreach($items as $item) {
             // Se carga la relacion con el modelo Titulacion
-            $item->titulacion = Titulacion::select('nombre','nombre_abreviado')->find($item->titulacion_id);
+            $item->titulacion = Titulacion::select('nombre','nombre_abreviado','orientacion','norma_aprob_jur_nro as reso_titulacion_nro','norma_aprob_jur_anio as reso_titulacion_anio')->find($item->titulacion_id);
+/*            $item->confirmadas = CursosInscripcions::filtrarCiclo($item->ciclo_id)
+                ->filtrarCurso($item->curso_id)
+                ->filtrarEstadoInscripcion('CONFIRMADA')
+                ->count();*/
+
+            $item->confirmadas_excede_plaza = ($item->confirmadas > $item->plazas);
 
             /*// Modifica las plazas y vacantes del ciclo 2019
             if(Input::get('ciclo')==2019)
@@ -132,35 +140,47 @@ class MatriculasPorSeccion extends Controller
                 }
             }*/
         }
-
-
         $this->exportar($result);
 
         return $result;
     }
 
     private function exportar($paginationResult) {
+
         $ciclo = Input::get('ciclo');
 
         // Exportacion a Excel
         if(Input::get('export')) {
-            $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno', 'Plazas', 'Matriculas','Vacantes','Varones'];
-            // Contenido
 
+            $content = [];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
+            // Contenido
             foreach($paginationResult as $item) {
-                $content[] = [
-                    $item->ciudad,
-                    $item->nombre,
-                    $item->nivel_servicio,
-                    $item->anio,
-                    $item->division,
-                    $item->turno,
-                    $item->plazas,
-                    $item->matriculas,
-                    $item->vacantes,
-                    $item->varones
-                ];
+                try{
+                    $content[] = [
+                        $item->ciudad,
+                        $item->nombre,
+                        $item->nivel_servicio,
+                        $item->anio,
+                        $item->division,
+                        $item->turno,
+                        isset($item->titulacion->nombre_abreviado) ? $item->titulacion->nombre_abreviado : null,
+                        isset($item->titulacion->orientacion) ? $item->titulacion->orientacion : null,
+                        $item->hs_catedras,
+                        isset($item->titulacion->reso_titulacion_nro) ? $item->titulacion->reso_titulacion_nro."/".$item->titulacion->reso_titulacion_anio : null,
+                        $item->reso_presupuestaria,
+                        $item->plazas,
+                        $item->matriculas,
+                        $item->vacantes,
+                        $item->varones,
+                        $item->por_hermano,
+                        $item->observaciones
+                    ];
+                }catch(Exception $ex){
+                    $content[] = [
+                        "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
+                    ];
+                }
             }
 
             Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
@@ -173,12 +193,14 @@ class MatriculasPorSeccion extends Controller
         $ciudad = Input::get('ciudad');
         $ciudad_id = Input::get('ciudad_id');
         $centro_id = Input::get('centro_id');
+        $curso_id = Input::get('curso_id');
         $anio = Input::get('anio');
         $division = Input::get('division');
         $nivel_servicio = Input::get('nivel_servicio');
         $sector= Input::get('sector');
         $estado_inscripcion= Input::get('estado_inscripcion');
         $status= Input::get('status');
+        $hermano= Input::get('hermano');
 
         // Por defecto Curso.status = 1
         if(isset($status)) {
@@ -218,6 +240,9 @@ class MatriculasPorSeccion extends Controller
         if(isset($centro_id)) {
             $query = $query->where('inscripcions.centro_id',$centro_id);
         }
+        if(isset($hermano)) {
+            $query = $query->where('inscripcions.hermano_id','<>',null);
+        }
         if(isset($curso_id)) {
             $query = $query->where('cursos.id',$curso_id);
         }
@@ -241,6 +266,7 @@ class MatriculasPorSeccion extends Controller
         if(isset($anio)) {
             $query = $query->where('cursos.anio',$anio);
         }
+        
         if(isset($division)) {
             if($division=='vacia' || $division=='sin' || $division == null) {
                 $query = $query->where('cursos.division','');

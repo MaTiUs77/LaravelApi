@@ -15,6 +15,11 @@ class Inscripcions extends Model
         'estado_inscripcion', 'legajo_nro'
     ];
 
+    function User()
+    {
+        return $this->hasOne('App\User', 'id', 'usuario_id');
+    }
+
     function Alumno()
     {
         return $this->hasOne('App\Alumnos', 'id', 'alumno_id');
@@ -37,13 +42,13 @@ class Inscripcions extends Model
 
     function Promocion()
     {
-        return $this->belongsTo('App\Inscripcions', 'promocion_id', 'id')->with(['curso']);
+        return $this->belongsTo('App\Inscripcions', 'promocion_id', 'id')->with(['curso','centro']);
         //return $this->belongsTo('App\CursosInscripcions', 'promocion_id', 'inscripcion_id')->with(['curso']);
     }
 
     function Repitencia()
     {
-        return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id')->with(['curso']);
+        return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id')->with(['curso','centro']);
         //return $this->belongsTo('App\CursosInscripcions', 'repitencia_id', 'inscripcion_id')->with(['curso']);
     }
 
@@ -62,5 +67,10 @@ class Inscripcions extends Model
             'id',
             'curso_id' // KEY CursosInscripcions
         );
+    }
+
+    function Pase()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
     }
 }
