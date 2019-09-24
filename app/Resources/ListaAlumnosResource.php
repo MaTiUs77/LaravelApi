@@ -20,6 +20,7 @@ class ListaAlumnosResource extends Resource
             'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
             'telefono_nro' => $persona['telefono_nro'],
             'direccion' => $this->transformDireccion($persona),
+            'email' => $persona['email'],
             'familiares' => $this->padresConfirmados($familiares)
         ];
 
