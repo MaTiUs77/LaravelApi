@@ -19,6 +19,7 @@ class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
         $nivel_servicio_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
+        $anio_rule= is_array(Input::get('anio')) ? 'array' : 'string';
         $estado_inscripcion_rule = is_array(Input::get('estado_inscripcion')) ? 'array' : 'string';
 
         // Reglas de validacion
@@ -29,7 +30,7 @@ class MatriculasPorSeccion extends Controller
             'centro_id' => 'numeric',
             'nivel_servicio' => $nivel_servicio_rule,
             'estado_inscripcion' => $estado_inscripcion_rule,
-            'anio' => 'string',
+            'anio' => $anio_rule,
             'division' => 'string',
             'sector' => 'string',
             'status' => 'string'
@@ -252,21 +253,10 @@ class MatriculasPorSeccion extends Controller
             $query = $query->where('centros.sector',$sector);
         }
         if(isset($nivel_servicio)) {
-            if(is_array($nivel_servicio))
-            {
-                $query = $query->where(function($subquery)
-                {
-                    foreach(Input::get('nivel_servicio') as $select) {
-                        $subquery->orWhere('centros.nivel_servicio', $select);
-                    }
-                });
-            } else
-            {
-                $query = $query->where('centros.nivel_servicio',$nivel_servicio);
-            }
+            $query = $query->whereArr('centros.nivel_servicio',$nivel_servicio);
         }
         if(isset($anio)) {
-            $query = $query->where('cursos.anio',$anio);
+            $query = $query->whereArr('cursos.anio',$anio);
         }
         
         if(isset($division)) {

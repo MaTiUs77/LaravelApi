@@ -30,13 +30,13 @@ class AppServiceProvider extends ServiceProvider
         // Permite realizar busquedas con arrays en una columna
         Builder::macro('whereArr', function($attribute, $searchTerm) {
             if(is_array($searchTerm)) {
-                $this->where(function($subquery) use($attribute, $searchTerm){
+                return $this->where(function($subquery) use($attribute, $searchTerm){
                     foreach($searchTerm as $arr_param) {
                         $subquery->orWhere($attribute,$arr_param);
                     }
                 });
             } else {
-                $this->where($attribute,$searchTerm);
+                return $this->where($attribute,$searchTerm);
             }
         });
     }
