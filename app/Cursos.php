@@ -24,7 +24,7 @@ class Cursos extends Model
 
     function Centro()
     {
-        return $this->hasMany('App\Centros', 'id', 'centro_id');
+        return $this->hasOne('App\Centros', 'id', 'centro_id');
     }
 
     function Titulacion()
