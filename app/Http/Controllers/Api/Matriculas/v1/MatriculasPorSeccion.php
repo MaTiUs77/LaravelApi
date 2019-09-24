@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Titulacion;
+use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
+        $export = Input::get('export');
         $nivel_servicio_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
         $anio_rule= is_array(Input::get('anio')) ? 'array' : 'string';
         $estado_inscripcion_rule = is_array(Input::get('estado_inscripcion')) ? 'array' : 'string';
@@ -143,7 +145,13 @@ class MatriculasPorSeccion extends Controller
                 }
             }*/
         }
-        $this->exportar($result);
+        
+        $exportacion = $this->exportar($result);
+        // Si el tipo de exportación es igual a 2 quiere decir que se exporta a PDF y requiero retornar
+        // el resultado
+        if(isset($export) && $export == 2){
+            return $exportacion;
+        }
 
         return $result;
     }
@@ -153,8 +161,7 @@ class MatriculasPorSeccion extends Controller
         $ciclo = Input::get('ciclo');
 
         // Exportacion a Excel
-        if(Input::get('export')) {
-
+        if(Input::get('export') == 1) {
             $content = [];
             $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
             // Contenido
@@ -185,8 +192,42 @@ class MatriculasPorSeccion extends Controller
                     ];
                 }
             }
-
             Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
+        }
+        else if(Input::get('export') == 2){
+            $content = [];
+            foreach($paginationResult as $item) {
+                try{
+                    $content[] = [
+                        "cue"=>$item->cue,
+                        "ciudad"=>$item->ciudad,
+                        "nombre"=>$item->nombre,
+                        "nivel_servicio"=>$item->nivel_servicio,
+                        "anio"=>$item->anio,
+                        "division"=>$item->division,
+                        "turno"=>$item->turno,
+                        "titulacion"=>[
+                            "nombre_abreviado"=>isset($item->titulacion->nombre_abreviado) ? $item->titulacion->nombre_abreviado : null,
+                            "orientacion"=>isset($item->titulacion->orientacion) ? $item->titulacion->orientacion : null,
+                            "reso_pedagogica"=>isset($item->titulacion->reso_titulacion_nro) ? $item->titulacion->reso_titulacion_nro."/".$item->titulacion->reso_titulacion_anio : null,
+                        ],
+                        "hs_catedras"=>$item->hs_catedras,
+                        "reso_presupuestaria"=>$item->reso_presupuestaria,
+                        "plazas"=>$item->plazas,
+                        "matriculas"=>$item->matriculas,
+                        "vacantes"=>$item->vacantes,
+                        "varones"=>$item->varones,
+                        "por_hermano"=>$item->por_hermano,
+                        "observaciones"=>$item->observaciones
+                    ];
+                }catch(Exception $ex){
+                    $content[] = [
+                        "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
+                    ];
+                }
+            }
+
+            return Export::toPDF("ddjj_secciones","ddjj_secciones","landscape",$content);
         }
     }
 

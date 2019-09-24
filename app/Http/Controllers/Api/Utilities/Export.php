@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Utilities;
 
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class Export extends Controller
 {
@@ -32,5 +33,13 @@ class Export extends Controller
                 $sheet->fromArray($content, null, 'A1', false, false);
             });
         })->export('xls');
+    }
+
+    public static function toPDF($view,$file,$orientation,$matriculas)
+    {
+        // Exportación a PDF
+        $pdf = PDF::loadView($view,array('matriculas'=>$matriculas));
+        $pdf->setPaper('a4', $orientation);
+        return $pdf->stream("$file.pdf");
     }
 }
