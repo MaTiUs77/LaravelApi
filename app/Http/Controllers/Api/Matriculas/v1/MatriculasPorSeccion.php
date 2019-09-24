@@ -74,6 +74,8 @@ class MatriculasPorSeccion extends Controller
             ) as vacantes,
             COUNT(personas.sexo) as varones,
             COUNT(inscripcions.hermano_id) as por_hermano,
+            COUNT(inscripcions.promocion_id) as promociones,
+            COUNT(inscripcions.repitencia_id) as repitencias,
             cursos.observaciones,
             CAST(SUM(if(inscripcions.estado_inscripcion  = "CONFIRMADA", 1, 0)) AS UNSIGNED) AS confirmadas
             ')
