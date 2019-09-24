@@ -11,9 +11,11 @@ use Illuminate\Support\Facades\Validator;
 class Inscripcion extends Controller
 {
     public $validationRules = [
-        'ciclo_id' => 'required_without_all:ciclo,alumno_id|numeric',
-        'ciclo' => 'required_without_all:ciclo_id,alumno_id|numeric',
-        'alumno_id' => 'required_without_all:ciclo,ciclo_id|numeric',
+        'ciclo_id' => 'required_without_all:ciclo,alumno_id,documento_nro|numeric',
+        'ciclo' => 'required_without_all:ciclo_id,alumno_id,documento_nro|numeric',
+        'alumno_id' => 'required_without_all:ciclo,ciclo_id,documento_nro|numeric',
+        'documento_nro' => 'required_without_all:ciclo,ciclo_id,alumno_id|numeric',
+        'persona' => 'string',
         'centro_id' => 'numeric',
         'ciudad' => 'string',
         'nivel_servicio' => 'string',
@@ -33,19 +35,25 @@ class Inscripcion extends Controller
             return ['error' => $validator->errors()];
         }
 
+        // Minimo requerido
         $ciclo_id = Input::get('ciclo_id');
         $ciclo = Input::get('ciclo');
-
         $alumno_id= Input::get('alumno_id');
+        $documento_nro= Input::get('documento_nro');
 
-        $centro_id = Input::get('centro_id');
+        // Centros
         $ciudad = Input::get('ciudad');
+        $centro_id = Input::get('centro_id');
+        $sector= Input::get('sector');
         $nivel_servicio = Input::get('nivel_servicio');
-
         $curso_id = Input::get('curso_id');
         $turno = Input::get('turno');
         $anio = Input::get('anio');
         $division = Input::get('division');
+
+        // Personas
+        $persona= Input::get('persona');
+
         $hermano = Input::get('hermano');
         $egresado = Input::get('egresado');
         $estado_inscripcion = Input::get('estado_inscripcion');
@@ -54,15 +62,19 @@ class Inscripcion extends Controller
 
         $query = CursosInscripcions::with('Inscripcion.Hermano.Persona.Ciudad');
 
+        if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
+        if($ciclo) { $query->filtrarCicloNombre($ciclo); }
         if($alumno_id) { $query->filtrarAlumnoId($alumno_id); }
+        if($documento_nro) { $query->filtrarPersonaDocumentoNro($documento_nro); }
 
+        if($persona) { $query->filtrarPersonaFullname($persona); }
+
+        if($sector) { $query->filtrarSector($sector); }
         if($centro_id) { $query->filtrarCentro($centro_id); }
         if($ciudad) { $query->filtrarCiudad($ciudad); }
         if($nivel_servicio) { $query->filtrarNivelServicio($nivel_servicio); }
 
         if($curso_id) { $query->filtrarCurso($curso_id); }
-        if($ciclo_id) { $query->filtrarCiclo($ciclo_id); }
-        if($ciclo) { $query->filtrarCicloNombre($ciclo); }
         if($turno) { $query->filtrarTurno($turno); }
         if($anio) { $query->filtrarAnio($anio); }
         if($division) { $query->filtrarDivision($division); }

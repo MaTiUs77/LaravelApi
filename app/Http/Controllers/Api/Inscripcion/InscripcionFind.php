@@ -3,13 +3,42 @@ namespace App\Http\Controllers\Api\Inscripcion;
 
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
-use App\Inscripcions;
-use App\Personas;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
 class InscripcionFind extends Controller
 {
+    public function startFind() {
+        $inscripcion_id = Input::get('inscripcion_id');
+        $persona_id= Input::get('persona_id');
+        $legajo_nro= Input::get('legajo_nro');
+        $fullname= Input::get('fullname');
+        $documento_nro= Input::get('documento_nro');
+
+        if($inscripcion_id){
+            return $this->byId($inscripcion_id);
+        }
+
+        if($persona_id){
+            return $this->byPersona($persona_id);
+        }
+
+        if($fullname){
+            return $this->byPersonaFullname();
+        }
+
+        if($legajo_nro){
+            return $this->byLegajo($legajo_nro);
+        }
+
+        if($documento_nro){
+            return $this->byDocumentoNro($documento_nro);
+        }
+
+        return ['error'=> 'No definio ningun filtro'];
+    }
+
+    // INSCRIPCIONES
     public function byId($inscripcion_id)
     {
         $validationRules = [
@@ -31,7 +60,26 @@ class InscripcionFind extends Controller
             return $cursoInscripcions;
         }
     }
+    public function byLegajo($legajo_nro)
+    {
+        list($dni,$anio) = explode('-',$legajo_nro);
+        if(is_numeric($dni) && is_numeric($anio))
+        {
+            $cursoInscripcions = CursosInscripcions::filtrarLegajo($legajo_nro)->first();
 
+            if($cursoInscripcions==null)
+            {
+                return ['error'=>'No se encontro una inscripcion con ese legajo'];
+            } else {
+                return $cursoInscripcions;
+            }
+        } else
+        {
+            return ['error'=>'El legajo es inválido'];
+        }
+    }
+
+    // PERSONAS
     public function byPersona($persona_id)
     {
         $validationRules = [
@@ -83,7 +131,6 @@ class InscripcionFind extends Controller
             }
         }
     }
-
     public function byPersonaFullname()
     {
         $fullname = Input::get('fullname');
@@ -101,7 +148,7 @@ class InscripcionFind extends Controller
             return ['error' => $validator->errors()];
         }
 
-        $cursoInscripcions = CursosInscripcions::filtrarPersonaFullname($fullname)->get();
+        $cursoInscripcions = CursosInscripcions::filtrarPersonaFullname($fullname)->paginate();
 
         if($cursoInscripcions==null || count($cursoInscripcions)<=0)
         {
@@ -122,23 +169,21 @@ class InscripcionFind extends Controller
             }
         }
     }
-
-    public function byLegajo($legajo_nro)
+    public function byDocumentoNro($documento_nro)
     {
-        list($dni,$anio) = explode('-',$legajo_nro);
-        if(is_numeric($dni) && is_numeric($anio))
+        if(is_numeric($documento_nro))
         {
-            $cursoInscripcions = CursosInscripcions::filtrarLegajo($legajo_nro)->first();
 
+            $cursoInscripcions = CursosInscripcions::filtrarPersonaDocumentoNro($documento_nro)->get();
             if($cursoInscripcions==null)
             {
-                return ['error'=>'No se encontro una inscripcion con ese legajo'];
+                return ['error'=>'No se encontro una inscripcion con ese numero de documento'];
             } else {
                 return $cursoInscripcions;
             }
         } else
         {
-            return ['error'=>'El legajo es inválido'];
+            return ['error'=>'El documento es inválido'];
         }
     }
 }

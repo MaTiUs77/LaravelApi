@@ -6,6 +6,7 @@ use App\Centros;
 use App\CursosInscripcions;
 use App\Http\Controllers\Controller;
 use App\Pases;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,8 +18,11 @@ class PaseCrud extends Controller
     }
 
     // Index
-    public function index()
+    public function index(Request $req)
     {
+        // Obtiene datos de usuario desde middleware
+        $user = (object) $req->get('jwt_user');
+
         $por_pagina = Input::get('por_pagina');
 
         // Relacion de modelo

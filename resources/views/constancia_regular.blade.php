@@ -19,12 +19,28 @@
                         <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                         <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                         <div style="font-style: italic">Ministerio de Educación</div>
-                        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->nivel_servicio!='Común - Secundario')
-                            <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->sector == 'ESTATAL')
+                            @switch($cursoInscripcions->inscripcion->centro->nivel_servicio)
+                                @case('Común - Inicial')
+                                @case('Común - Primario')
+                                @case('Común - Especial')
+                                    <div style="font-weight: bold;">Supervisión Técnica-Supervisión Escolar</div>
+                                    @break
+                                @case('Adultos - Primario')
+                                @case('Adultos - Secundario')
+                                    <div style="font-weight: bold;">Dirección de Modalidades Educativas</div>
+                                    @break
+                                @case('Común - Superior')
+                                    <div style="font-weight: bold;">Dirección de Superior</div>
+                                    @break
+                                @default
+                            @endswitch
+                        @else
+                            <div style="font-weight: bold;">Dirección de Privadas</div>
                         @endif
                     </td>
                     <td>
-                        <div style="text-align: right;line-height: 150px;">2018- "Año de los 44 Héroes del Submarino ARA San Juan"</div>
+                        <div style="text-align:right; line-height: 150px; font-size: 11px">“2019 – AÑO DEL CENTENARIO DEL NACIMIENTO DE EVA DUARTE DE PERÓN”</div>
                     </td>
                 </tr>
             </table>
@@ -51,11 +67,11 @@
                 del servicio y nivel <b>{{ $cursoInscripcions->inscripcion->centro->nivel_servicio }}</b>
             </p>
 
-            @if(!empty($cursoInscripcions->inscripcion->alumno->observaciones))
+            @if(!empty($cursoInscripcions->inscripcion->observaciones))
             <h4>Datos complementarios</h4>
 
             <p>
-                {{ $cursoInscripcions->inscripcion->alumno->observaciones }}
+                {{ $cursoInscripcions->inscripcion->observaciones }}
             </p>
             @endif
             <p>

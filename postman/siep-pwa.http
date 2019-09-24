@@ -1,0 +1,56 @@
+###
+# Personas GET
+GET http://localhost:7777/api/public/app_familiares/v1/personas
+Content-Type: application/json
+
+{
+    "documento_nro":36176011
+}
+
+###
+# Personas POST
+POST http://localhost:7777/api/public/app_familiares/v1/personas
+Content-Type: application/json
+
+{
+    "apellidos": "Maidana",
+"autorizado_retirar": 0,
+"calle_nombre": "calle",
+"calle_nro": 0,
+"ciudad": "Ushuaia",
+"conviviente": 0,
+"documento_nro": "36176011",
+"documento_tipo": "0",
+"email": "email@email.com",
+"familiar": 1,
+"fecha_nac": "1900/01/01",
+"id": 69945,
+"nombres": "Diego",
+"observaciones": "N/A",
+"persona_id": 69945,
+"sexo": "Masculino",
+"telefono_nro": 2901,
+"vinculo": "Padre",
+"_method": "POST"
+}
+
+###
+# Familiares Get
+GET http://localhost:7777/api/public/app_familiares/v1/familiares
+
+###
+# Familiares Get By persona_id
+GET http://localhost:7777/api/public/app_familiares/v1/familiares/persona/49303
+
+###
+# Ciudades
+GET http://localhost:7777/api/public/app_familiares/v1/ciudades
+
+###
+# Barrios
+GET http://localhost:7777/api/public/app_familiares/v1/barrios
+Content-Type: application/json
+
+{
+    "nombre":"La Cumbre"
+}

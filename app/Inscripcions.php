@@ -11,6 +11,14 @@ class Inscripcions extends Model
 
     protected $table = 'inscripcions';
     public $timestamps = false;
+    protected $fillable = [
+        'estado_inscripcion', 'legajo_nro'
+    ];
+
+    function User()
+    {
+        return $this->hasOne('App\User', 'id', 'usuario_id');
+    }
 
     function Alumno()
     {
@@ -32,13 +40,37 @@ class Inscripcions extends Model
         return $this->hasOne('App\Centros', 'id', 'centro_id');
     }
 
-   function Promocion()
+    function Promocion()
     {
-        return $this->hasOne('App\CursosInscripcions', 'id', 'promocionado');
+        return $this->belongsTo('App\Inscripcions', 'promocion_id', 'id')->with(['curso','centro']);
+        //return $this->belongsTo('App\CursosInscripcions', 'promocion_id', 'inscripcion_id')->with(['curso']);
+    }
+
+    function Repitencia()
+    {
+        return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id')->with(['curso','centro']);
+        //return $this->belongsTo('App\CursosInscripcions', 'repitencia_id', 'inscripcion_id')->with(['curso']);
     }
 
     function CursosInscripcions()
     {
-        return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id');
+        return $this->belongsTo('App\CursosInscripcions', 'id', 'inscripcion_id')->with('curso');
+    }
+
+    function Curso()
+    {
+        return $this->hasManyThrough(
+            'App\Cursos',
+            'App\CursosInscripcions',
+            'inscripcion_id', // KEY CursosInscripcions
+            'id',
+            'id',
+            'curso_id' // KEY CursosInscripcions
+        );
+    }
+
+    function Pase()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
     }
 }
