@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers\Api\Matriculas\v1;
 
-use App\Cursos;
-use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
 use App\Titulacion;
-use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 
 class MatriculasPorSeccion extends Controller
 {
     public function start(Request $request) {
-        $export = Input::get('export');
         $nivel_servicio_rule = is_array(Input::get('nivel_servicio')) ? 'array' : 'string';
+        $anio_rule= is_array(Input::get('anio')) ? 'array' : 'string';
         $estado_inscripcion_rule = is_array(Input::get('estado_inscripcion')) ? 'array' : 'string';
 
         // Reglas de validacion
@@ -31,7 +27,7 @@ class MatriculasPorSeccion extends Controller
             'centro_id' => 'numeric',
             'nivel_servicio' => $nivel_servicio_rule,
             'estado_inscripcion' => $estado_inscripcion_rule,
-            'anio' => 'string',
+            'anio' => $anio_rule,
             'division' => 'string',
             'sector' => 'string',
             'status' => 'string'
@@ -76,6 +72,8 @@ class MatriculasPorSeccion extends Controller
             ) as vacantes,
             COUNT(personas.sexo) as varones,
             COUNT(inscripcions.hermano_id) as por_hermano,
+            COUNT(inscripcions.promocion_id) as promociones,
+            COUNT(inscripcions.repitencia_id) as repitencias,
             cursos.observaciones,
             CAST(SUM(if(inscripcions.estado_inscripcion  = "CONFIRMADA", 1, 0)) AS UNSIGNED) AS confirmadas
             ')
@@ -142,23 +140,64 @@ class MatriculasPorSeccion extends Controller
                 }
             }*/
         }
-        
-        $exportacion = $this->exportar($result);
-        // Si el tipo de exportación es igual a 2 quiere decir que se exporta a PDF y requiero retornar
-        // el resultado
-        if(isset($export) && $export == 2){
-            return $exportacion;
+
+        $export = Input::get('export');
+
+        // Exporta a PDF
+        if($export==2 || $export == 'pdf') {
+            return $this->exportarPDF($result);
+        }
+
+        // Exporta a EXCEL
+        if($export==1 || $export == 'excel') {
+            return $this->exportar($result);
         }
 
         return $result;
     }
 
+    private function exportarPDF($paginationResult) {
+        $content = [];
+        foreach($paginationResult as $item) {
+            try{
+                $content[] = [
+                    "cue"=>$item->cue,
+                    "ciudad"=>$item->ciudad,
+                    "nombre"=>$item->nombre,
+                    "nivel_servicio"=>$item->nivel_servicio,
+                    "anio"=>$item->anio,
+                    "division"=>$item->division,
+                    "turno"=>$item->turno,
+                    "titulacion"=>[
+                        "nombre_abreviado"=>isset($item->titulacion->nombre_abreviado) ? $item->titulacion->nombre_abreviado : null,
+                        "orientacion"=>isset($item->titulacion->orientacion) ? $item->titulacion->orientacion : null,
+                        "reso_pedagogica"=>isset($item->titulacion->reso_titulacion_nro) ? $item->titulacion->reso_titulacion_nro."/".$item->titulacion->reso_titulacion_anio : null,
+                    ],
+                    "hs_catedras"=>$item->hs_catedras,
+                    "reso_presupuestaria"=>$item->reso_presupuestaria,
+                    "plazas"=>$item->plazas,
+                    "matriculas"=>$item->matriculas,
+                    "vacantes"=>$item->vacantes,
+                    "varones"=>$item->varones,
+                    "por_hermano"=>$item->por_hermano,
+                    "observaciones"=>$item->observaciones
+                ];
+            }catch(Exception $ex){
+                $content[] = [
+                    "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
+                ];
+            }
+        }
+
+        return Export::toPDF("ddjj_secciones","ddjj_secciones","landscape",$content);
+    }
+
     private function exportar($paginationResult) {
 
-        $ciclo = Input::get('ciclo');
+        if(Input::get('export')) {
+            $ciclo = Input::get('ciclo');
 
-        // Exportacion a Excel
-        if(Input::get('export') == 1) {
+            // Exportacion a Excel
             $content = [];
             $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
             // Contenido
@@ -189,44 +228,9 @@ class MatriculasPorSeccion extends Controller
                     ];
                 }
             }
-            Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
+            return Export::toExcel("Matricula Cuantitativa Por Seccion - Ciclo $ciclo","Matriculas por Seccion",$content);
         }
-        else if(Input::get('export') == 2){
-            $content = [];
-            foreach($paginationResult as $item) {
-                try{
-                    $content[] = [
-                        "cue"=>$item->cue,
-                        "ciudad"=>$item->ciudad,
-                        "nombre"=>$item->nombre,
-                        "nivel_servicio"=>$item->nivel_servicio,
-                        "anio"=>$item->anio,
-                        "division"=>$item->division,
-                        "turno"=>$item->turno,
-                        "titulacion"=>[
-                            "nombre_abreviado"=>isset($item->titulacion->nombre_abreviado) ? $item->titulacion->nombre_abreviado : null,
-                            "orientacion"=>isset($item->titulacion->orientacion) ? $item->titulacion->orientacion : null,
-                            "reso_pedagogica"=>isset($item->titulacion->reso_titulacion_nro) ? $item->titulacion->reso_titulacion_nro."/".$item->titulacion->reso_titulacion_anio : null,
-                        ],
-                        "hs_catedras"=>$item->hs_catedras,
-                        "reso_presupuestaria"=>$item->reso_presupuestaria,
-                        "plazas"=>$item->plazas,
-                        "matriculas"=>$item->matriculas,
-                        "vacantes"=>$item->vacantes,
-                        "varones"=>$item->varones,
-                        "por_hermano"=>$item->por_hermano,
-                        "observaciones"=>$item->observaciones
-                    ];
-                }catch(Exception $ex){
-                    $content[] = [
-                        "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
-                    ];
-                }
-            }
-
-            return Export::toPDF("ddjj_secciones","ddjj_secciones","landscape",$content);
-        }
-    }
+   }
 
     private function aplicarFiltros($query) {
         // Obtencion de parametros
@@ -291,21 +295,10 @@ class MatriculasPorSeccion extends Controller
             $query = $query->where('centros.sector',$sector);
         }
         if(isset($nivel_servicio)) {
-            if(is_array($nivel_servicio))
-            {
-                $query = $query->where(function($subquery)
-                {
-                    foreach(Input::get('nivel_servicio') as $select) {
-                        $subquery->orWhere('centros.nivel_servicio', $select);
-                    }
-                });
-            } else
-            {
-                $query = $query->where('centros.nivel_servicio',$nivel_servicio);
-            }
+            $query = $query->whereArr('centros.nivel_servicio',$nivel_servicio);
         }
         if(isset($anio)) {
-            $query = $query->where('cursos.anio',$anio);
+            $query = $query->whereArr('cursos.anio',$anio);
         }
         
         if(isset($division)) {
