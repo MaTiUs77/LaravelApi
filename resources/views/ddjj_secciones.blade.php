@@ -12,17 +12,20 @@
             left:0;
             right:0;
             position: fixed; 
-            top:-120px; 
+            top:-120px;
+            padding-bottom:0;
+            margin-bottom:0;
         }
         footer { 
             width: 100%; 
             position: fixed;
-            margin-top:15px; 
+            margin-top:15px;
             bottom: 10px; 
             text-align: right; 
             border-top: 1px solid black;
         }
-        main { 
+        main {
+            margin-bottom:50px;
             font-family: sans-serif; 
         }
         tr:nth-child(even) {background-color: #f2f2f2;}
@@ -51,7 +54,7 @@
                 </td>
             </tr>
         </table>
-        <div style="margin:5px 20px 0 10px; font-size:15px;font-family:sans-serif;">
+        <div style="margin:15px 20px 0 10px; font-size:15px;font-family:sans-serif;">
             <strong>{{$matriculas[0]["cue"]}} | {{$matriculas[0]["nombre"]}}</strong>
         </div>
     </header><footer style="text-align:center">
