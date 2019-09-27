@@ -22,7 +22,6 @@
             text-align: right; 
             border-top: 1px solid black;
         }
-        {{-- margin:120px 0 60px 0; --}}
         main { 
             font-family: sans-serif; 
         }
@@ -52,7 +51,7 @@
                 </td>
             </tr>
         </table>
-        <div style="margin:15px 20px 0 0; font-size:15px;font-family:sans-serif;">
+        <div style="margin:5px 20px 0 10px; font-size:15px;font-family:sans-serif;">
             <strong>{{$matriculas[0]["cue"]}} | {{$matriculas[0]["nombre"]}}</strong>
         </div>
     </header><footer style="text-align:center">
@@ -64,20 +63,22 @@
         <span style="float:right;clear:both;color:#3a3a3a;font-size:11px;font-family:sans-serif;"></span>
     </footer><main>
         <table width="100%" class="table-hover">
-            <tbody>
+            <thead>
                 <tr style="font-size:13px; text-align:center;">
                     <th>Año</th>
                     <th>División</th>
                     <th>Turno</th>
                     <th>Hs Cátedras</th>
                     <th>Res. Pedagógica</th>
-                    <th>Res. Presupuestaria</th>
+                    <th>Instr. legal de Creación</th>
                     <th>Titulación</th>
                     <th>Plazas</th>
                     <th>Matrículas</th>
                     <th>Vacantes</th>
                     <th>Observaciones</th>
                 </tr>
+            </thead>
+            <tbody>
                 @if(isset($matriculas))
                     @foreach($matriculas as $mat)
                     <tr style="font-size:11px; text-align:center;">

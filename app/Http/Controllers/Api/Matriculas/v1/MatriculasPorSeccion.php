@@ -199,7 +199,7 @@ class MatriculasPorSeccion extends Controller
 
             // Exportacion a Excel
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Res. Presupuestaria', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
+            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Instr. Legal de Creación', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
             // Contenido
             foreach($paginationResult as $item) {
                 try{
