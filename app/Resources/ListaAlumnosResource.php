@@ -36,7 +36,7 @@ class ListaAlumnosResource extends Resource
 
         // Se obtiene el nombre y el vinculo
         return $padresConfirmados->map(function($value){
-            $familiar = "{$value['familiar']['persona']['nombre_completo']} ({$value['familiar']['vinculo']})";
+            $familiar = "{$value['familiar']['persona']['nombre_completo']} ({$value['familiar']['vinculo']}) | {$value['familiar']['persona']['telefono_nro']} | {$value['familiar']['persona']['telefono_nro_alt']} | {$value['familiar']['persona']['email']}";
             return $familiar;
         });
     }
