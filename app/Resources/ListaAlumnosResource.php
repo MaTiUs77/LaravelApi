@@ -18,6 +18,8 @@ class ListaAlumnosResource extends Resource
             'documento_nro' => $persona['documento_nro'],
             'nombre_completo' => $persona['nombre_completo'],
             'fecha_nac' => Carbon::parse($persona['fecha_nac'])->format('d/m/Y'),
+            'edad' => $persona['edad'],
+            'nacionalidad' => $persona['nacionalidad'],
             'telefono_nro' => $persona['telefono_nro'],
             'direccion' => $this->transformDireccion($persona),
             'email' => $persona['email'],
@@ -36,7 +38,7 @@ class ListaAlumnosResource extends Resource
 
         // Se obtiene el nombre y el vinculo
         return $padresConfirmados->map(function($value){
-            $familiar = "{$value['familiar']['persona']['nombre_completo']} ({$value['familiar']['vinculo']})";
+            $familiar = "{$value['familiar']['persona']['nombre_completo']} ({$value['familiar']['vinculo']}) | {$value['familiar']['persona']['telefono_nro']} | {$value['familiar']['persona']['telefono_nro_alt']} | {$value['familiar']['persona']['email']}";
             return $familiar;
         });
     }
