@@ -54,9 +54,11 @@
                 </td>
             </tr>
         </table>
+        @if(count($matriculas) > 0)
         <div style="margin:15px 20px 0 10px; font-size:15px;font-family:sans-serif;">
             <strong>{{$matriculas[0]["cue"]}} | {{$matriculas[0]["nombre"]}}</strong>
         </div>
+        @endif
     </header><footer style="text-align:center">
         <div style="margin-top:3px;float:left; font-size:11px;font-family:sans-serif;">Fecha de Impresión: {{ \Carbon\Carbon::now()->format('d-m-Y H:m') }}<br><br>
             <span style="font-style: italic;">Documento obtenido en <strong>SIEP TDF</strong></span>
@@ -82,7 +84,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($matriculas))
+                @if(isset($matriculas) && count($matriculas) > 0)
                     @foreach($matriculas as $mat)
                     <tr style="font-size:11px; text-align:center;">
                         <td>{{$mat["anio"]}}</td>
