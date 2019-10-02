@@ -69,8 +69,9 @@ class Inscripcions extends Model
         );
     }
 
-    function Pase()
+    function Origen()
     {
+        //return $this->belongsTo('App\Inscripcions', 'repitencia_id', 'id')->with(['curso','centro']);
         return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
     }
 }

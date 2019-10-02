@@ -61,6 +61,20 @@ trait WithInscripcionScopes {
             }
         });
     }
+    function scopeFiltrarPase($query,$param) {
+        $query->whereHas('Inscripcion', function ($q) use($param){
+            switch($param){
+                case 'si':
+                case 'con':
+                    return $q->where('tipo_inscripcion','Pase')->where('centro_origen_id','<>',null);
+                    break;
+                case 'no':
+                case 'sin':
+                    return $q->where('tipo_inscripcion','<>','Pase')->where('centro_origen_id',null);
+                    break;
+            }
+        });
+    }
     //--- Permite Array ---
     function scopeFiltrarEstadoInscripcion($query,$param) {
         $query->whereHas('Inscripcion', function ($q) use($param) {
