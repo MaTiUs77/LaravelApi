@@ -246,6 +246,7 @@ class MatriculasPorSeccion extends Controller
         $estado_inscripcion= Input::get('estado_inscripcion');
         $status= Input::get('status');
         $hermano= Input::get('hermano');
+        $tipo = Input::get('tipo');
 
         // Por defecto Curso.status = 1
         if(isset($status)) {
@@ -297,8 +298,14 @@ class MatriculasPorSeccion extends Controller
         if(isset($nivel_servicio)) {
             $query = $query->whereArr('centros.nivel_servicio',$nivel_servicio);
         }
+        if(isset($curso_id)) {
+            $query = $query->where('cursos.id',$curso_id);
+        }
         if(isset($anio)) {
             $query = $query->whereArr('cursos.anio',$anio);
+        }
+        if(isset($tipo)) {
+            $query = $query->whereArr('cursos.tipo',$tipo);
         }
         
         if(isset($division)) {

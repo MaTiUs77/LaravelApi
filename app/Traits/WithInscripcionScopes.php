@@ -169,4 +169,9 @@ trait WithInscripcionScopes {
             return $persona->where('documento_nro', $documento_nro);
         });
     }
+    function scopeFiltrarPersonaEdad($query,$edad) {
+        $query->whereHas('Inscripcion.Alumno.Persona', function ($persona) use($edad) {
+            return $persona->where('edad', $edad);
+        });
+    }
 }
