@@ -289,9 +289,6 @@ class MatriculasPorSeccion extends Controller
         if(isset($hermano)) {
             $query = $query->where('inscripcions.hermano_id','<>',null);
         }
-        if(isset($curso_id)) {
-            $query = $query->where('cursos.id',$curso_id);
-        }
         if(isset($sector)) {
             $query = $query->where('centros.sector',$sector);
         }
