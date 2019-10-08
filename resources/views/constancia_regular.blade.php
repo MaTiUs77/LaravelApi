@@ -8,6 +8,16 @@
     {
         $fecha_inscripcion =  Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $fecha_inscripcion );
     }
+
+    // Alias para un render mas legible
+    $inscripcion = $cursoInscripcions->inscripcion;
+    $curso= $cursoInscripcions->curso;
+
+    $ciclo = $inscripcion->ciclo;
+    $centro = $inscripcion->centro;
+    $alumno = $inscripcion->alumno;
+    $persona = $alumno->persona;
+
 @endphp
 
     <div style="font-size: 14px">
@@ -19,8 +29,8 @@
                         <div style="font-style: italic">Antártida e Islas del Atlántico Sur</div>
                         <div style="font-style: italic;color: #5e5e5e;">República Argentina</div>
                         <div style="font-style: italic">Ministerio de Educación</div>
-                        @if(isset($cursoInscripcions->inscripcion->centro->nivel_servicio) && $cursoInscripcions->inscripcion->centro->sector == 'ESTATAL')
-                            @switch($cursoInscripcions->inscripcion->centro->nivel_servicio)
+                        @if(isset($centro->nivel_servicio) && $centro->sector == 'ESTATAL')
+                            @switch($centro->nivel_servicio)
                                 @case('Común - Inicial')
                                 @case('Común - Primario')
                                 @case('Común - Especial')
@@ -49,34 +59,47 @@
                 <h3>CONSTANCIA DE ALUMNO REGULAR</h3>
 
                 <div>
-                    {{ $cursoInscripcions->inscripcion->centro->nombre }}
+                    {{ $centro->nombre }}
                     C.U.E. N°
-                    {{ $cursoInscripcions->inscripcion->centro->cue }}
+                    {{ $centro->cue }}
                 </div>
 
                 <div style="padding:10px; font-size:12px;font-weight: bold;">
-                    {{ strtoupper($cursoInscripcions->inscripcion->centro->direccion) }} -
-                    {{ strtoupper($cursoInscripcions->inscripcion->centro->ciudad->nombre) }}
+                    {{ strtoupper($centro->direccion) }} -
+                    {{ strtoupper($centro->ciudad->nombre) }}
                 </div>
             </div>
             <p>
-                Se hace constar que <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->apellidos) }}, {{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->nombres) }}</b>,
-                documento tipo: <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_tipo) }}</b>, N°
-                <b>{{ strtoupper($cursoInscripcions->inscripcion->alumno->persona->documento_nro) }}</b>
-                es alumno regular de este establecimiento y se encuentra cursando año <b>{{ $cursoInscripcions->curso->anio }}</b>, división <b>{{ $cursoInscripcions->curso->division }}</b>
-                del servicio y nivel <b>{{ $cursoInscripcions->inscripcion->centro->nivel_servicio }}</b>
+                Se hace constar que <b>{{ strtoupper($persona->apellidos) }}, {{ strtoupper($persona->nombres) }}</b>,
+                documento tipo: <b>{{ strtoupper($persona->documento_tipo) }}</b>, N°
+                <b>{{ strtoupper($persona->documento_nro) }}</b>
+                es alumno regular de este establecimiento y se encuentra cursando año <b>{{ $curso->anio }}</b>
+
+                @if($centro->nivel_servicio=='Común - Inicial' && $curso->tipo=='Múltiple' )
+                    @switch($curso->anio)
+                    @case('Sala de 3 años')
+                    Múltiple (3 y 4 años)
+                    @break
+                    @case('Sala de 4 años')
+                    Múltiple (4 y 5 años)
+                    @break
+                    @endswitch
+                @endif
+
+                , división <b>{{ $curso->division }}</b>
+                del servicio y nivel <b>{{ $centro->nivel_servicio }}</b>
             </p>
 
-            @if(!empty($cursoInscripcions->inscripcion->observaciones))
+            @if(!empty($inscripcion->observaciones))
             <h4>Datos complementarios</h4>
 
             <p>
-                {{ $cursoInscripcions->inscripcion->observaciones }}
+                {{ $inscripcion->observaciones }}
             </p>
             @endif
             <p>
 		A pedido del/a interesado/a y al solo efecto de ser presentada ante quien corresponda 
-                se extiende la presente, sin enmiendas ni raspaduras en la ciudad de <b>{{ $cursoInscripcions->inscripcion->centro->ciudad->nombre }}</b>, Provincia de Tierra del Fuego,
+                se extiende la presente, sin enmiendas ni raspaduras en la ciudad de <b>{{ $centro->ciudad->nombre }}</b>, Provincia de Tierra del Fuego,
                 el <b>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</b>.
             </p>
 
