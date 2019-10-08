@@ -78,8 +78,10 @@
                 @if($centro->nivel_servicio=='Común - Inicial' && $curso->tipo=='Múltiple' )
                     @switch($curso->anio)
                     @case('Sala de 3 años')
-                    @case('Sala de 4 años')
                     Múltiple (3 y 4 años)
+                    @break
+                    @case('Sala de 4 años')
+                    Múltiple (4 y 5 años)
                     @break
                     @endswitch
                 @endif
