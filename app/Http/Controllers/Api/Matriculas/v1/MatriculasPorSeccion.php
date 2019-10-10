@@ -163,7 +163,7 @@ class MatriculasPorSeccion extends Controller
                     }
 
                     // CENTRO_ID: 10 --> ESCUELA PROVINCIAL Nº 13 - ALMIRANTE GUILLERMO BROWN
-                    if($item->centro_id==173) {
+                    if($item->centro_id==10) {
                         $item->plazas = 24;
                     }
 
