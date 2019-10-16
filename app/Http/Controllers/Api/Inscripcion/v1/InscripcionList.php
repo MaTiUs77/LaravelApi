@@ -66,6 +66,7 @@ class InscripcionList extends Controller
 
         $promocion = Input::get('promocion');
         $repitencia = Input::get('repitencia');
+        $pase = Input::get('pase');
 
         $por_pagina = Input::get('por_pagina');
 
@@ -106,6 +107,9 @@ class InscripcionList extends Controller
         }
         if($repitencia) {
             $query->filtrarRepitencia($repitencia);
+        }
+        if($pase) {
+            $query->filtrarPase($pase);
         }
 
         return $query->customPagination($por_pagina);

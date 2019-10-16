@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Matriculas\v1;
 
+use App\CursosInscripcions;
 use App\Http\Controllers\Api\Utilities\Export;
 use App\Http\Controllers\Controller;
 use App\Inscripcions;
@@ -116,29 +117,11 @@ class MatriculasPorSeccion extends Controller
         foreach($items as $item) {
             // Se carga la relacion con el modelo Titulacion
             $item->titulacion = Titulacion::select('nombre','nombre_abreviado','orientacion','norma_aprob_jur_nro as reso_titulacion_nro','norma_aprob_jur_anio as reso_titulacion_anio')->find($item->titulacion_id);
-/*            $item->confirmadas = CursosInscripcions::filtrarCiclo($item->ciclo_id)
-                ->filtrarCurso($item->curso_id)
-                ->filtrarEstadoInscripcion('CONFIRMADA')
-                ->count();*/
 
             $item->confirmadas_excede_plaza = ($item->confirmadas > $item->plazas);
 
-            /*// Modifica las plazas y vacantes del ciclo 2019
-            if(Input::get('ciclo')==2019)
-            {
-                switch ($item->nivel_servicio)
-                {
-                    case 'Común - Inicial':
-                    case 'Común - Primario':
-                        $item->plazas = 24;
-                        // Harcodeada
-                        if($item->anio=='Sala de 3 años') {
-                            $item->plazas = 20;
-                        }
-                        $item->vacantes= $item->plazas - $item->matriculas;
-                        break;
-                }
-            }*/
+            $this->doHardcode($item);
+
         }
 
         $export = Input::get('export');
@@ -154,6 +137,41 @@ class MatriculasPorSeccion extends Controller
         }
 
         return $result;
+    }
+
+    private function doHardcode($item) {
+        // Modifica las plazas y vacantes del ciclo 2020 ==> HARCODEADA <==
+        if(request('ciclo')==2020)
+        {
+            switch ($item->nivel_servicio)
+            {
+                case 'Común - Inicial':
+                case 'Común - Primario':
+                    // Plazas por defecto
+                    $item->plazas = 22;
+
+                    // CENTRO_ID: 3   --> JARDIN DE INFANTES Nº 2 - EL BARQUITO TRAVIESO
+                    // CURSO_ID: 2492  --> Sala de 4 años VIOLETA Mañana
+                    // CURSO_ID: 2493 --> Sala de 4 años VIOLETA Tarde
+                    if($item->curso_id==2492 || $item->curso_id==2493) {
+                        $item->plazas = 18;
+                    }
+
+                    // CENTRO_ID: 173 --> ESCUELA PROVINCIAL Nº 40 - MARIA ELENA WALSH
+                    if($item->centro_id==173) {
+                        $item->plazas = 12;
+                    }
+
+                    // CENTRO_ID: 10 --> ESCUELA PROVINCIAL Nº 13 - ALMIRANTE GUILLERMO BROWN
+                    if($item->centro_id==10) {
+                        $item->plazas = 24;
+                    }
+
+                    // Recuento de vacantes
+                    $item->vacantes= $item->plazas - $item->matriculas;
+                    break;
+            }
+        }
     }
 
     private function exportarPDF($paginationResult) {
@@ -246,6 +264,7 @@ class MatriculasPorSeccion extends Controller
         $estado_inscripcion= Input::get('estado_inscripcion');
         $status= Input::get('status');
         $hermano= Input::get('hermano');
+        $tipo = Input::get('tipo');
 
         // Por defecto Curso.status = 1
         if(isset($status)) {
@@ -288,19 +307,22 @@ class MatriculasPorSeccion extends Controller
         if(isset($hermano)) {
             $query = $query->where('inscripcions.hermano_id','<>',null);
         }
-        if(isset($curso_id)) {
-            $query = $query->where('cursos.id',$curso_id);
-        }
         if(isset($sector)) {
             $query = $query->where('centros.sector',$sector);
         }
         if(isset($nivel_servicio)) {
             $query = $query->whereArr('centros.nivel_servicio',$nivel_servicio);
         }
+        if(isset($curso_id)) {
+            $query = $query->where('cursos.id',$curso_id);
+        }
         if(isset($anio)) {
             $query = $query->whereArr('cursos.anio',$anio);
         }
-        
+        if(isset($tipo)) {
+            $query = $query->whereArr('cursos.tipo',$tipo);
+        }
+
         if(isset($division)) {
             if($division=='vacia' || $division=='sin' || $division == null) {
                 $query = $query->where('cursos.division','');

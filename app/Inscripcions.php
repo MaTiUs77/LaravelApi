@@ -69,8 +69,19 @@ class Inscripcions extends Model
         );
     }
 
+    // Deprecar logica de relacion
+    function Origen()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
+    }
+
+    // Deprecar logica de relacion
     function Pase()
     {
+        // Relacion correcta luego del saneo
+        // return $this->belongsTo('App\Inscripcions', 'pase_id', 'id')->with(['curso','centro']);
+
+        // Deprecar relacion con columna actual
         return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
     }
 }
