@@ -61,6 +61,7 @@
         para el Ciclo Escolar <b>{{ $ciclo->nombre }}</b>
         en <b>{{ $centro->ciudad->nombre }}</b> el día: <b>{{ ($fecha_inscripcion!=null) ? $fecha_inscripcion->format('d/m/Y') :'__/__/____' }}</b>
     </p>
+    <div style="height: 80px;"></div>
     <div style="float:right;border-top: 1px solid #000;">Sello y firma de autoridad institucional</div>
     <span style="clear:both;color:#3a3a3a;font-size:11px;font-style: italic;font-weight: bold;">Las Islas Malvinas, Georgias, Sandwich del Sur, son y serán Argentinas</span>
     <hr />
