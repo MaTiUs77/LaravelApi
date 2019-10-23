@@ -80,7 +80,15 @@
                     <th>Plazas</th>
                     <th>Matrículas</th>
                     <th>Vacantes</th>
-                    <th>Observaciones</th>
+                    @if(isset($report_type))
+                        @if($report_type === "repitencias")
+                            <th>Repitencias</th>
+                        @elseif($report_type === "promociones")
+                            <th>Promociones</th>
+                        @endif
+                    @else
+                        <th>Observaciones</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -97,8 +105,15 @@
                         <td>{{$mat["plazas"]}}</td>
                         <td>{{$mat["matriculas"]}}</td>
                         <td>{{$mat["vacantes"]}}</td>
-                        <td>{{$mat["observaciones"]}}</td>
-
+                        @if(isset($report_type))
+                            @if($report_type == "repitencias")
+                                <td>{{$mat["repitencias"]}}</td>
+                            @elseif($report_type == "promociones")
+                                <td>{{$mat["promociones"]}}</td>
+                            @endif
+                        @else
+                            <td>{{$mat["observaciones"]}}</td>
+                        @endif
                     </tr>
                     @endforeach
                 @endif

@@ -125,15 +125,17 @@ class MatriculasPorSeccion extends Controller
         }
 
         $export = Input::get('export');
+        $report_type = Input::get('report_type');
 
+        // dd(Input::all());
         // Exporta a PDF
-        if($export==2 || $export == 'pdf') {
-            return $this->exportarPDF($result);
+        if($export == 2 || $export == 'pdf') {
+            return $this->exportarPDF($result,$report_type);
         }
 
         // Exporta a EXCEL
-        if($export==1 || $export == 'excel') {
-            return $this->exportar($result);
+        if($export == 1 || $export == 'excel') {
+            return $this->exportar($result,$report_type);
         }
 
         return $result;
@@ -175,7 +177,7 @@ class MatriculasPorSeccion extends Controller
         }
     }
 
-    private function exportarPDF($paginationResult) {
+    private function exportarPDF($paginationResult,$report_type) {
         $content = [];
         foreach($paginationResult as $item) {
             try{
@@ -199,8 +201,11 @@ class MatriculasPorSeccion extends Controller
                     "vacantes"=>$item->vacantes,
                     "varones"=>$item->varones,
                     "por_hermano"=>$item->por_hermano,
+                    "promociones"=>$item->promociones,
+                    "repitencias"=>$item->repitencias,
                     "observaciones"=>$item->observaciones
                 ];
+
             }catch(Exception $ex){
                 $content[] = [
                     "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
@@ -208,17 +213,44 @@ class MatriculasPorSeccion extends Controller
             }
         }
 
-        return Export::toPDF("ddjj_secciones","ddjj_secciones","landscape",$content);
+        return Export::toPDF("ddjj_secciones","ddjj_secciones","landscape",compact(["content","report_type"]));
     }
 
-    private function exportar($paginationResult) {
+    private function exportar($paginationResult,$report_type=null) {
+
 
         if(Input::get('export')) {
             $ciclo = Input::get('ciclo');
 
             // Exportacion a Excel
             $content = [];
-            $content[] = ['Ciudad', 'Establecimiento', 'Nivel de Servicio', 'Año', 'Division', 'Turno','Titulacion','Orientacion','Hs Cátedras','Res. Pedagógica','Instr. Legal de Creación', 'Plazas', 'Matriculas','Vacantes','Varones','Por Hermano','Observaciones'];
+            $content[] = [
+                'Ciudad', 
+                'Establecimiento', 
+                'Nivel de Servicio', 
+                'Año', 
+                'Division', 
+                'Turno', 
+                'Titulacion',
+                'Orientacion',
+                'Hs Cátedras',
+                'Res. Pedagógica',
+                'Instr. Legal de Creación', 
+                'Plazas', 
+                'Matriculas',
+                'Vacantes',
+                'Varones',
+                'Por Hermano'
+                ];
+            if($report_type){
+                if($report_type == "repitencias"){
+                    array_push($content[0],'Repitencias');
+                }else if($report_type == "promociones"){
+                    array_push($content[0],'Promociones');
+                }
+            }else{
+                array_push($content[0],'Observaciones');
+            }
             // Contenido
             foreach($paginationResult as $item) {
                 try{
@@ -238,9 +270,29 @@ class MatriculasPorSeccion extends Controller
                         $item->matriculas,
                         $item->vacantes,
                         $item->varones,
-                        $item->por_hermano,
-                        $item->observaciones
+                        $item->por_hermano
                     ];
+                    if($report_type){
+                        if($report_type == 'repitencias'){
+                            if(count($content) > 0){
+                                array_push($content[count($content) - 1],$item->repitencias);
+                            }else{
+                                array_push($content,$item->repitencias);
+                            }
+                        }else if($report_type == 'promociones'){
+                            if(count($content) > 0){
+                                array_push($content[count($content) - 1],$item->promociones);
+                            }else{
+                                array_push($content,$item->promociones);
+                            }
+                        }
+                    }else{
+                        if(count($content) > 0){
+                            array_push($content[count($content) - 1],$item->observaciones);
+                        }else{
+                            array_push($content,$item->observaciones);
+                        }
+                    }
                 }catch(Exception $ex){
                     $content[] = [
                         "Error: Centro_id: ".$item->centro_id. "| ".$ex->getMessage()
