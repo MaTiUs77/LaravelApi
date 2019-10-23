@@ -35,10 +35,10 @@ class Export extends Controller
         })->export('xls');
     }
 
-    public static function toPDF($view,$file,$orientation,$matriculas)
+    public static function toPDF($view,$file,$orientation,$content)
     {
         // Exportación a PDF
-        $pdf = PDF::loadView($view,array('matriculas'=>$matriculas));
+        $pdf = PDF::loadView($view,array('matriculas'=>$content["content"],'report_type'=>$content["report_type"]));
         $pdf->setPaper('a4', $orientation);
         return $pdf->stream("$file.pdf");
     }
