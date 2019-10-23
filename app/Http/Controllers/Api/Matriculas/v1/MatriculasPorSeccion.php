@@ -141,7 +141,8 @@ class MatriculasPorSeccion extends Controller
 
     private function doHardcode($item) {
         // Modifica las plazas y vacantes del ciclo 2020 ==> HARCODEADA <==
-        if(request('ciclo')==2020)
+        // Solo a secciones con division
+        if(request('ciclo')==2020 && !empty($item->division))
         {
             switch ($item->nivel_servicio)
             {
