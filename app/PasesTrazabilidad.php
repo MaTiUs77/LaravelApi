@@ -12,9 +12,21 @@ class PasesTrazabilidad extends Model
     // Permite usar Model::create(array[])
     protected $fillable= [
         'id',
-        'inscripcion_id_origen',
-        'centro_id_destino',
+        'ciclo_id',
+        'inscripcion_id',
+        'centro_id',
+
+        'centro_id_destino_a',
+        'centro_id_destino_b',
         'anio',
-        'user_id'
+
+        'nota_pase_tutor',
+        'tipo',
+        'motivo',
+        'observaciones',
+        'observaciones',
+        'user_id',
+        'familiar_id',
+        'fecha_vencimiento'
     ];
 }

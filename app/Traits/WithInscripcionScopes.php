@@ -61,6 +61,7 @@ trait WithInscripcionScopes {
             }
         });
     }
+    // Deprecar logica, debe verificar la tabla de pases
     function scopeFiltrarPase($query,$param) {
         $query->whereHas('Inscripcion', function ($q) use($param){
             switch($param){

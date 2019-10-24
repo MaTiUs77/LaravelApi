@@ -75,13 +75,17 @@ class Inscripcions extends Model
         return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
     }
 
-    // Deprecar logica de relacion
     function Pase()
     {
-        // Relacion correcta luego del saneo
-        // return $this->belongsTo('App\Inscripcions', 'pase_id', 'id')->with(['curso','centro']);
-
-        // Deprecar relacion con columna actual
+ 	// Deprecar relacion con columna actual
         return $this->hasOne('App\Centros', 'id', 'centro_origen_id');
+
+	// Logica correcta con nuevo modelo Pases
+        //return $this->hasOne('App\Pases', 'inscripcion_id', 'id');
+    }
+
+    function PaseTrazabilidad()
+    {
+        return $this->hasMany('App\PasesTrazabilidad', 'inscripcion_id', 'id');
     }
 }

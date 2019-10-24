@@ -27,6 +27,18 @@ class Pases extends Model
         return $this->hasOne('App\Ciclos', 'id', 'ciclo_id');
     }
 
+    // Nueva version
+    function Origen()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_id');
+    }
+
+    function Destino()
+    {
+        return $this->hasOne('App\Centros', 'id', 'centro_id_destino');
+    }
+
+    // DEPRECAR
     function CentroOrigen()
     {
         return $this->hasOne('App\Centros', 'id', 'centro_id_origen');
